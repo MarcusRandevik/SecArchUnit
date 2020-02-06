@@ -1,2 +1,2 @@
-# ArchSecUnit
-Repository for the ArchSecUnit master thesis at Software Engineering.
+# SecArchUnit
+Repository for the SecArchUnit master thesis at Software Engineering.
