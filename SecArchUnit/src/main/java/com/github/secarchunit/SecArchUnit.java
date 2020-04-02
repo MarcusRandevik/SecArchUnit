@@ -114,8 +114,8 @@ public class SecArchUnit {
         return new DescribedPredicate<>("pass argument whose class is " + argumentDescriptor.getDescription()) {
             @Override
             public boolean apply(JavaAccess<?> access) {
-                boolean passesArgument = access.getArguments().stream()
-                        .anyMatch(argumentDescriptor::apply);
+                boolean passesArgument = access.getArgumentHints().stream()
+                        .anyMatch(hint -> argumentDescriptor.apply(hint.getJavaClass()));
 
                 return passesArgument;
             }
