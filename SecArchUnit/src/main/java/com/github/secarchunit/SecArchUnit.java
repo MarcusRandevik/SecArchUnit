@@ -60,8 +60,9 @@ public class SecArchUnit {
     }
 
     public static ArchRule doNotBleedAssetsBetweenComponents() {
-        // TODO
-        return null;
+        return fields()
+                .that().areAnnotatedWith(Asset.class)
+                .should(notBleedToInsecureComponents());
     }
 
     public static ArchRule doNotLogSecrets(DescribedPredicate<? super JavaClass> loggerDescriptor) {
@@ -137,6 +138,34 @@ public class SecArchUnit {
                             codeUnit.getFullName(), targetDescriptor.getDescription());
                     events.add(SimpleConditionEvent.violated(codeUnit, message));
                 }
+            }
+        };
+    }
+
+    private static ArchCondition<JavaField> notBleedToInsecureComponents() {
+        return new ArchCondition<>("not bleed to insecure components") {
+            @Override
+            public void check(JavaField field, ConditionEvents events) {
+                // Direct access
+                field.getAccessesToSelf().stream()
+                        .filter(access -> !access.getOriginOwner().isAnnotatedWith(AssetHandler.class))
+                        .forEach(offendingFieldAccess -> {
+                            String message = offendingFieldAccess + ": access to asset " + field.getName();
+                            events.add(SimpleConditionEvent.violated(offendingFieldAccess, message));
+                        });
+
+                // Access via getter method
+                field.getAccessesToSelf().stream()
+                        .filter(access -> access.getOrigin() instanceof JavaMethod)
+                        .map(access -> (JavaMethod) access.getOrigin())
+                        .filter(method -> method.getReturnValueHints().stream().anyMatch(hint -> field.equals(hint.getMemberOrigin())))
+                        .map(method -> method.getCallsOfSelf())
+                        .flatMap(calls -> calls.stream())
+                        .filter(call -> !call.getOriginOwner().isAnnotatedWith(AssetHandler.class))
+                        .forEach(offendingMethodCall -> {
+                            String message = offendingMethodCall + ": access to asset " + field.getName() + " (via getter method)";
+                            events.add(SimpleConditionEvent.violated(offendingMethodCall, message));
+                        });
             }
         };
     }
