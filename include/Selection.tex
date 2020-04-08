@@ -1,0 +1,70 @@
+\chapter{Selection of Architectural Security Constraints}
+
+This chapter describes the methodology of collecting a final list of security constraints from three sources. 
+
+\section{Collection of Security Measures}
+
+The processed collection of security measures can be seen in Table~\ref{tab:all_measures}.
+
+\begin{table}
+\begin{tabular}{lp{7cm}lll}
+\hline
+\textbf{\#} & \textbf{Measure} & \textbf{Goal} & \textbf{Sub-goal} \\
+\hline
+1  & Exceptions should not reveal sensitive information to the client & Confidentiality & Reveal \\
+\rowcolor{RowColor}
+2  & Do not allow sensitive information to bleed to other components & Confidentiality & Reveal \\
+3  & Do not send or receive sensitive information in plain text & Confidentiality & Transmit \\
+\rowcolor{RowColor}
+4  & Every outbound message is sent from a central point of the system & Confidentiality & Transmit \\
+5  & Strip and validate data before it passes a trust boundary & Confidentiality & Store \\
+\rowcolor{RowColor}
+6  & Do not log secrets & Confidentiality & Store \\
+7  & The system must not provide functionality to decrypt secured log messages & Confidentiality & Store \\
+\rowcolor{RowColor}
+8  & Ensure erroneous output is not propagated between components & Integrity & Fault tolerance \\
+9  & Input from a user is validated & Integrity & - \\
+\rowcolor{RowColor}
+10 & The user never accesses the session object & Integrity & - \\
+11 & Checkpointed system & Availability & Recoverability \\
+\rowcolor{RowColor}
+12 & Limit and/or throttle allocation of resources & Availability & Resource usage \\
+13 & Provide a single point of access to the system & Accountability & - \\
+\rowcolor{RowColor}
+14 & There is at least one checkpoint initialized for both tasks: authentication and authorization & Accountability & - \\
+15 & Log all security relevant events with appropriate information & Accountability & Auditing \\
+\rowcolor{RowColor}
+16 & Enforce authentication at a central point of the system & Accountability & Authentication \\
+17 & Enforce authorization at a central point of the system & Accountability & Authorization \\
+\rowcolor{RowColor}
+18 & Every security-relevant log message must be secured & Accountability & Non-repudiation \\
+\hline
+\end{tabular}
+\caption{Security measures and their related goals.}
+\label{tab:all_measures}
+\end{table}
+
+\section{Final Selection}
+
+Out of the larger collection of security measures, we have selected 7 entries from diverse security goals and formulated them as architectural security constraints. The selected constraints can be seen in Table~\ref{tab:selected_measures}.
+
+\begin{table}
+\begin{tabular}{ll}
+\hline
+\textbf{\#} & \textbf{Constraint} \\
+1 & Log all security events with relevant information\\
+\rowcolor{RowColor}
+2 & Enforce authentication/ authorization at a single point in the system\\
+3 & Every outbound message is sent from a central point of the system\\
+\rowcolor{RowColor}
+4 & Input from a user is validated\\
+5 & Allocation of resources is limited or throttled\\
+\rowcolor{RowColor}
+6 & Do not allow sensitive information to bleed to other components\\
+7 & Do not log secrets\\
+\hline
+\end{tabular}
+\caption{List of constraints that have been selected for enforcement.}
+\label{tab:selected_measures}
+\end{table}
+

@@ -1,0 +1,42 @@
+\chapter{Methodology}
+
+This chapter describes the adopted method for collecting relevant constraints and mapping these to the common security-goals of CIAA. Second, this chapter presents the validation plan for expressing security constraints with ArchUnit (as is) by means of an illustration and for expressing additional constraints by means of a controlled experiment.
+
+\section{Data collection}
+
+In order to compose appropriate security architectural constraints, a review of security measures and common weaknesses has been performed. The sources used in this review are presented below.
+
+\textbf{CAWE catalog:}
+The Common Architectural Weakness Enumeration catalog \cite{santos_catalog_2017} details 224 common weaknesses in security architectures. Each entry has a description of the weakness and exemplifications of how it could manifest itself in the source code, when applicable. In some entries, there are recommendations on what techniques can be used to detect the weakness, along with mitigation strategies.
+
+\textbf{Security patterns:}
+Similar to the usage of general design patterns made famous in \cite{gamma_design_1995}, security patterns provide a reusable and domain-independent solution to a known problem. More specifically, this study focused on security patterns for the design phase, as defined in \cite{yoshioka_survey_2008}. While the security pattern repository\footnote{http://sefm.cs.utsa.edu/repository/} lists over 170 security patterns, not all are provided with sufficient detail or at the appropriate level of abstraction. As a result, the report by Scandariato et al. \cite{scandariato_system_2006}  which provides a filtered list of patterns.
+
+
+\textbf{Security rules:}
+Architectural security rules constrain the implementation of a system while less solution-oriented compared to security patterns. Eden and Kazman differentiate architectural security rules from those defined on a level of source code based on two criteria, locality and intension/extension \cite{eden_architecture_2003}. Architectural rules are both non-local and intensional, meaning that they affect all or several parts of the system while having \say{infinitely-many possible instances}. In \cite{franch_constraining_2019}, Jasser presents a catalog of architectural security rules. Although the entire catalog of 150 security rules is not yet available, the initial list of 22 included in the paper was used in our study.
+
+\subsection{Processing}
+
+Security measures that we deem difficult to enforce through static analysis, or are otherwise unrelated to security architecture, are discarded upfront. Applicable security measures are categorized according to the security goal that they aim to fulfill. Measures that are similar in nature are combined and presented as a single measure. Additionally, measures defined as the absence of certain functionality are deemed as less important due to the increased difficulty of enforcement \cite{haley_security_2008}.
+
+\section{Validation}
+
+The validation of our results will be performed in two ways, depending on whether or not a constraint required any modification of ArchUnit or additional information in the source-code. The latter category carries a higher degree of scientific value thus motivating a more thorough validation procedure. In the sections below, both types of procedures will be described. 
+
+\subsection{Solution Proposal}
+
+As described in section~\ref{archunit-back-section}, ArchUnit already provides functionality to perform conformance testing of architectural constraints. However, it is unclear whether the framework supports the enforcement of security architectural constraints. The mapping of security architectural constraints to that of rules in ArchUnit allows us to perform a \textit{proposal of solution} as described in \cite{wieringa_requirements_2006}. This type of validation is intended to propose a novel or significantly improved technique without rigorous validation. Instead, a proof of concept or small example is used to facilitate later validation. 
+
+\subsection{Controlled Experiment} \label{sec-controlled-experiment}
+In contrast to constraints which may be implemented through already existing functionality, those requiring extension to either the API or additional information within the source-code are not guaranteed to reliably detect violations of the intended architecture. Therefore, validation is performed using a laboratory experiment \cite{stol_abc_2018} in order to increase the precision of the measurement. 
+
+Integration with already existing testing frameworks is a prominent advantage of ArchUnit. As testing is generally performed overtime to ensure that a system does not degrade, the focus of the experiment is to determine whether ArchUnit can detect changes to security architectural constraints between two versions. 
+
+\subsubsection{Performance metrics}
+The imbalance between the designer, who needs to ensure that every single aspect of a system is secure, and the attacker, who needs to succeed only once, influences the metrics chosen to represent how well the extension to ArchUnit performs. Precision and recall were the metrics of choice, with the greater importance placed on the latter. 
+
+\subsubsection{Projects used in evaluation}
+Systems to be included in the validation needed to fulfill two mandatory criteria. First and foremost was the fact that they need open source and written in Java as the static analysis of ArchUnit relies on the source-code. Secondly, there needed to be at minimum two different snapshots in order to fulfill the goal of comparing subsequent changes to a system.  
+
+In addition to the mandatory criteria, other aspects were also considered to reduce bias in the validation process. Systems which had already been analyzed in previous literature \cite{peldszus_secure_2019, abi-antoun_static_2009} would provide an existing architecture and its security analysis, which we leverage as ground truth in our experiment. Additionally, systems which have a well documented architecture and security requirements and were within a reasonable size can further help mitigate potential internal validity threats. 

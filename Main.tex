@@ -1,0 +1,87 @@
+% CREATED BY DAVID FRISK, 2018
+
+% IMPORT SETTINGS
+\documentclass[12pt,a4paper,oneside]{report}
+\input{include/settings/Settings}
+
+\begin{document} 
+
+% COVER PAGE, TITLE PAGE AND IMPRINT PAGE
+\pagenumbering{roman}			% Roman numbering (starting with i (one)) until first main chapter
+\input{include/frontmatter/Titlepage}
+% asdf
+% ABSTRACT
+\newpage
+\input{include/frontmatter/Abstract}
+
+% ACKNOWLEDGEMENTS
+\newpage
+\input{include/frontmatter/Acknowledgements}
+
+
+% TABLE OF CONTENTS
+\newpage
+\tableofcontents
+
+% OTHER FRONTMATTER
+% List of figures (add to table of contents)
+\clearpage
+\addcontentsline{toc}{chapter}{\listfigurename} 
+\listoffigures
+% List of tables (add to table of contents)
+\clearpage
+\addcontentsline{toc}{chapter}{\listtablename}  
+\listoftables
+
+
+% START OF MAIN DOCUMENT
+\cleardoublepage
+\setcounter{page}{1}
+\pagenumbering{arabic}			% Arabic numbering starting from 1 (one)
+\setlength{\parskip}{10pt plus 1pt}
+
+% INTRODUCTION
+\input{include/Introduction}
+
+% THEORY
+\input{include/Background}
+
+% METHODS
+\input{include/Method}
+
+% Systematic mapping of constraints and our scope
+\input{include/Selection}
+
+% Enforcement of constraints using ArchUnit + extension
+\input{include/Solution}
+
+% Validation against open-source systems
+\input{include/Evaluation}
+
+% RESULTS
+%\input{include/Results}
+
+% DISCUSSION
+%\input{include/Discussion}
+
+% CONCLUSION
+%\input{include/Conclusion}
+
+
+
+% REFERENCES / BIBLIOGRAPHY
+\cleardoublepage
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+% APPENDICES
+\cleardoublepage
+\appendix
+\setcounter{page}{1}
+\pagenumbering{Roman}			% Capitalized roman numbering starting from I (one)
+
+%\input{include/backmatter/Appendix_1}
+
+
+\end{document}
