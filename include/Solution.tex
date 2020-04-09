@@ -1,5 +1,4 @@
 \chapter{Enforcing Constraints}
-\todo{implementation of the constraints is very much a work in progress}
 
 This chapter explains how the constraints can be expressed and validated with the tool. The constraints are divided into three distinct categories. The first category contains the constraints that are possible to express in ArchUnit as-is. The second category describes constraints that are enforceable with the help of additional information in source code. The third and final category details constraints that require an extension of ArchUnit to be possible to enforce.
 
@@ -19,6 +18,9 @@ In cases where this vocabulary is not sufficient for expressing a constraint, th
 
 \subsection{Constraints}
 
+\todo{Show rule definition for each constraint}
+\todo{Show how each constraint is used in our toy app}
+
 \subsubsection*{Log all security events with relevant information}
 This constraint is expressed with the assumption that there is a central class through which security related actions are performed. Any publicly accessible method in this class must contain at least one call to the logging facility. Both the class that represents the secure service facade and the class responsible for logging are expressed in the constraint itself, meaning there is no need for additional information in the source code.
 
@@ -36,7 +38,12 @@ In some cases, this information is simply an indicator that says something about
 
 In other cases, however, the information may be required for methods of arbitrary signatures and even specific fields. For the purposes of flexibility and minimal obtrusiveness, any extra information is expressed in the form of annotations. These can be applied to classes, fields, methods and parameters without changing the underlying architecture of the system.
 
+\todo{Specific example that requires additional information}
+
 \subsection{Constraints}
+
+\todo{Show rule definition for each constraint}
+\todo{Show how each constraint is used in our toy app}
 
 \subsubsection*{Input from a user is validated}
 ...
@@ -53,7 +60,16 @@ In the current ArchUnit API, a rule that aims to constrain access to a method (o
 
 ArchUnit builds its representation of the architecture using ASM\footnote{https://asm.ow2.io/}, a Java bytecode analysis framework. This framework contains functionality for keeping track of the stack and local variables while analyzing the instructions of a method. With knowledge of the type signatures of the references on the stack at the time of a method call or field assignment, it is possible to determine the type signatures of objects passed as parameters or an object being assigned to a field. Our extension provides this additional information in ArchUnit's representation of accesses to fields and methods, which the rule definitions can then make use of.
 
+\todo{Specific example that requires an extension}
+
+\subsection{Extensions}
+
+\todo{Detail the extensions we made}
+
 \subsection{Constraints}
+
+\todo{Show rule definition for each constraint}
+\todo{Show how each constraint is used in our toy app}
 
 \subsubsection*{Do not allow sensitive information to bleed to other components}
 ...

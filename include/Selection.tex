@@ -5,66 +5,91 @@ This chapter describes the methodology of collecting a final list of security co
 \section{Collection of Security Measures}
 
 The processed collection of security measures can be seen in Table~\ref{tab:all_measures}.
+\todo{Fix sub-goals: some of them are anti-goals currently}
+\todo{Reformulate everything as constraints}
+% E.g. #5, what is "it"/the subject? Who strips the data?
+% Some of these are just guidelines, not actual constraints.
 
 \begin{table}
-\begin{tabular}{lp{7cm}lll}
+\begin{tabular}{lp{7cm}ll}
 \hline
-\textbf{\#} & \textbf{Measure} & \textbf{Goal} & \textbf{Sub-goal} \\
+\textbf{\#} & \textbf{Constraint} & \textbf{Goal} & \textbf{Sub-goal} \\
 \hline
-1  & Exceptions should not reveal sensitive information to the client & Confidentiality & Reveal \\
+1  & Exceptions shown to the client must be sent to a sanitizer & Confidentiality & Reveal \\
 \rowcolor{RowColor}
-2  & Do not allow sensitive information to bleed to other components & Confidentiality & Reveal \\
-3  & Do not send or receive sensitive information in plain text & Confidentiality & Transmit \\
+2  & Sensitive information must not bleed to components with lower security classification & Confidentiality & Reveal \\
+3  & Sensitive information must be encrypted before transmission \todo[inline]{Rename} & Confidentiality & Transmit \\
 \rowcolor{RowColor}
-4  & Every outbound message is sent from a central point of the system & Confidentiality & Transmit \\
-5  & Strip and validate data before it passes a trust boundary & Confidentiality & Store \\
+4  & Every outbound message must be sent from a single component responsible for transmission & Confidentiality & Transmit \\
+5  & Data must be stripped and validated before it passes a trust boundary \todo[inline]{Continue from here} & Confidentiality & Store \\
 \rowcolor{RowColor}
-6  & Do not log secrets & Confidentiality & Store \\
+6  & Secrets must not be exposed in log messages & Confidentiality & Store \\
 7  & The system must not provide functionality to decrypt secured log messages & Confidentiality & Store \\
 \rowcolor{RowColor}
-8  & Ensure erroneous output is not propagated between components & Integrity & Fault tolerance \\
+8  & Erroneous output must not be propagated between components & Integrity & Fault tolerance \\
 9  & Input from a user is validated & Integrity & - \\
 \rowcolor{RowColor}
 10 & The user never accesses the session object & Integrity & - \\
-11 & Checkpointed system & Availability & Recoverability \\
+11 & The system has checkpoints that can be restored & Availability & Recoverability \\
 \rowcolor{RowColor}
-12 & Limit and/or throttle allocation of resources & Availability & Resource usage \\
-13 & Provide a single point of access to the system & Accountability & - \\
+12 & Allocation of resources is limited or throttled & Availability & Resource usage \\
+13 & The system has a single point of access & Accountability & - \\
 \rowcolor{RowColor}
 14 & There is at least one checkpoint initialized for both tasks: authentication and authorization & Accountability & - \\
-15 & Log all security relevant events with appropriate information & Accountability & Auditing \\
+15 & All security events are logged & Accountability & Auditing \\
 \rowcolor{RowColor}
-16 & Enforce authentication at a central point of the system & Accountability & Authentication \\
-17 & Enforce authorization at a central point of the system & Accountability & Authorization \\
+16 & Authentication is enforced at a central point of the system & Accountability & Authentication \\
+17 & Authorization is enforced at a central point of the system & Accountability & Authorization \\
 \rowcolor{RowColor}
-18 & Every security-relevant log message must be secured & Accountability & Non-repudiation \\
+18 & Security relevant log messages must be secured & Accountability & Non-repudiation \\
 \hline
 \end{tabular}
-\caption{Security measures and their related goals.}
+\caption{Security constraints and their related CIAA goals.}
 \label{tab:all_measures}
 \end{table}
 
 \section{Final Selection}
 
-Out of the larger collection of security measures, we have selected 7 entries from diverse security goals and formulated them as architectural security constraints. The selected constraints can be seen in Table~\ref{tab:selected_measures}.
+As explained in Section~\ref{sec:limitations}, the aim is not to demonstrate the enforceability of as many constraints as possible, but rather to investigate the feasibility of using the tool in this manner. To that end, a subset of the full list of security constraints is selected for enforcement. The final list contains 7 architectural security constraints, as this allows us to cover at least one constraint from each goal. The selected constraints can be seen in Table~\ref{tab:selected_measures}. The remainder of this section presents each selected constraint in further detail.
 
 \begin{table}
-\begin{tabular}{ll}
+\begin{tabular}{llp{11cm}}
 \hline
-\textbf{\#} & \textbf{Constraint} \\
-1 & Log all security events with relevant information\\
+\textbf{\#} & \textbf{ID in 4.1} & \textbf{Constraint} \\
+1 & 15 & Security events are logged with appropriate information\\
 \rowcolor{RowColor}
-2 & Enforce authentication/ authorization at a single point in the system\\
-3 & Every outbound message is sent from a central point of the system\\
+2 & 16,17 & Enforce authentication/ authorization at a single point in the system\\
+3 & 4 & Every outbound message is sent from a central point of the system\\
 \rowcolor{RowColor}
-4 & Input from a user is validated\\
-5 & Allocation of resources is limited or throttled\\
+4 & 9 & Input from a user is validated\\
+5 & 12 & Allocation of resources is limited or throttled\\
 \rowcolor{RowColor}
-6 & Do not allow sensitive information to bleed to other components\\
-7 & Do not log secrets\\
+6 & 2 & Do not allow sensitive information to bleed to other components\\
+7 & 6 & Do not log secrets\\
 \hline
 \end{tabular}
-\caption{List of constraints that have been selected for enforcement.}
+\caption{Constraints that have been selected for enforcement.}
 \label{tab:selected_measures}
 \end{table}
+
+\todo{Present each of the final constraints, see notes in comment}
+% For each constraint:
+% * describe what it means
+% * typical way to enforce it
+% * which source it comes from (literature)
+% * maybe describing a security attack scenario that this constraint aims to avoid
+
+\subsection{Log all security events}
+
+\subsection{Enforce authentication at single point}
+
+\subsection{Messages are sent from central point}
+
+\subsection{User input is validated}
+
+\subsection{Usage of resources is restricted}
+
+\subsection{Sensitive information must stay within trust boundary}
+
+\subsection{Secrets must not be exposed in log messages}
 

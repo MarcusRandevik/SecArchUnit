@@ -4,7 +4,7 @@ This chapter describes the adopted method for collecting relevant constraints an
 
 \section{Data collection}
 
-In order to compose appropriate security architectural constraints, a review of security measures and common weaknesses has been performed. The sources used in this review are presented below.
+The relevance of the security architectural constraints included in the study was ensured by performing a review of security measures and common weaknesses and compiling the result to a list of constraints. Completeness was not the primary goal of the review, but rather to provide a set of constraints derived from previous knowledge, thus reducing the bias. Presented below are the three sources used to form the final list. 
 
 \textbf{CAWE catalog:}
 The Common Architectural Weakness Enumeration catalog \cite{santos_catalog_2017} details 224 common weaknesses in security architectures. Each entry has a description of the weakness and exemplifications of how it could manifest itself in the source code, when applicable. In some entries, there are recommendations on what techniques can be used to detect the weakness, along with mitigation strategies.
@@ -18,7 +18,14 @@ Architectural security rules constrain the implementation of a system while less
 
 \subsection{Processing}
 
-Security measures that we deem difficult to enforce through static analysis, or are otherwise unrelated to security architecture, are discarded upfront. Applicable security measures are categorized according to the security goal that they aim to fulfill. Measures that are similar in nature are combined and presented as a single measure. Additionally, measures defined as the absence of certain functionality are deemed as less important due to the increased difficulty of enforcement \cite{haley_security_2008}.
+%Elaborate. Perhaps explaining how the sources were analyzed. Did you analyse one right after the other, were there iterations, did you meet after each iteration to discuss your findings and synchronize individually derived subset, or did you work together? How many constraints were taken from individual sources, which of those were grouped? What is the proportion of CIAA coverage in the final list (Show CIAA in table 4.2 and show #ID linking the chosen ones from 4.1)? What was the rational for grouping? Perhaps explicitly enumerating  the "rules" you followed for inclusion would be nice (if there are more than two :) ...), e.g.:
+%1) only security related architectural constraints were considered
+%2) only constraints that can be enforced statically (FYI: prepare for the question, what is an example of a constraint that can not be statically enforced?),
+%3) ...
+
+Security measures that we deem difficult to enforce through static analysis, or are otherwise unrelated to security architecture, are discarded upfront. Applicable security measures are categorized according to the security goal that they aim to fulfill. Measures that are similar in nature are combined and presented as a single measure. Additionally, measures defined as the absence of certain functionality are deemed as less important due to the increased difficulty of enforcement \cite{haley_security_2008}. \todo{Add additional information on the process of deriving at the full list, see comment}
+
+
 
 \section{Validation}
 
