@@ -10,38 +10,39 @@ The processed collection of security measures can be seen in Table~\ref{tab:all_
 % E.g. #5, what is "it"/the subject? Who strips the data?
 % Some of these are just guidelines, not actual constraints.
 
+% (2020-04-10) Subgoals do not seem to add any value as we have not used them when considering the implementation. 
+% (2020-04-10) Previous entry 16 and 17 were merged in table 4.1 instead of 4.2 as they were previously not grouped due to sub-goal differences
+
 \begin{table}
-\begin{tabular}{lp{7cm}ll}
+\begin{tabular}{lp{10cm}ll}
 \hline
-\textbf{\#} & \textbf{Constraint} & \textbf{Goal} & \textbf{Sub-goal} \\
+\textbf{\#} & \textbf{Constraint} & \textbf{Goal} \\
 \hline
-1  & Exceptions shown to the client must be sent to a sanitizer & Confidentiality & Reveal \\
+1  & Exceptions shown to the client must be sent to a sanitizer \checkmark & Confidentiality \\
 \rowcolor{RowColor}
-2  & Sensitive information must not bleed to components with lower security classification & Confidentiality & Reveal \\
-3  & Sensitive information must be encrypted before transmission \todo[inline]{Rename} & Confidentiality & Transmit \\
+2  & Sensitive information must not bleed to components with lower security classification \checkmark & Confidentiality \\
+3  & Sensitive information must be encrypted before transmission \checkmark & Confidentiality \\
 \rowcolor{RowColor}
-4  & Every outbound message must be sent from a single component responsible for transmission & Confidentiality & Transmit \\
-5  & Data must be stripped and validated before it passes a trust boundary \todo[inline]{Continue from here} & Confidentiality & Store \\
+4  & Every outbound message must be sent from a single component responsible for transmissions \checkmark & Confidentiality \\
+5  & Data that passes a trust boundary must first be sent to a component responsible for hiding or removing sensitive data \checkmark & Confidentiality \\
 \rowcolor{RowColor}
-6  & Secrets must not be exposed in log messages & Confidentiality & Store \\
-7  & The system must not provide functionality to decrypt secured log messages & Confidentiality & Store \\
+6  & Secrets must not be exposed in log messages \checkmark & Confidentiality \\
+7  & The system must not provide functionality to decrypt secured log messages \checkmark & Confidentiality \\
 \rowcolor{RowColor}
-8  & Erroneous output must not be propagated between components & Integrity & Fault tolerance \\
-9  & Input from a user is validated & Integrity & - \\
+8  & Output passing between components must be validated against its specification & Integrity \\
+9  & Input from a user must pass through a component validating the data \checkmark & Integrity \\
 \rowcolor{RowColor}
-10 & The user never accesses the session object & Integrity & - \\
-11 & The system has checkpoints that can be restored & Availability & Recoverability \\
+10 & The session object must not be accessible to the user \checkmark & Integrity \\
+11 & Components must store its state as restorable checkpoints \checkmark & Availability \\
 \rowcolor{RowColor}
-12 & Allocation of resources is limited or throttled & Availability & Resource usage \\
-13 & The system has a single point of access & Accountability & - \\
+12 & Spawning of threads must be limited or throttled \checkmark & Availability \\
+13 & The system must not have multiple points of access \checkmark & Accountability \\
 \rowcolor{RowColor}
-14 & There is at least one checkpoint initialized for both tasks: authentication and authorization & Accountability & - \\
-15 & All security events are logged & Accountability & Auditing \\
+14 & At least one checkpoint must be initialized after successful authentication and authorization \checkmark & Accountability \\
+15 & Methods related to security events must call the logger \checkmark & Accountability \\
 \rowcolor{RowColor}
-16 & Authentication is enforced at a central point of the system & Accountability & Authentication \\
-17 & Authorization is enforced at a central point of the system & Accountability & Authorization \\
-\rowcolor{RowColor}
-18 & Security relevant log messages must be secured & Accountability & Non-repudiation \\
+16 & Authentication and authorization must each be enforced in a single component \checkmark & Accountability \\
+17 & Security relevant log messages must be encrypted and immutable & Accountability \\
 \hline
 \end{tabular}
 \caption{Security constraints and their related CIAA goals.}
@@ -79,17 +80,17 @@ As explained in Section~\ref{sec:limitations}, the aim is not to demonstrate the
 % * which source it comes from (literature)
 % * maybe describing a security attack scenario that this constraint aims to avoid
 
-\subsection{Log all security events}
+\subsection{Log all security events} \todo{Marcus}
 
-\subsection{Enforce authentication at single point}
+\subsection{Enforce authentication at single point} \todo{Marcus}
 
-\subsection{Messages are sent from central point}
+\subsection{Messages are sent from central point} \todo{Marcus}
 
-\subsection{User input is validated}
+\subsection{User input is validated}  \todo{Marcus/ Patrik}
 
-\subsection{Usage of resources is restricted}
+\subsection{Usage of resources is restricted} \todo{Patrik}
 
-\subsection{Sensitive information must stay within trust boundary}
+\subsection{Sensitive information must stay within trust boundary}\todo{Patrik}
 
-\subsection{Secrets must not be exposed in log messages}
+\subsection{Secrets must not be exposed in log messages}\todo{Patrik}
 
