@@ -16,7 +16,7 @@ The processed collection of security measures can be seen in Table~\ref{tab:all_
 \begin{table}
 \begin{tabular}{lp{10cm}ll}
 \hline
-\textbf{\#} & \textbf{Constraint} & \textbf{Goal} \\
+\textbf{ID} & \textbf{Constraint} & \textbf{Goal} \\
 \hline
 1  & Exceptions shown to the client must be sent to a sanitizer \checkmark & Confidentiality \\
 \rowcolor{RowColor}
@@ -57,16 +57,16 @@ As explained in Section~\ref{sec:limitations}, the aim is not to demonstrate the
 \begin{tabular}{llp{11cm}}
 \hline
 \textbf{\#} & \textbf{ID in 4.1} & \textbf{Constraint} \\
-1 & 15 & Security events are logged with appropriate information\\
+1 & 15 & Methods related to security events must call the logger\\
 \rowcolor{RowColor}
-2 & 16,17 & Enforce authentication/ authorization at a single point in the system\\
-3 & 4 & Every outbound message is sent from a central point of the system\\
+2 & 16 & Authentication and authorization must each be enforced in a single component\\
+3 & 4 & Every outbound message must be sent from a single component responsible for transmissions\\
 \rowcolor{RowColor}
-4 & 9 & Input from a user is validated\\
-5 & 12 & Allocation of resources is limited or throttled\\
+4 & 9 & Input from a user must pass through a component validating the data\\
+5 & 12 & Spawning of threads must be limited or throttled\\
 \rowcolor{RowColor}
-6 & 2 & Do not allow sensitive information to bleed to other components\\
-7 & 6 & Do not log secrets\\
+6 & 2 & Sensitive information must not bleed to components with lower security classification\\
+7 & 6 & Secrets must not be exposed in log messages\\
 \hline
 \end{tabular}
 \caption{Constraints that have been selected for enforcement.}
@@ -80,17 +80,80 @@ As explained in Section~\ref{sec:limitations}, the aim is not to demonstrate the
 % * which source it comes from (literature)
 % * maybe describing a security attack scenario that this constraint aims to avoid
 
-\subsection{Log all security events} \todo{Marcus}
+\subsection{Log all security events \checkmark} 
 
-\subsection{Enforce authentication at single point} \todo{Marcus}
+\textbf{Description:} In any system, several components either directly change or process data, which represents the system's asset, or indirectly by invoking other components to act on its behalf. In either case, the request to perform a particular action originates from an actor (user or external process) who should later be held accountable.  As a consequence, the system should log a security event before performing an action that could breach the specified security policies. Although the term security event has become somewhat ambiguous, the definition used in the context of this report comes from the SANS Institute: "An event is an observable occurrence in an information system that actually happened at some point in time." \footnote{https://www.sans.org/reading-room/whitepapers/incident/events-incidents-646}
 
-\subsection{Messages are sent from central point} \todo{Marcus}
+\textbf{Typical enforcement:} The usage of the \textit{audit interceptor} forces all requests from a user to first be sent to a component responsible for logging the request and later forwarding it to the intended target. 
 
-\subsection{User input is validated}  \todo{Marcus/ Patrik}
+\textbf{Sources:} CAWE 223/778, Jasser rule 5, Security pattern \textit{Audit interceptor}
 
-\subsection{Usage of resources is restricted} \todo{Patrik}
+\textbf{Attack scenario:} A typical scenario where the logging of security events increases a system's resilience to attacks is that of failed login attempts. An attacker may try and guess the credentials of a user by employing a brute-force attack. During the attack, the attacker performs several failed attempts at guessing the credentials, (hopefully) causing the system to either increase the time between repeated attempts or lock the account entirely though with the added effect of decreased availability for the intended user. Although this type of defense temporarily hinders the attacker, a log of failed attempts facilities the detection of malicious actors and enables administrators to impose more permanent measures. 
+
+\subsection{Enforce AuthN/AuthZ at single point}
+ 
+ \textbf{Description:} Any system that has more than one user needs to incorporate functionality for authentication (AuthN), as well as authorization (AuthZ) if the privileges between users differ. The difficulty in complex systems where components handle different functionality, thus receiving separate requests and creating multiple entry points, is the fact that the components may have been designed to use various mechanisms of authentication. Instead, AuthN/AuthZ should be delegated to a single component to ensure consistent behavior across all entry points. 
+ 
+ \textbf{Typical enforcement:} Designing a single component responsible for AuthN/AuthZ mechanisms across several points of entry. Several third-party libraries exist that provide such features as well as language extending specifications such as Jakarta EE (formerly J2EE). 
+ 
+ \textbf{Sources:} CAWE 288/420/592, Security pattern \textit{Authentication enforcer} and \textit{Authorization enforcer}
+ 
+ \textbf{Attack scenario:} In system where the following conditions are true:
+ 
+ \begin{itemize}
+     \item There are multiple points of entry; 
+     \item There are different mechanisms to provide AuthN/AuthZ, some having a greater certainty that a user is \todo[inline]{add word for what is greater}
+     \item and all points of entry share the same session object
+ \end{itemize}
+ 
+  An attacker may try and gain access to the least trusted point of entry and later use granted authority to access services or operation normally requiring a greater level of trust.
+
+\subsection{Messages are sent from a central point} \todo{Marcus}
+
+\textbf{Description:} 
+ 
+ \textbf{Typical enforcement:}
+ 
+ \textbf{Sources:}
+ 
+ \textbf{Attack scenario:}
+
+\subsection{Validate user input}  \todo{Marcus/ Patrik}
+
+\textbf{Description:} 
+ 
+ \textbf{Typical enforcement:}
+ 
+ \textbf{Sources:}
+ 
+ \textbf{Attack scenario:}
+
+\subsection{Restrict thread spawning} \todo{Patrik}
+
+\textbf{Description:} Computers have finite resources in terms of memory, CPU time and network bandwidth. Systems should be designed with this in mind, employing measures to avoid exhausting the computer's resources. This constraint limits the number of threads that can be spawned on behalf of actors, which could otherwise lead to exhaustion of the CPU.
+ 
+ \textbf{Typical enforcement:} Dispatching tasks to a pool of worker threads that is not allowed to grow beyond a fixed size. Moreover, various mechanisms are employed to throttle or limit requests such that a single actor cannot occupy all of the allotted threads.
+ 
+ \textbf{Sources:} CAWE 770
+ 
+ \textbf{Attack scenario:} An attacker may initiate many requests that are each handled by the system in a separate thread. By initiating requests at a higher rate than the server is able to process them, the resources at the server are eventually exhausted. This leads to a denial of service to any legitimate actors attempting to access the system.
 
 \subsection{Sensitive information must stay within trust boundary}\todo{Patrik}
 
+\textbf{Description:} 
+ 
+ \textbf{Typical enforcement:}
+ 
+ \textbf{Sources:}
+ 
+ \textbf{Attack scenario:}
+
 \subsection{Secrets must not be exposed in log messages}\todo{Patrik}
 
+\textbf{Description:} Many systems handle secrets that should never be exposed to unauthorized actors. A password is perhaps the most common example of such a secret. While great care can be taken on the design level to ensure that secrets are either encrypted or not stored at all, they may still be exposed unintentionally through log messages. In order to prevent such exposure, messages that are sent to the logger must not be derived from secrets.
+
+ \textbf{Typical enforcement:} \todo{approaches using information flow analysis?}
+ 
+ \textbf{Sources:} CAWE 359/532, Jasser rule 13
+ 
+ \textbf{Attack scenario:} Log messages may be accessible to actors who are not otherwise granted access to the secrets directly. By exploiting an unintentional leak of secrets into the log messages, an attacker could systematically extract these without facing the intended restrictions.
