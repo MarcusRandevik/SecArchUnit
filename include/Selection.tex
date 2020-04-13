@@ -82,7 +82,7 @@ As explained in Section~\ref{sec:limitations}, the aim is not to demonstrate the
 
 \subsection{Log all security events \checkmark} 
 
-\textbf{Description:} In any system, several components either directly change or process data, which represents the system's asset, or indirectly by invoking other components to act on its behalf. In either case, the request to perform a particular action originates from an actor (user or external process) who should later be held accountable.  As a consequence, the system should log a security event before performing an action that could breach the specified security policies. Although the term security event has become somewhat ambiguous, the definition used in the context of this report comes from the SANS Institute: "An event is an observable occurrence in an information system that actually happened at some point in time." \footnote{https://www.sans.org/reading-room/whitepapers/incident/events-incidents-646}
+\textbf{Description:} In any system, several components either directly change or process data, which represents the system's asset, or indirectly by invoking other components to act on its behalf. In either case, the request to perform a particular action originates from an actor (user or external process) who should later be held accountable.  As a consequence, the system should log a security event before performing an action that could breach the specified security policies. Although the term security event has become somewhat ambiguous, the definition used in the context of this report comes from the SANS Institute: "An event is an observable occurrence in an information system that actually happened at some point in time." \footnote{\url{https://www.sans.org/reading-room/whitepapers/incident/events-incidents-646}}
 
 \textbf{Typical enforcement:} The usage of the \textit{audit interceptor} forces all requests from a user to first be sent to a component responsible for logging the request and later forwarding it to the intended target. 
 
@@ -144,16 +144,16 @@ As explained in Section~\ref{sec:limitations}, the aim is not to demonstrate the
  
  \textbf{Typical enforcement:}
  
- \textbf{Sources:}
+ \textbf{Sources:} CAWE 488
  
  \textbf{Attack scenario:}
 
 \subsection{Secrets must not be exposed in log messages}\todo{Patrik}
 
-\textbf{Description:} Many systems handle secrets that should never be exposed to unauthorized actors. A password is perhaps the most common example of such a secret. While great care can be taken on the design level to ensure that secrets are either encrypted or not stored at all, they may still be exposed unintentionally through log messages. In order to prevent such exposure, messages that are sent to the logger must not be derived from secrets.
+\textbf{Description:} Many systems handle secrets that should never touch permanent storage. A password is perhaps the most common example of such a secret. While great care can be taken on the design level to ensure that these secrets are not stored to disk, they may still be exposed unintentionally through log messages. In order to prevent such exposure, messages that are sent to the logger must not be derived from secrets.
 
- \textbf{Typical enforcement:} \todo{approaches using information flow analysis?}
+ \textbf{Typical enforcement:} A typical approach is to manually review log statements and ensure that they do not expose any secrets. As for automated enforcement, various information flow analysis tools, like JOANA\footnote{\url{https://pp.ipd.kit.edu/projects/joana/}}, can be employed to detect these types of information leaks within a system.
  
  \textbf{Sources:} CAWE 359/532, Jasser rule 13
  
- \textbf{Attack scenario:} Log messages may be accessible to actors who are not otherwise granted access to the secrets directly. By exploiting an unintentional leak of secrets into the log messages, an attacker could systematically extract these without facing the intended restrictions.
+ \textbf{Attack scenario:} Log messages may be accessible to actors who are not otherwise granted direct access to the secrets. By exploiting an unintentional leak of secrets into the log messages, an attacker could systematically extract these without facing the intended restrictions.
