@@ -6,6 +6,10 @@ import com.tngtech.archunit.core.domain.*;
 import com.tngtech.archunit.lang.*;
 
 import java.lang.annotation.Annotation;
+import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.tngtech.archunit.core.domain.AccessTarget.Predicates.declaredIn;
 import static com.tngtech.archunit.core.domain.JavaAccess.Predicates.targetOwner;
@@ -67,7 +71,7 @@ public class SecArchUnit {
 
     public static ArchRule doNotLogSecrets(DescribedPredicate<? super JavaClass> loggerDescriptor) {
         return noClasses()
-                .should().callMethodWhere(targetOwner(loggerDescriptor).and(passArgument(annotatedWith(Secret.class))));
+                .should().callMethodWhere(targetOwner(loggerDescriptor).and(passSecretArgument()));
     }
 
     private static DescribedPredicate<AccessTarget> codeUnitOrClassAnnotatedWith(Class<? extends Annotation> annotation) {
@@ -111,16 +115,52 @@ public class SecArchUnit {
         };
     }
 
-    private static DescribedPredicate<JavaAccess<?>> passArgument(DescribedPredicate<? super JavaClass> argumentDescriptor) {
-        return new DescribedPredicate<>("pass argument whose class is " + argumentDescriptor.getDescription()) {
+    private static DescribedPredicate<JavaAccess<?>> passSecretArgument() {
+        return new DescribedPredicate<>("pass a secret as argument") {
             @Override
             public boolean apply(JavaAccess<?> access) {
-                boolean passesArgument = access.getArgumentHints().stream()
-                        .anyMatch(hint -> argumentDescriptor.apply(hint.getJavaClass()));
+                boolean passesSecretArgument = recurseOnHints(access.getArgumentHints())
+                        .anyMatch(hint -> hint.getJavaClass().isAnnotatedWith(Secret.class)
+                                || hint.getMemberOrigin() != null && hint.getMemberOrigin().isAnnotatedWith(Secret.class));
 
-                return passesArgument;
+                return passesSecretArgument;
             }
         };
+    }
+
+    private static Stream<Hint> recurseOnHints(Collection<Hint> hints) {
+        return recurseOnHints(hints, 5).distinct();
+    }
+
+    private static Stream<Hint> recurseOnHints(Collection<Hint> hints, int depth) {
+        if (depth == 0) {
+            return hints.stream();
+        }
+
+        // Hints with an originating member
+        Set<JavaMember> hintOrigins = hints.stream()
+                .filter(hint -> hint.getMemberOrigin() != null)
+                .map(hint -> hint.getMemberOrigin())
+                .collect(Collectors.toSet());
+
+        // Hints flowing into a member
+        Stream<Hint> hintsFlowingIntoMembers = hintOrigins.stream()
+                .flatMap(hint -> hint.getAccessesToSelf().stream())
+                .flatMap(access -> access.getArgumentHints().stream());
+        // ^ This assumes that all arguments that flowed into a method also flow into the method's return value...
+
+        // Hints flowing out of a method
+        Stream<Hint> hintsFlowingOutOfMethods = hintOrigins.stream()
+                .filter(member -> member instanceof JavaMethod)
+                .map(member -> (JavaMethod) member)
+                .flatMap(method -> method.getReturnValueHints().stream());
+
+        // Collect hints from this level
+        Set<Hint> recursedHints = Stream.concat(hintsFlowingIntoMembers, hintsFlowingOutOfMethods)
+                .collect(Collectors.toSet());
+
+        // Concatenate this level of hints with the next recursion level
+        return Stream.concat(hints.stream(), recurseOnHints(recursedHints, depth - 1));
     }
 
     private static ArchCondition<JavaCodeUnit> callTarget(DescribedPredicate<AccessTarget> targetDescriptor) {
