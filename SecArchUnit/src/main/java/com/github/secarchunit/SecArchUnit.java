@@ -59,19 +59,19 @@ public class SecArchUnit {
     public static ArchRule limitResourceAllocation() {
         return noClasses()
                 .that().areNotAnnotatedWith(ResourceRestriction.class)
-                .should().callMethodWhere(aThreadIsStarted())
-                .orShould().callMethodWhere(aProcessIsStarted());
+                .should().callMethodWhere(aThreadIsStarted)
+                .orShould().callMethodWhere(aProcessIsStarted);
     }
 
     public static ArchRule doNotBleedAssetsBetweenComponents() {
         return fields()
                 .that().areAnnotatedWith(Asset.class)
-                .should(notBleedToInsecureComponents());
+                .should(notBleedToInsecureComponents);
     }
 
     public static ArchRule doNotLogSecrets(DescribedPredicate<? super JavaClass> loggerDescriptor) {
         return noClasses()
-                .should().callMethodWhere(targetOwner(loggerDescriptor).and(passSecretArgument()));
+                .should().callMethodWhere(targetOwner(loggerDescriptor).and(passSecretArgument));
     }
 
     private static DescribedPredicate<AccessTarget> codeUnitOrClassAnnotatedWith(Class<? extends Annotation> annotation) {
@@ -85,48 +85,45 @@ public class SecArchUnit {
         };
     }
 
-    private static DescribedPredicate<JavaMethodCall> aThreadIsStarted() {
-        return new DescribedPredicate<>("a thread is started") {
-            @Override
-            public boolean apply(JavaMethodCall call) {
-                AccessTarget.MethodCallTarget target = call.getTarget();
+    private static DescribedPredicate<JavaMethodCall> aThreadIsStarted =
+            new DescribedPredicate<>("a thread is started") {
+                @Override
+                public boolean apply(JavaMethodCall call) {
+                    AccessTarget.MethodCallTarget target = call.getTarget();
 
-                boolean isRestricted = call.getOrigin().isAnnotatedWith(ResourceRestriction.class);
-                boolean startsAThread = target.getOwner().isAssignableTo(Thread.class) && target.getName().equals("start");
+                    boolean isRestricted = call.getOrigin().isAnnotatedWith(ResourceRestriction.class);
+                    boolean startsAThread = target.getOwner().isAssignableTo(Thread.class) && target.getName().equals("start");
 
-                return !isRestricted && startsAThread;
-            }
-        };
-    }
+                    return !isRestricted && startsAThread;
+                }
+            };
 
-    private static DescribedPredicate<JavaMethodCall> aProcessIsStarted() {
-        return new DescribedPredicate<>("a process is started") {
-            @Override
-            public boolean apply(JavaMethodCall call) {
-                AccessTarget.MethodCallTarget target = call.getTarget();
+    private static DescribedPredicate<JavaMethodCall> aProcessIsStarted =
+            new DescribedPredicate<>("a process is started") {
+                @Override
+                public boolean apply(JavaMethodCall call) {
+                    AccessTarget.MethodCallTarget target = call.getTarget();
 
-                boolean isRestricted = call.getOrigin().isAnnotatedWith(ResourceRestriction.class);
-                boolean startsAProcess =
-                        target.getOwner().isEquivalentTo(ProcessBuilder.class) && target.getName().equals("start")
-                                || target.getOwner().isEquivalentTo(Runtime.class) && target.getName().equals("exec");
+                    boolean isRestricted = call.getOrigin().isAnnotatedWith(ResourceRestriction.class);
+                    boolean startsAProcess =
+                            target.getOwner().isEquivalentTo(ProcessBuilder.class) && target.getName().equals("start")
+                                    || target.getOwner().isEquivalentTo(Runtime.class) && target.getName().equals("exec");
 
-                return !isRestricted && startsAProcess;
-            }
-        };
-    }
+                    return !isRestricted && startsAProcess;
+                }
+            };
 
-    private static DescribedPredicate<JavaAccess<?>> passSecretArgument() {
-        return new DescribedPredicate<>("pass a secret as argument") {
-            @Override
-            public boolean apply(JavaAccess<?> access) {
-                boolean passesSecretArgument = recurseOnHints(access.getArgumentHints())
-                        .anyMatch(hint -> hint.getJavaClass().isAnnotatedWith(Secret.class)
-                                || hint.getMemberOrigin() != null && hint.getMemberOrigin().isAnnotatedWith(Secret.class));
+    private static DescribedPredicate<JavaAccess<?>> passSecretArgument =
+            new DescribedPredicate<>("pass a secret as argument") {
+                @Override
+                public boolean apply(JavaAccess<?> access) {
+                    boolean passesSecretArgument = recurseOnHints(access.getArgumentHints())
+                            .anyMatch(hint -> hint.getJavaClass().isAnnotatedWith(Secret.class)
+                                    || hint.getMemberOrigin() != null && hint.getMemberOrigin().isAnnotatedWith(Secret.class));
 
-                return passesSecretArgument;
-            }
-        };
-    }
+                    return passesSecretArgument;
+                }
+            };
 
     private static Stream<Hint> recurseOnHints(Collection<Hint> hints) {
         return recurseOnHints(hints, 5).distinct();
@@ -182,31 +179,30 @@ public class SecArchUnit {
         };
     }
 
-    private static ArchCondition<JavaField> notBleedToInsecureComponents() {
-        return new ArchCondition<>("not bleed to insecure components") {
-            @Override
-            public void check(JavaField field, ConditionEvents events) {
-                // Direct access
-                field.getAccessesToSelf().stream()
-                        .filter(access -> !access.getOriginOwner().isAnnotatedWith(AssetHandler.class))
-                        .forEach(offendingFieldAccess -> {
-                            String message = offendingFieldAccess + ": access to asset " + field.getName();
-                            events.add(SimpleConditionEvent.violated(offendingFieldAccess, message));
-                        });
+    private static ArchCondition<JavaField> notBleedToInsecureComponents =
+            new ArchCondition<>("not bleed to insecure components") {
+                @Override
+                public void check(JavaField field, ConditionEvents events) {
+                    // Direct access
+                    field.getAccessesToSelf().stream()
+                            .filter(access -> !access.getOriginOwner().isAnnotatedWith(AssetHandler.class))
+                            .forEach(offendingFieldAccess -> {
+                                String message = offendingFieldAccess + ": access to asset " + field.getName();
+                                events.add(SimpleConditionEvent.violated(offendingFieldAccess, message));
+                            });
 
-                // Access via getter method
-                field.getAccessesToSelf().stream()
-                        .filter(access -> access.getOrigin() instanceof JavaMethod)
-                        .map(access -> (JavaMethod) access.getOrigin())
-                        .filter(method -> method.getReturnValueHints().stream().anyMatch(hint -> field.equals(hint.getMemberOrigin())))
-                        .map(method -> method.getCallsOfSelf())
-                        .flatMap(calls -> calls.stream())
-                        .filter(call -> !call.getOriginOwner().isAnnotatedWith(AssetHandler.class))
-                        .forEach(offendingMethodCall -> {
-                            String message = offendingMethodCall + ": access to asset " + field.getName() + " (via getter method)";
-                            events.add(SimpleConditionEvent.violated(offendingMethodCall, message));
-                        });
-            }
-        };
-    }
+                    // Access via getter method
+                    field.getAccessesToSelf().stream()
+                            .filter(access -> access.getOrigin() instanceof JavaMethod)
+                            .map(access -> (JavaMethod) access.getOrigin())
+                            .filter(method -> method.getReturnValueHints().stream().anyMatch(hint -> field.equals(hint.getMemberOrigin())))
+                            .map(method -> method.getCallsOfSelf())
+                            .flatMap(calls -> calls.stream())
+                            .filter(call -> !call.getOriginOwner().isAnnotatedWith(AssetHandler.class))
+                            .forEach(offendingMethodCall -> {
+                                String message = offendingMethodCall + ": access to asset " + field.getName() + " (via getter method)";
+                                events.add(SimpleConditionEvent.violated(offendingMethodCall, message));
+                            });
+                }
+            };
 }
