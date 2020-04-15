@@ -53,7 +53,7 @@ public class SecArchUnit {
     public static ArchRule validateUserInput() {
         return codeUnits()
                 .that().areAnnotatedWith(UserInput.class)
-                .should(callTarget(codeUnitOrClassAnnotatedWith(InputValidator.class)));
+                .should(performDirectOrIndirectValidation);
     }
 
     public static ArchRule limitResourceAllocation() {
@@ -74,16 +74,37 @@ public class SecArchUnit {
                 .should().callMethodWhere(targetOwner(loggerDescriptor).and(passSecretArgument));
     }
 
-    private static DescribedPredicate<AccessTarget> codeUnitOrClassAnnotatedWith(Class<? extends Annotation> annotation) {
-        String description = "class or method annotated with @{}".format(annotation.getSimpleName());
+    private static ArchCondition<JavaCodeUnit> performDirectOrIndirectValidation =
+            new ArchCondition<>("perform direct or indirect validation") {
+                @Override
+                public void check(JavaCodeUnit codeUnit, ConditionEvents events) {
+                    if (codeUnit.isAnnotatedWith(InputValidator.class)) {
+                        // Validation performed by same code unit => condition passed
+                        return;
+                    }
 
-        return new DescribedPredicate<AccessTarget>(description) {
-            @Override
-            public boolean apply(AccessTarget target) {
-                return target.isAnnotatedWith(annotation) || target.getOwner().isAnnotatedWith(annotation);
-            }
-        };
-    }
+                    boolean callsValidator = codeUnit.getCallsFromSelf().stream()
+                            .map(call -> call.getTarget())
+                            .anyMatch(target -> target.isAnnotatedWith(InputValidator.class)
+                                    || target.getOwner().isAnnotatedWith(InputValidator.class));
+                    if (callsValidator) {
+                        // Contains at least one call to a validator => condition passed
+                        return;
+                    }
+
+                    boolean onlyCalledByValidators = codeUnit.getAccessesToSelf().stream()
+                            .map(call -> call.getOrigin())
+                            .allMatch(origin -> origin.isAnnotatedWith(InputValidator.class)
+                                    || origin.getOwner().isAnnotatedWith(InputValidator.class));
+                    if (onlyCalledByValidators) {
+                        // Is only called by validators => condition passed
+                        return;
+                    }
+
+                    String message = codeUnit.getFullName() + " takes user input that is never validated";
+                    events.add(SimpleConditionEvent.violated(codeUnit, message));
+                }
+            };
 
     private static DescribedPredicate<JavaMethodCall> aThreadIsStarted =
             new DescribedPredicate<>("a thread is started") {
