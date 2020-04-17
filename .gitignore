@@ -116,3 +116,7 @@ buildNumber.properties
 .flattened-pom.xml
 
 # End of https://www.gitignore.io/api/maven,intellij
+
+Validation/ATMsimulator/.scannerwork/
+
+Validation/sonarcustomrules/.idea/
