@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 
 import static com.tngtech.archunit.core.domain.AccessTarget.Predicates.declaredIn;
 import static com.tngtech.archunit.core.domain.JavaAccess.Predicates.targetOwner;
+import static com.tngtech.archunit.core.domain.JavaClass.Predicates.belongToAnyOf;
 import static com.tngtech.archunit.core.domain.properties.CanBeAnnotated.Predicates.annotatedWith;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.*;
 
@@ -47,7 +48,7 @@ public class SecArchUnit {
     public static ArchRule sendOutboundMessagesFromCentralPoint(Class<?> sendingPoint, DescribedPredicate<? super JavaClass> senderDescriptor) {
         return classes()
                 .that(senderDescriptor)
-                .should().onlyBeAccessed().byClassesThat().belongToAnyOf(sendingPoint);
+                .should().onlyBeAccessed().byClassesThat(belongToAnyOf(sendingPoint).or(senderDescriptor));
     }
 
     public static ArchRule validateUserInput() {
@@ -151,7 +152,7 @@ public class SecArchUnit {
     }
 
     private static Stream<Hint> recurseOnHints(Collection<Hint> hints, int depth) {
-        if (depth == 0) {
+        if (depth == 0 || hints.isEmpty()) {
             return hints.stream();
         }
 
