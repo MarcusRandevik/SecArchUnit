@@ -150,7 +150,7 @@ Communication with external actors, whether they are a client
 
 \subsection{Secrets must not be exposed in log messages}\todo{Patrik}
 
-\textbf{Description:} Many systems handle secrets that should never touch permanent storage. A password is perhaps the most common example of such a secret. While great care can be taken on the design level to ensure that these secrets are not stored to disk, they may still be exposed unintentionally through log messages. In order to prevent such exposure, messages that are sent to the logger must not be derived from secrets.
+\textbf{Description:} Many systems handle secrets that should never touch permanent storage. A password is perhaps the most common example of such a secret. While great care can be taken on the design level to ensure that these secrets are not stored to disk, they may still be exposed unintentionally through log messages. In order to prevent such exposure, messages that are sent to the logger must not contain secrets.
 
  \textbf{Typical enforcement:} A typical approach is to manually review log statements and ensure that they do not expose any secrets. As for automated enforcement, various information flow analysis tools, like JOANA\footnote{\url{https://pp.ipd.kit.edu/projects/joana/}}, can be employed to detect these types of information leaks within a system.
  

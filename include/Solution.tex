@@ -1,12 +1,12 @@
 \chapter{Enforcing Constraints}
 
-This chapter explains how the constraints can be expressed and validated with the tool. The constraints are divided into three distinct categories. The first category contains the constraints that are possible to express in ArchUnit as-is. The second category describes constraints that are enforceable with the help of additional information in source code. The third and final category details constraints that require an extension of ArchUnit to be possible to enforce.
+This chapter explains how the constraints are expressed and validated with the tool. The constraints are divided into three distinct categories. The first category contains the constraints that are possible to express in ArchUnit as-is. The second category describes constraints that are enforceable with the help of additional information in source code. The third and final category details constraints that require an extension of ArchUnit to be possible to enforce.
 
 \section{Support in ArchUnit as-is}
 
 ArchUnit contains an extensive vocabulary for expressing typical architectural constraints. These constraints are typically composed of three parts. The first part indicates the type of Java construct that should be inspected. These constructs include classes, methods, fields and constructors. The second part contains a predicate that selects a subset of these constructs. The third part defines the condition that must hold true for all the selected constructs.
 
-An example of a rule defined solely using this standard vocabulary can be seen in Listing \ref{lst:standard_vocabulary}, where each of the three aforementioned parts of the constraint has been separated into their own line. The rule is a simple example of complete mediation, where some internal classes must only be accessed through a mediator.
+An example of a rule defined solely using this standard vocabulary can be seen in Listing~\ref{lst:standard_vocabulary}, where each of the three aforementioned parts of the constraint has been separated into their own line. The rule is a simple example of complete mediation, where some internal classes must only be accessed through a mediator.
 
 \begin{lstlisting}[caption={Example of a rule that is expressed with the standard vocabulary.}, captionpos=b, label=lst:standard_vocabulary, numbers=left]
 ArchRule rule = classes()
@@ -21,14 +21,35 @@ In cases where this vocabulary is not sufficient for expressing a constraint, th
 \todo{Show rule definition for each constraint}
 \todo{Show how each constraint is used in our toy app}
 
-\subsubsection*{Log all security events with relevant information}
-This constraint is expressed with the assumption that there is a central class through which security related actions are performed. Any publicly accessible method in this class must contain at least one call to the logging facility. Both the class that represents the secure service facade and the class responsible for logging are expressed in the constraint itself, meaning there is no need for additional information in the source code.
+\subsubsection*{Log all security events}
+This constraint is expressed with the assumption that there are services, in the form of one or several classes, that are responsible for performing security related events. Any publicly accessible method in these services must contain at least one call to the logging facility.
 
-\subsubsection*{Enforce authentication/ authorization at a single point in the system}
+As seen in Listing~\ref{lst:logging}, the predicate that selects the security services, as well as the class responsible for logging, are passed as arguments to the architectural rule. This leaves no need for additional information in the source code.
+
+\begin{lstlisting}[caption={Rule definition for constraint 1.}, captionpos=b, label=lst:logging, numbers=left]
+ArchRule logSecurityEvents(
+        DescribedPredicate<? super JavaClass> securityServicesDescriptor,
+        Class<?> logger) {
+    return methods()
+        .that().haveModifier(JavaModifier.PUBLIC)
+        .and().areDeclaredInClassesThat(securityServicesDescriptor)
+        .should(callTarget(declaredIn(logger)));
+}
+\end{lstlisting}
+
+\subsubsection*{Enforce AuthN/AuthZ at single point}
 ...
+
+\begin{lstlisting}[caption={Rule definition for constraint 2.}, captionpos=b, label=lst:central_auth, numbers=left]
+
+\end{lstlisting}
 
 \subsubsection*{Every outbound message is sent from a central point of the system}
 ...
+
+\begin{lstlisting}[caption={Rule definition for constraint 3.}, captionpos=b, label=lst:central_sending, numbers=left]
+
+\end{lstlisting}
 
 \section{With Additional Information in Code}
 
@@ -56,9 +77,9 @@ The marking is done with the help of an annotation, either on the relevant metho
 
 \section{With Extensions to ArchUnit}
 
-In the current ArchUnit API, a rule that aims to constrain access to a method (or field) must be expressed in terms of the type signatures of the source and target methods. Some of our constraints require knowledge about the type signature of the object that is being passed as a parameter. This is a non-issue when fields and method parameters are of the same types as the objects being passed to them. However, in cases where a method signature accepts a "more general" type, such as an \texttt{Object}, there is no way for ArchUnit to constrain the types of the objects that are actually being passed as parameters.
+In the current ArchUnit API, a rule that aims to constrain access to a method (or field) must be expressed in terms of the type signatures of the source and target methods. Some of our constraints require knowledge about the type signature of the object that is being passed as a parameter. This is a non-issue when fields and method parameters are of the same types as the objects being passed to them. However, in cases where a method signature accepts a "more general" type, such as an \texttt{Object}, there is no way for ArchUnit to constrain the types of the objects that are actually being passed as arguments.
 
-ArchUnit builds its representation of the architecture using ASM\footnote{https://asm.ow2.io/}, a Java bytecode analysis framework. This framework contains functionality for keeping track of the stack and local variables while analyzing the instructions of a method. With knowledge of the type signatures of the references on the stack at the time of a method call or field assignment, it is possible to determine the type signatures of objects passed as parameters or an object being assigned to a field. Our extension provides this additional information in ArchUnit's representation of accesses to fields and methods, which the rule definitions can then make use of.
+ArchUnit builds its representation of the architecture using ASM\footnote{\url{https://asm.ow2.io/}}, a Java bytecode analysis framework. This framework contains functionality for keeping track of the stack and local variables while analyzing the instructions of a method. With knowledge of the type signatures of the references on the stack at the time of a method call or field assignment, it is possible to determine the type signatures of objects passed as method arguments or an object being assigned to a field. Our extension provides this additional information in ArchUnit's representation of accesses to fields and methods, which the rule definitions can then make use of.
 
 \todo{Specific example that requires an extension}
 
