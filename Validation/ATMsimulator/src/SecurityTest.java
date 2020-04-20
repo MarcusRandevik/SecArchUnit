@@ -44,8 +44,8 @@ public class SecurityTest {
 	@ArchTest
     public static final ArchRule sendMessagesFromCentralPoint =
     		SecArchUnit.sendOutboundMessagesFromCentralPoint(
-		    		NetworkToBank.class,
-		    		JavaClass.Predicates.belongToAnyOf(Transaction.class));
+    				Transaction.class,
+		    		JavaClass.Predicates.belongToAnyOf(NetworkToBank.class));
     
 	// -- ANNOTATION CONSTRAINTS --
 
