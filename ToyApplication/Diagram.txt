@@ -49,4 +49,20 @@ class OutboundMessageSanitizer {
 
 OutboundMessageSanitizer --> HttpResponse
 
+class StatusSanitizer {
+    + String sanitizeStatusMessage(String statusMessage)
+}
+
+UserService ..> StatusSanitizer
+
+class RequestHandler {
+    + void handle(HttpRequest request, HttpResponse response)
+}
+
+RequestHandler ..> Thread
+RequestHandler ..> UserService
+RequestHandler ..> OutboundMessageSanitizer
+RequestHandler ..> HttpResponse
+RequestHandler ..> UserLoginRequest
+
 @enduml
