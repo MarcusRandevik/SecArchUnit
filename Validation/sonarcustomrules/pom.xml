@@ -23,6 +23,14 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.github.secarchunit</groupId>
+            <artifactId>secarchunit</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/../../SecArchUnit/target/secarchunit-1.0-SNAPSHOT.jar</systemPath>
+        </dependency>
+
+        <dependency>
             <groupId>org.sonarsource.sonarqube</groupId>
             <artifactId>sonar-plugin-api</artifactId>
             <version>${sonar.version}</version>
