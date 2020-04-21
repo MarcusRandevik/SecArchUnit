@@ -3,10 +3,7 @@ package customrules.checks;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
 import org.sonar.plugins.java.api.cfg.ControlFlowGraph;
-import org.sonar.plugins.java.api.tree.ClassTree;
-import org.sonar.plugins.java.api.tree.MethodInvocationTree;
-import org.sonar.plugins.java.api.tree.MethodTree;
-import org.sonar.plugins.java.api.tree.Tree;
+import org.sonar.plugins.java.api.tree.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -22,24 +19,22 @@ public class ValidateUserInputRule extends IssuableSubscriptionVisitor {
 
     @Override
     public List<Tree.Kind> nodesToVisit() {
-        return Collections.singletonList(Tree.Kind.METHOD_INVOCATION);
+        return Collections.singletonList(Tree.Kind.METHOD);
     }
 
     @Override
     public void visitNode(Tree tree) {
-        MethodInvocationTree methodInvocation = (MethodInvocationTree) tree;
+        MethodTree methodTree = (MethodTree) tree;
 
-        if (methodInvocation.symbol().metadata().isAnnotatedWith(USER_INPUT)) {
-            // Target method handles user input
-
-            // Check for in-line validation in target method
-            if (methodInvocation.symbol().metadata().isAnnotatedWith(INPUT_VALIDATOR)) {
+        // Check if this method deals with user input
+        if (methodTree.symbol().metadata().isAnnotatedWith(USER_INPUT)) {
+            // Check for in-line validation
+            if (methodTree.symbol().metadata().isAnnotatedWith(INPUT_VALIDATOR)) {
                 return;
             }
 
-            // Check for calls to validator in target method
-            MethodTree targetMethod = (MethodTree) methodInvocation.symbol().declaration();
-            for (ControlFlowGraph.Block block : targetMethod.cfg().blocks()) {
+            // Check for calls to validator
+            for (ControlFlowGraph.Block block : methodTree.cfg().blocks()) {
                 for (Tree blockTree : block.elements()) {
                     if (blockTree.is(Tree.Kind.METHOD_INVOCATION)) {
                         MethodInvocationTree mit = (MethodInvocationTree) blockTree;
@@ -50,32 +45,25 @@ public class ValidateUserInputRule extends IssuableSubscriptionVisitor {
                 }
             }
 
-            // Traverse tree to source method
-            Tree parent = methodInvocation.parent();
-            while (!(parent instanceof MethodTree)) {
-                parent = parent.parent();
+            // Check if all callers are marked as validators
+            boolean validatedInAllCallers = true;
+            for (IdentifierTree caller : methodTree.symbol().usages()) {
+                if (caller.symbol().metadata().isAnnotatedWith(INPUT_VALIDATOR)) {
+                    // Caller method is validator
+                    continue;
+                }
+
+                if (caller.symbol().enclosingClass().metadata().isAnnotatedWith(INPUT_VALIDATOR)) {
+                    // Caller class is validator
+                    continue;
+                }
+
+                validatedInAllCallers = false;
             }
 
-            // Check if source method is validator
-            MethodTree sourceMethod = (MethodTree) parent;
-            if (sourceMethod.symbol().metadata().isAnnotatedWith(INPUT_VALIDATOR)) {
-                // Source method is validator
-                return;
+            if (!validatedInAllCallers) {
+                reportIssue(methodTree, "User input must be validated");
             }
-
-            // Traverse tree to source class
-            while (!(parent instanceof ClassTree)) {
-                parent = parent.parent();
-            }
-
-            ClassTree sourceClass = (ClassTree) parent;
-            if (sourceClass.symbol().metadata().isAnnotatedWith(INPUT_VALIDATOR)) {
-                // Source class is validator
-                return;
-            }
-
-            // There is no validation
-            reportIssue(targetMethod, "User input must be validated");
         }
     }
 }
