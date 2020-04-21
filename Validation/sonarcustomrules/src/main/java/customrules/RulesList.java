@@ -1,6 +1,7 @@
 package customrules;
 
 import customrules.checks.LogSecurityEventsRule;
+import customrules.checks.ValidateUserInputRule;
 import org.sonar.plugins.java.api.JavaCheck;
 
 import java.util.*;
@@ -21,7 +22,10 @@ public final class RulesList {
 
 
     public static List<Class<? extends JavaCheck>> getJavaChecks() {
-        return Collections.unmodifiableList(Arrays.asList(LogSecurityEventsRule.class));
+        return Collections.unmodifiableList(Arrays.asList(
+                LogSecurityEventsRule.class,
+                ValidateUserInputRule.class
+        ));
     }
 
     public static List<Class<? extends JavaCheck>> getJavaTestChecks() {
