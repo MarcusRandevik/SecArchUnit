@@ -67,8 +67,8 @@ public class SecArchUnit {
     public static ArchRule limitResourceAllocation() {
         return noClasses()
                 .that().areNotAnnotatedWith(ResourceRestriction.class)
-                .should().callMethodWhere(MethodCallPredicates.aThreadIsStarted)
-                .orShould().callMethodWhere(MethodCallPredicates.aProcessIsStarted);
+                .should().callMethodWhere(MethodCallPredicates.aThreadIsStartedWithoutRestriction)
+                .orShould().callMethodWhere(MethodCallPredicates.aProcessIsStartedWithoutRestriction);
     }
 
     public static ArchRule doNotBleedAssetsBetweenComponents() {
@@ -97,7 +97,7 @@ public class SecArchUnit {
     }
 
     private static class MethodCallPredicates {
-        private static DescribedPredicate<JavaMethodCall> aThreadIsStarted =
+        private static DescribedPredicate<JavaMethodCall> aThreadIsStartedWithoutRestriction =
                 new DescribedPredicate<>("a thread is started") {
                     @Override
                     public boolean apply(JavaMethodCall call) {
@@ -110,7 +110,7 @@ public class SecArchUnit {
                     }
                 };
 
-        private static DescribedPredicate<JavaMethodCall> aProcessIsStarted =
+        private static DescribedPredicate<JavaMethodCall> aProcessIsStartedWithoutRestriction =
                 new DescribedPredicate<>("a process is started") {
                     @Override
                     public boolean apply(JavaMethodCall call) {
