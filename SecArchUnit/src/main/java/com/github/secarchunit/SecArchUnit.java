@@ -47,15 +47,11 @@ public class SecArchUnit {
     public static ArchRule sendOutboundMessagesFromCentralPoint(Class<?> sendingPoint, DescribedPredicate<? super JavaClass> senderDescriptor) {
         String description = "Outbound messages should be sent from the central sending point " + sendingPoint.getName();
 
-        return CompositeArchRule.of(
-                methods()
-                    .that().areDeclaredInClassesThat(senderDescriptor)
-                    .should(MemberConditions.onlyBeAccessedBy(sendingPoint))
-        ).and(
-                fields()
-                    .that().areDeclaredInClassesThat(senderDescriptor)
-                    .should(MemberConditions.onlyBeAccessedBy(sendingPoint))
-        ).as(description);
+        return methods()
+                .that().areDeclaredInClassesThat(senderDescriptor)
+                .and(MethodPredicates.haveAtLeastOneParameter)
+                .should(MemberConditions.onlyBeAccessedBy(sendingPoint))
+                .as(description);
     }
 
     public static ArchRule validateUserInput() {
@@ -122,6 +118,16 @@ public class SecArchUnit {
                                         || target.getOwner().isEquivalentTo(Runtime.class) && target.getName().equals("exec");
 
                         return !isRestricted && startsAProcess;
+                    }
+                };
+    }
+
+    private static class MethodPredicates {
+        private static DescribedPredicate<JavaMethod> haveAtLeastOneParameter =
+                new DescribedPredicate<>("have at least one parameter") {
+                    @Override
+                    public boolean apply(JavaMethod method) {
+                        return !method.getRawParameterTypes().isEmpty();
                     }
                 };
     }
