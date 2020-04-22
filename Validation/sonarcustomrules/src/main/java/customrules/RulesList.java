@@ -1,5 +1,6 @@
 package customrules;
 
+import customrules.checks.CentralMessageRule;
 import customrules.checks.LimitThreadSpawnRule;
 import customrules.checks.LogSecurityEventsRule;
 import customrules.checks.ValidateUserInputRule;
@@ -26,7 +27,8 @@ public final class RulesList {
         return Collections.unmodifiableList(Arrays.asList(
                 LogSecurityEventsRule.class,
                 ValidateUserInputRule.class,
-                LimitThreadSpawnRule.class
+                LimitThreadSpawnRule.class,
+                CentralMessageRule.class
         ));
     }
 
