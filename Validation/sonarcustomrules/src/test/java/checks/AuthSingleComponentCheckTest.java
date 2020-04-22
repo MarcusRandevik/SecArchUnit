@@ -1,5 +1,6 @@
 package checks;
 
+import customrules.checks.AuthSingleComponentEnforcerRule;
 import customrules.checks.AuthSingleComponentRule;
 import org.junit.Test;
 import org.sonar.java.checks.verifier.JavaCheckVerifier;

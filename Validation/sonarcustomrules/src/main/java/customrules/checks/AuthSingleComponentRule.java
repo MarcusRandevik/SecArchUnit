@@ -75,6 +75,7 @@ public class AuthSingleComponentRule extends IssuableSubscriptionVisitor {
             }
         }
 
+        System.out.println("Number of methods visited " + methodsVisited + " nbr of methods in class " + methodsInAuthPoint);
         if (methodsVisited >= methodsInAuthPoint && !containsCallToEnforcer) {
             reportIssue(method.symbol().enclosingClass().declaration(), "Authpoint must contain call to enforcer");
         }
