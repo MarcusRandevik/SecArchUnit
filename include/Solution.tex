@@ -4,13 +4,6 @@ This chapter explains how the constraints are expressed and validated with the t
 
 \section{Support in ArchUnit as-is}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{figure/ToyApp.png}
-    \caption{Toy application.}
-    \label{fig:toy_application}
-\end{figure}
-
 ArchUnit contains an extensive vocabulary for expressing typical architectural constraints. These constraints are typically composed of three parts. The first part indicates the type of Java construct that should be inspected. These constructs include classes, methods, fields and constructors. The second part contains a predicate that selects a subset of these constructs. The third part defines the condition that must hold true for all the selected constructs.
 
 An example of a rule defined solely using this standard vocabulary can be seen in Listing~\ref{lst:standard_vocabulary}, where each of the three aforementioned parts of the constraint has been separated into their own line. The rule is a simple example of complete mediation, where some internal classes must only be accessed through a mediator.
@@ -25,15 +18,15 @@ ArchRule rule = classes()
 
 In cases where this vocabulary is not sufficient for expressing a constraint, there is a possibility to define custom predicates and conditions over any given construct and supplying these as arguments to the \texttt{that()} and \texttt{should()} methods.
 
-\subsection{Constraints}
-
 \todo{Show rule definition for each constraint}
 \todo{Show how each constraint is used in our toy app}
 
-\subsubsection*{Log all security events}
-This constraint is expressed with the assumption that there are services, in the form of one or several classes, that are responsible for performing security related events. Any publicly accessible method in these services must contain at least one call to the logging facility.
+\subsection{Log all security events}
+% Description
+This constraint is expressed with the assumption that there are services, in the form of classes, that are responsible for performing security related events. Any publicly accessible methods in these services perform a security event and must therefore contain a call to the logging facility.
 
-As seen in Listing~\ref{lst:constraint_1_impl}, the predicate that selects the security services, as well as the class responsible for logging, are passed as arguments to the architectural rule. This leaves no need for additional information in the source code.
+% Rule definition
+The definition of the architectural rule can be seen in Listing~\ref{lst:constraint_1_impl}. The predicate that selects the security services, and the class that is responsible for logging, are passed as arguments to the architectural rule. This leaves no need for injecting information into the source code of the target system. Furthermore, by using a predicate to select the security services, the developer is left with some flexibility in how they decide to apply the constraint. As opposed to a plain list of classes, a predicate can match all classes belonging to a specific package or following a set naming scheme, minimizing the need for revisiting the constraint as the system evolves.
 
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[caption={Rule definition for constraint 1.}, captionpos=b, label=lst:constraint_1_impl, numbers=left]
@@ -48,8 +41,30 @@ ArchRule logSecurityEvents(
 \end{lstlisting}
 \end{minipage}
 
-\subsubsection*{Enforce AuthN/AuthZ at single point}
-...
+% Applied to toy app
+In the example system, illustrated in Figure~\ref{fig:toy_application}, the logging facility is the class named \texttt{Logger} while the only security service is the \texttt{UserService} class. An application of the constraint on this system can be as simple as the one shown in Listing~\ref{lst:constraint_1_toy}.
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[caption={Application of constraint 1 to the example system.}, captionpos=b, label=lst:constraint_1_toy, numbers=left]
+@ArchTest
+ArchRule logSecurityEvents = SecArchUnit
+    .logSecurityEvents(type(UserService.class), Logger.class);
+\end{lstlisting}
+\end{minipage}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figure/ToyApp.png}
+    \caption{An example of a system, for the purpose of illustrating how the constraints are applied.}
+    \label{fig:toy_application}
+\end{figure}
+
+\subsection{Enforce AuthN/AuthZ at single point}
+% Description
+The second constraint is defined in terms of two concepts: an authentication point and an authentication enforcer. Authentication is performed through a method call to the authentication enforcer, which is a class whose sole responsibility is to authenticate an actor. This call should occur at the authentication point, and at no other points in the system, for the sake of ensuring a uniform authentication mechanism throughout the system. Authorization is enforced in the same manner, with the concepts of an authorization point and an authorization enforcer.
+
+% Rule definition
+The definition of the second constraint is detailed in Listing~\ref{lst:constraint_2_impl}. The constraint is defined as two separate rules, for the sake of clarity, but their implementations are identical.
 
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[caption={Rule definition for constraint 2.}, captionpos=b, label=lst:constraint_2_impl, numbers=left]
@@ -65,10 +80,34 @@ ArchRule enforceAuthenticationAtCentralPoint(
             .should(onlyBeAccessedBy(authenticationPoint))
     );
 }
+
+ArchRule enforceAuthorizationAtCentralPoint(
+        Class<?> authorizationPoint,
+        Class<?> authorizer) {
+    return enforceAuthenticationAtCentralPoint(
+        authorizationPoint,
+        authorizer
+    );
+}
 \end{lstlisting}
 \end{minipage}
 
-\subsubsection*{Every outbound message is sent from a central point of the system}
+% Applied to toy app
+In the example system, the authentication and authorization points are both situated in the \texttt{UserService} class while authentication and authorization are enforced by the classes \texttt{UserAuthenticator} and \texttt{UserAuthorizer} respectively. The application of the rule can be seen in Listing~\ref{lst:constraint_2_toy}.
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[caption={Application of constraint 2 to the example system.}, captionpos=b, label=lst:constraint_2_toy, numbers=left]
+@ArchTest
+ArchRule enforceAuthentication = SecArchUnit
+    .enforceAuthenticationAtCentralPoint(UserService.class, UserAuthenticator.class);
+
+@ArchTest
+ArchRule enforceAuthorization = SecArchUnit
+    .enforceAuthorizationAtCentralPoint(UserService.class, UserAuthorizer.class);
+\end{lstlisting}
+\end{minipage}
+
+\subsection{Messages are sent from a central point}
 ...
 
 \begin{minipage}{\linewidth}
@@ -76,15 +115,10 @@ ArchRule enforceAuthenticationAtCentralPoint(
 ArchRule sendOutboundMessagesFromCentralPoint(
         Class<?> sendingPoint,
         DescribedPredicate<? super JavaClass> senderDescriptor) {
-    return CompositeArchRule.of(
-        methods()
-            .that().areDeclaredInClassesThat(senderDescriptor)
-            .should(onlyBeAccessedBy(sendingPoint))
-    ).and(
-        fields()
-            .that().areDeclaredInClassesThat(senderDescriptor)
-            .should(onlyBeAccessedBy(sendingPoint))
-    );
+    return methods()
+        .that().areDeclaredInClassesThat(senderDescriptor)
+        .and(haveAtLeastOneParameter)
+        .should(onlyBeAccessedBy(sendingPoint));
 }
 \end{lstlisting}
 \end{minipage}
@@ -99,12 +133,10 @@ In other cases, however, the information may be required for methods of arbitrar
 
 \todo{Specific example that requires additional information}
 
-\subsection{Constraints}
-
 \todo{Show rule definition for each constraint}
 \todo{Show how each constraint is used in our toy app}
 
-\subsubsection*{Input from a user is validated}
+\subsection{Validate user input}
 ...
 
 \begin{minipage}{\linewidth}
@@ -117,7 +149,7 @@ public static ArchRule validateUserInput() {
 \end{lstlisting}
 \end{minipage}
 
-\subsubsection*{Allocation of resources is limited or throttled}
+\subsection{Restrict thread spawning}
 While resources is a broad term, this constraint focuses on preventing the exhaustion of CPU and memory resources through the creation of new threads and processes. As such, every block of code that contains a call to the \texttt{start()} method of a \texttt{Thread}\footnote{https://docs.oracle.com/javase/7/docs/api/java/lang/Thread.html} or any of its subclasses, must be marked as containing a resource restriction mechanism. The same rule is applied for calls to \texttt{ProcessBuilder.start()}\footnote{https://docs.oracle.com/javase/7/docs/api/java/lang/Process.html} and \texttt{Runtime.exec()}\footnotemark[3], which lead to the creation of new processes.
 % TODO manual footnote, adjust as necessary
 

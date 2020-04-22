@@ -1,7 +1,26 @@
 \chapter{Evaluation}
 \todo{adjust sections as necessary}
 
-\section{Strategy}
-
 \section{Selection of systems}
+
+\section{Comparison with SonarQube}
+...
+
+The results from this comparison can be seen in Table~\ref{tab:results_comparison}.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{lccccc}
+\hline
+\textbf{Tool} & \textbf{TP} & \textbf{FP} & \textbf{FN} & \textbf{Precision} & \textbf{Recall}\\
+\hline
+SecArchUnit & 19 & 1 & 2 & 0.95 & 0.90\\
+\rowcolor{RowColor}
+SonarQube plugin & 17 & 1 & 4 & 0.94 & 0.81\\
+\hline
+\end{tabular}
+\end{center}
+\caption{Results from running both tools on ATM simulator.}
+\label{tab:results_comparison}
+\end{table}
 

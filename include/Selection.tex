@@ -13,7 +13,8 @@ The processed collection of security measures can be seen in Table~\ref{tab:all_
 % (2020-04-10) Previous entry 16 and 17 were merged in table 4.1 instead of 4.2 as they were previously not grouped due to sub-goal differences
 
 \begin{table}
-\begin{tabular}{lp{10cm}ll}
+\begin{center}
+\begin{tabular}{lp{10.4cm}ll}
 \hline
 \textbf{ID} & \textbf{Constraint} & \textbf{Goal} \\
 \hline
@@ -44,6 +45,7 @@ The processed collection of security measures can be seen in Table~\ref{tab:all_
 17 & Security relevant log messages must be encrypted and immutable & Accountability \\
 \hline
 \end{tabular}
+\end{center}
 \caption{Security constraints and their related CIAA goals.}
 \label{tab:all_measures}
 \end{table}
@@ -53,9 +55,11 @@ The processed collection of security measures can be seen in Table~\ref{tab:all_
 As explained in Section~\ref{sec:limitations}, the aim is not to demonstrate the enforceability of as many constraints as possible, but rather to investigate the feasibility of using the tool in this manner. To that end, a subset of the full list of security constraints is selected for enforcement. The final list contains 7 architectural security constraints, as this allows us to cover at least one constraint from each goal. The selected constraints can be seen in Table~\ref{tab:selected_measures}. The remainder of this section presents each selected constraint in further detail.
 
 \begin{table}
-\begin{tabular}{llp{11cm}}
+\begin{center}
+\begin{tabular}{ccp{12.4cm}}
 \hline
-\textbf{\#} & \textbf{ID in 4.1} & \textbf{Constraint} \\
+\textbf{\#} & \textbf{\#\textsubscript{4.1}} & \textbf{Constraint} \\
+\hline
 1 & 15 & Methods related to security events must call the logger\\
 \rowcolor{RowColor}
 2 & 16 & Authentication and authorization must each be enforced in a single component\\
@@ -68,6 +72,7 @@ As explained in Section~\ref{sec:limitations}, the aim is not to demonstrate the
 7 & 6 & Secrets must not be exposed in log messages\\
 \hline
 \end{tabular}
+\end{center}
 \caption{Constraints that have been selected for enforcement.}
 \label{tab:selected_measures}
 \end{table}
@@ -107,28 +112,32 @@ As explained in Section~\ref{sec:limitations}, the aim is not to demonstrate the
  
   An attacker may try and gain access to the least trusted point of entry and later use the granted authority to access services or operation normally requiring a greater level of trust.
 
-\subsection{Messages are sent from a central point} \todo{Marcus}
-Communication with external actors, whether they are a client 
+\subsection{Messages are sent from a central point} \checkmark
 
 \textbf{Description:} 
+Communication with external actors, whether they are a client connecting to a server, or the system requesting data from a third party, is commonly performed over insecure networks. Encryption is the preferred method of securing such communication against potential attackers. However, it is challenging to implement an encryption algorithm correctly as a seemingly small deviation might affect the algorithm's mathematical soundness. Having a single component responsible for any outbound communication reduces the risk of introducing an implementation error, potentially causing an otherwise sound algorithm to be insecure.
+ 
+ \textbf{Typical enforcement:} 
+ A single component is responsible for establishing, performing, and closing external communications. This component may be a part of a network library or implemented inside of the system. 
+ 
+ \textbf{Sources:} Jasser rule 11
+ 
+ \textbf{Attack scenario:}
+ A banking system may properly use a delegated component for the transmission of some of the most critical data (e.g. credit card numbers) but fail to do so for others (e.g. bank account numbers). An attacker who monitors network traffic at an open wireless network can thus intercept the packets and directly read and/or alter the data sent between the user and the system. If the user were to initiate a money transfer, the attacker could potentially change the recipient's account number. 
+
+\subsection{Validate user input}
+
+\textbf{Description:} 
+The ability to receive and process user input is fundamental to every computer system. However, the same input is also the primary source of untrusted data as an attacker possesses full control of what the system receives. Assuming that all data passed to a system is safe to process can have severe consequences when interpreting user input as a part of a query, often referred to as injection. In order to prevent an attacker from compromising the system by injection, all user input must be validated.
  
  \textbf{Typical enforcement:}
  
- \textbf{Sources:}
+ \todo{Perhaps change the number of mentioned entries}
+ \textbf{Sources:} CAWE 20/59/74-79/88-91/93-99/138/150/349/352/472/473/502/601/\newline/641/643/652/790-797/942, Security pattern \textit{input guard}
  
  \textbf{Attack scenario:}
 
-\subsection{Validate user input}  \todo{Marcus/ Patrik}
-
-\textbf{Description:} 
- 
- \textbf{Typical enforcement:}
- 
- \textbf{Sources:}
- 
- \textbf{Attack scenario:}
-
-\subsection{Restrict thread spawning} \todo{Patrik}
+\subsection{Restrict thread spawning}
 
 \textbf{Description:} Computers have finite resources in terms of memory, CPU time and network bandwidth. Systems should be designed with this in mind, employing measures to avoid exhausting the computer's resources. This constraint limits the number of threads that can be spawned on behalf of actors, which could otherwise lead to exhaustion of the CPU.
  
