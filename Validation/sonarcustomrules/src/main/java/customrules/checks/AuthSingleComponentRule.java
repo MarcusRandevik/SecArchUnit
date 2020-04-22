@@ -10,10 +10,7 @@ import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.Tree;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Rule(
         key = "AuthSingleComponentRule",
@@ -24,6 +21,7 @@ public class AuthSingleComponentRule extends IssuableSubscriptionVisitor {
 
     public static String AUTHN_POINT_CLASS_TEST = "AuthSingleComponentCheck".toLowerCase();
     public static String AUTHN_POINT_CLASS = "Transaction".toLowerCase();
+    public static List<String> AUTH_POINT_CLASSES = new ArrayList<>(Arrays.asList(AUTHN_POINT_CLASS_TEST, AUTHN_POINT_CLASS));
 
     public static String AUTHN_CLASS_TEST = "java.math.BigDecimal";
     public static String AUTHN_CLASS = "atm.transaction.Transaction";
@@ -47,12 +45,15 @@ public class AuthSingleComponentRule extends IssuableSubscriptionVisitor {
     public void visitNode(Tree tree) {
         MethodTree method = (MethodTree) tree;
 
-        String enclosingCLassNme = method.symbol().enclosingClass().name().toLowerCase();
-
+        String enclosingCLassName = method.symbol().enclosingClass().name().toLowerCase();
         // Check if were in the auth point class
-        if (!enclosingCLassNme.equals(AUTHN_POINT_CLASS_TEST) || !enclosingCLassNme.equals(AUTHN_POINT_CLASS)) return;
+        if (!AUTH_POINT_CLASSES.contains(enclosingCLassName)) {
+            return;
+        }
+
         methodsVisited++;
 
+        System.out.println("we're in");
         // If this is the first time we're in the auth point class, calculate the number of methods
         if (methodsInAuthPoint == INITIAL_AMOUNT_OF_METHODS) {
             Collection<Symbol> symbols = method.symbol().enclosingClass().memberSymbols();
