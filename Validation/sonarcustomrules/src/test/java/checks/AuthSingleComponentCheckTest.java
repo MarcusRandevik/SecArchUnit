@@ -7,7 +7,7 @@ import org.sonar.java.checks.verifier.JavaCheckVerifier;
 
 public class AuthSingleComponentCheckTest {
 
-    @Test
+    //@Test
     public void firstTest() {
         JavaCheckVerifier.newVerifier()
                 .onFile("src/test/files/AuthSingleComponentCheck.java")
@@ -15,7 +15,7 @@ public class AuthSingleComponentCheckTest {
                 .verifyIssues();
     }
 
-    @Test
+    //@Test
     public void secondTest() {
         JavaCheckVerifier.newVerifier()
                 .onFile("src/test/files/AuthSingleComponentFailCheck.java")

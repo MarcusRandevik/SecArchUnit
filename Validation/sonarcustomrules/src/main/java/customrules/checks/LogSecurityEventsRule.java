@@ -22,9 +22,15 @@ import java.util.List;
 public class LogSecurityEventsRule extends IssuableSubscriptionVisitor {
 
     public static String LOGGER_CLASS_TEST = "java.math.BigDecimal";
-    public static String LOGGER_CLASS = "java.math.BigDecimal";
-    public static List<String> SECURITY_CLASSES = new ArrayList<String>(Arrays.asList("LogSecurityEventsCheck".toLowerCase(),
-                                                                                    "CardReader".toLowerCase()));
+    public static String LOGGER_CLASS = "atm.physical.Log";
+    public static List<String> SECURITY_CLASSES = new ArrayList<String>(Arrays.asList(
+            "LogSecurityEventsCheck".toLowerCase(),
+            "CardReader".toLowerCase(),
+            "CashDispenser".toLowerCase(),
+            "EnvelopeAcceptor".toLowerCase(),
+            "NetworkToBank".toLowerCase(),
+            "Transaction".toLowerCase()
+    ));
 
     MethodMatchers loggerMethodsTest = MethodMatchers.create().ofTypes(LOGGER_CLASS_TEST).anyName().withAnyParameters().build();
     MethodMatchers loggerMethods = MethodMatchers.create().ofTypes(LOGGER_CLASS).anyName().withAnyParameters().build();

@@ -1,9 +1,6 @@
 package customrules;
 
-import customrules.checks.CentralMessageRule;
-import customrules.checks.LimitThreadSpawnRule;
-import customrules.checks.LogSecurityEventsRule;
-import customrules.checks.ValidateUserInputRule;
+import customrules.checks.*;
 import org.sonar.plugins.java.api.JavaCheck;
 
 import java.util.*;
@@ -28,7 +25,9 @@ public final class RulesList {
                 LogSecurityEventsRule.class,
                 ValidateUserInputRule.class,
                 LimitThreadSpawnRule.class,
-                CentralMessageRule.class
+                CentralMessageRule.class,
+                AuthSingleComponentRule.class,
+                AuthSingleComponentEnforcerRule.class
         ));
     }
 
