@@ -94,7 +94,7 @@ As explained in Section~\ref{sec:limitations}, the aim is not to demonstrate the
 
 \textbf{Attack scenario:} A typical scenario where the logging of security events increases a system's resilience to attacks is that of failed login attempts. An attacker may try and guess the credentials of a user by employing a brute-force attack. During the attack, the attacker performs several failed attempts at guessing the credentials, (hopefully) causing the system to either increase the time between repeated attempts or lock the account entirely though with the added effect of decreased availability for the intended user. Although this type of defense temporarily hinders the attacker, a log of failed attempts facilities the detection of malicious actors and enables administrators to impose more permanent measures. 
 
-\subsection{Enforce AuthN/AuthZ at single point}
+\subsection{Enforce AuthN/AuthZ at single point} \checkmark
  
  \textbf{Description:} Any system that has more than one user needs to incorporate functionality for authentication (AuthN), as well as authorization (AuthZ) if the privileges between users differ. The difficulty in complex systems where components handle different functionality, thus receiving separate requests and creating multiple entry points, is the fact that the components may have been designed to use various mechanisms of authentication. Instead, AuthN/AuthZ should be delegated to a single component to ensure consistent behavior across all entry points. 
  
@@ -125,17 +125,26 @@ Communication with external actors, whether they are a client connecting to a se
  \textbf{Attack scenario:}
  A banking system may properly use a delegated component for the transmission of some of the most critical data (e.g. credit card numbers) but fail to do so for others (e.g. bank account numbers). An attacker who monitors network traffic at an open wireless network can thus intercept the packets and directly read and/or alter the data sent between the user and the system. If the user were to initiate a money transfer, the attacker could potentially change the recipient's account number. 
 
-\subsection{Validate user input}
+\subsection{Validate user input} \checkmark
 
 \textbf{Description:} 
 The ability to receive and process user input is fundamental to every computer system. However, the same input is also the primary source of untrusted data as an attacker possesses full control of what the system receives. Assuming that all data passed to a system is safe to process can have severe consequences when interpreting user input as a part of a query, often referred to as injection. In order to prevent an attacker from compromising the system by injection, all user input must be validated.
  
- \textbf{Typical enforcement:}
+ \textbf{Typical enforcement:} 
+ Placing a component performing validation between the user's input and the component processing the data ensures that the input can be trusted. The approach is commonly referred to as the security pattern \textit{input guard}.
  
  \todo{Perhaps change the number of mentioned entries}
  \textbf{Sources:} CAWE 20/59/74-79/88-91/93-99/138/150/349/352/472/473/502/601/\newline/641/643/652/790-797/942, Security pattern \textit{input guard}
  
  \textbf{Attack scenario:}
+ In an application that uses user input to build a SQL query to retrieve a specific account number (as seen in listing \ref{lst:SQL_vul}) an attacker may construct the request to retrieve all accounts by adding characters that break the query and introduces new parameters, such as \texttt{' or '1'='1}. The resulting operation would retrieve all customer accounts, thus exposing sensitive information.
+ 
+ \begin{minipage}{\linewidth}
+\begin{lstlisting}[caption={Example of a vulnerable SQL query}, captionpos=b, label=lst:SQL_vul, numbers=left, showstringspaces=false]
+String query = "SELECT * FROM accounts WHERE 
+    custID='" + userInput + "'";
+\end{lstlisting}
+\end{minipage}
 
 \subsection{Restrict thread spawning}
 
@@ -150,6 +159,7 @@ The ability to receive and process user input is fundamental to every computer s
 \subsection{Sensitive information must stay within trust boundary}\todo{Patrik}
 
 \textbf{Description:} 
+
  
  \textbf{Typical enforcement:}
  
