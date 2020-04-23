@@ -2,7 +2,7 @@
 
 This chapter describes the methodology of collecting a final list of security constraints from three sources. 
 
-\section{Collection of Security Measures}
+\section{Collection of Security constraint}
 
 The processed collection of security measures can be seen in Table~\ref{tab:all_measures}.
 \todo{Reformulate everything as constraints}
@@ -156,22 +156,24 @@ String query = "SELECT * FROM accounts WHERE
  
  \textbf{Attack scenario:} An attacker may initiate many requests that are each handled by the system in a separate thread. By initiating requests at a higher rate than the server is able to process them, the resources at the server are eventually exhausted. This leads to a denial of service to any legitimate actors attempting to access the system.
 
-\subsection{Sensitive information must stay within trust boundary}\todo{Patrik}
+\subsection{Sensitive information must stay within trust boundary}\label{sec:trust_boundry_constraint}
 
 \textbf{Description:} 
-
+Generally, a specific set of components, which have stricter security requirements constraining their implementation, handles the sensitive data within a system. Should that information leak to less secure components, the risk of exposing secrets to the user, and a potential attacker, increases significantly. In order to prevent leakage to less secure components, sensitive information must stay within a trust boundary.
  
  \textbf{Typical enforcement:}
+ A typical approach is to manually review methods that receives or send information to other components and ensure that they do not expose any secrets. As for automated enforcement, various information flow analysis tools, like JOANA\footnote{\url{https://pp.ipd.kit.edu/projects/joana/}}, can be employed to detect these types of information leaks within a system.
  
  \textbf{Sources:} CAWE 488
  
  \textbf{Attack scenario:}
+ 
 
-\subsection{Secrets must not be exposed in log messages}\todo{Patrik}
+\subsection{Secrets must not be exposed in log messages} \checkmark
 
 \textbf{Description:} Many systems handle secrets that should never touch permanent storage. A password is perhaps the most common example of such a secret. While great care can be taken on the design level to ensure that these secrets are not stored to disk, they may still be exposed unintentionally through log messages. In order to prevent such exposure, messages that are sent to the logger must not contain secrets.
 
- \textbf{Typical enforcement:} A typical approach is to manually review log statements and ensure that they do not expose any secrets. As for automated enforcement, various information flow analysis tools, like JOANA\footnote{\url{https://pp.ipd.kit.edu/projects/joana/}}, can be employed to detect these types of information leaks within a system.
+ \textbf{Typical enforcement:} Similar to the constraint described in section \ref{sec:trust_boundry_constraint}, the typical approach is to manually review call to the logger to ensure that no secrets are exposed, with the potential ability to use information flow analysis tools.
  
  \textbf{Sources:} CAWE 359/532, Jasser rule 13
  
