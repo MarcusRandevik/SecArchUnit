@@ -1,41 +1,46 @@
 package com.github.secarchunit.pmd;
 
-import net.sourceforge.pmd.lang.java.ast.ASTClassOrInterfaceDeclaration;
-import net.sourceforge.pmd.lang.java.ast.ASTMethodDeclaration;
+import net.sourceforge.pmd.lang.java.ast.*;
 import net.sourceforge.pmd.lang.java.rule.AbstractJavaRule;
-import net.sourceforge.pmd.properties.PropertyDescriptor;
-import net.sourceforge.pmd.properties.PropertyFactory;
 
-import java.util.List;
+import java.util.Arrays;
+import java.util.Collection;
 
 public class LogSecurityEventsRule extends AbstractJavaRule {
-    private static final PropertyDescriptor<List<String>> SECURITY_SERVICES_PROPERTY = PropertyFactory
-            .stringListProperty("securityServices").emptyDefaultValue().build();
-
-    private final List<String> securityServices;
+    private static final String LOGGER = "atm.physical.Log";
+    private static final Collection<String> SECURITY_SERVICES = Arrays.asList(
+            "physical.CardReader",
+            "physical.CashDispenser",
+            "physical.EnvelopeAcceptor",
+            "physical.NetworkToBank",
+            "atm.transaction.Transaction"
+    );
 
     public LogSecurityEventsRule() {
         super();
 
         // Types of nodes to visit
         addRuleChainVisit(ASTMethodDeclaration.class);
-
-        // Rule properties
-        definePropertyDescriptor(SECURITY_SERVICES_PROPERTY);
-        securityServices = getProperty(SECURITY_SERVICES_PROPERTY);
     }
 
     @Override
     public Object visit(ASTMethodDeclaration method, Object data) {
         ASTClassOrInterfaceDeclaration owningClass = method.getFirstParentOfType(ASTClassOrInterfaceDeclaration.class);
-        if (!securityServices.contains(owningClass.getSimpleName())) {
-            // Not a security service; skip class
+        if (!SECURITY_SERVICES.contains(owningClass.getBinaryName())) {
+            // Not a security service; skip method
             return data;
         }
 
+        System.out.println("LogSecurityEventsRule visit " + owningClass.getBinaryName() + " " + owningClass.getSimpleName() + " " + method.getName());
+
         if (method.isPublic()) {
             // Security event; check for call to logger
-
+            method.getBody().findDescendantsOfType(ASTPrimaryPrefix.class).stream()
+                    .forEach(expr -> {
+                        expr.getXPathAttributesIterator().forEachRemaining(attr -> {
+                            System.out.println(attr.getName() + " -> " + attr.getStringValue());
+                        });
+                    });
         }
 
         return data;

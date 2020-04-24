@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<ruleset name="SecArchUnit"
+    xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+  <description>Security rules from SecArchUnit thesis</description>
+
+  <rule name="LogSecurityEvents" language="java" message="Security events must be logged." class="com.github.secarchunit.pmd.LogSecurityEventsRule" >
+    <priority>3</priority>
+  </rule>
+
+</ruleset>
