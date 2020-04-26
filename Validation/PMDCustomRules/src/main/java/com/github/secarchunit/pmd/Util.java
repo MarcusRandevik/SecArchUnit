@@ -1,17 +1,59 @@
 package com.github.secarchunit.pmd;
 
 import net.sourceforge.pmd.lang.java.ast.*;
+import net.sourceforge.pmd.lang.java.symboltable.JavaNameOccurrence;
+import net.sourceforge.pmd.lang.java.symboltable.NameFinder;
 import net.sourceforge.pmd.lang.symboltable.NameDeclaration;
 import net.sourceforge.pmd.lang.symboltable.NameOccurrence;
 import net.sourceforge.pmd.lang.symboltable.Scope;
 import net.sourceforge.pmd.lang.symboltable.ScopedNode;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Util {
+    public static class MethodCall {
+        public final String targetOwner;
+        public final String target;
+
+        public MethodCall(String targetOwner, String target) {
+            this.targetOwner = targetOwner;
+            this.target = target;
+        }
+    }
+
+    public static List<MethodCall> getMethodCallsFrom(ScopedNode node) {
+        List<MethodCall> methodCalls = new ArrayList<>();
+
+        // Find expressions that contain at least one method call
+        Set<List<JavaNameOccurrence>> invocationChains = node
+                .findDescendantsOfType(ASTPrimaryExpression.class).stream()
+                .map(expr -> new NameFinder(expr).getNames())
+                .filter(names -> names.stream().anyMatch(name -> name.isMethodOrConstructorInvocation()))
+                .collect(Collectors.toSet());
+
+        for (List<JavaNameOccurrence> chain : invocationChains) {
+            // Resolve type of first sub-expression, i.e. owner of target method
+            String targetOwner = getType(chain.get(0), node.getScope());
+
+            // Iterate over suffixes to resolve method calls
+            for (Iterator<JavaNameOccurrence> it = chain.listIterator(1); it.hasNext();) {
+                JavaNameOccurrence occurrence = it.next();
+
+                if (occurrence.isMethodOrConstructorInvocation()) {
+                    methodCalls.add(new MethodCall(targetOwner, occurrence.getImage()));
+                }
+
+                // Return type becomes target owner for the next iteration
+                targetOwner = resolveReturnType(targetOwner, occurrence.getImage());
+            }
+        }
+
+        return methodCalls;
+    }
+
     public static String resolveReturnType(String targetOwner, String target) {
         try {
             Class<?> targetClass = Class.forName(targetOwner);
