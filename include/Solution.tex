@@ -18,9 +18,6 @@ ArchRule rule = classes()
 
 In cases where this vocabulary is not sufficient for expressing a constraint, there is a possibility to define custom predicates and conditions over any given construct and supplying these as arguments to the \texttt{that()} and \texttt{should()} methods.
 
-\todo{Show rule definition for each constraint}
-\todo{Show how each constraint is used in our toy app}
-
 \subsection{Log all security events}
 % Description
 This constraint is expressed with the assumption that there are services, in the form of classes, that are responsible for performing security related events. Any publicly accessible methods in these services perform a security event and must therefore contain a call to the logging facility.
@@ -108,7 +105,11 @@ ArchRule enforceAuthorization = SecArchUnit
 \end{minipage}
 
 \subsection{Messages are sent from a central point}
-...
+% Description
+The third constraint dictates that all outbound messages are sent from a central sending point. The intent is to have a single point that handles output sanitization or performs other safety checks on messages before they are sent. The act of sending a message is defined as a method call to a sender with at least one argument, which is assumed to contain the message contents. The reasoning is that any class should be allowed to create and pass around a sender instance without violating the constraint.
+
+% Rule definition
+The rule definition can be seen in Listing~\ref{lst:constraint_3_impl}. Since there can be multiple sender classes in a system, e.g. one for HTTP requests and one for SMTP messages, the rule accepts a predicate that describes all these sender classes.
 
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[caption={Rule definition for constraint 3.}, captionpos=b, label=lst:constraint_3_impl, numbers=left]
@@ -120,6 +121,20 @@ ArchRule sendOutboundMessagesFromCentralPoint(
         .and(haveAtLeastOneParameter)
         .should(onlyBeAccessedBy(sendingPoint));
 }
+\end{lstlisting}
+\end{minipage}
+
+% Applied to toy app
+In the example system, there is a single sender class \texttt{HttpResponse} and the central sending point is the \texttt{OutboundMessageSanitizer} class. 
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[caption={Application of constraint 3 to the example system.}, captionpos=b, label=lst:constraint_3_toy, numbers=left]
+@ArchTest
+ArchRule centralSendingPoint = SecArchUnit
+    .sendOutboundMessagesFromCentralPoint(
+        OutboundMessageSanitizer.class,
+        type(HttpResponse.class)
+    );
 \end{lstlisting}
 \end{minipage}
 
