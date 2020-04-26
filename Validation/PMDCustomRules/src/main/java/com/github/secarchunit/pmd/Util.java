@@ -1,5 +1,6 @@
 package com.github.secarchunit.pmd;
 
+import net.sourceforge.pmd.lang.ast.Node;
 import net.sourceforge.pmd.lang.java.ast.*;
 import net.sourceforge.pmd.lang.java.symboltable.JavaNameOccurrence;
 import net.sourceforge.pmd.lang.java.symboltable.NameFinder;
@@ -17,10 +18,14 @@ public class Util {
     public static class MethodCall {
         public final String targetOwner;
         public final String target;
+        public final int argumentCount;
+        public final Node source;
 
-        public MethodCall(String targetOwner, String target) {
+        public MethodCall(String targetOwner, JavaNameOccurrence occurrence) {
             this.targetOwner = targetOwner;
-            this.target = target;
+            this.target = occurrence.getImage();
+            this.argumentCount = occurrence.getArgumentCount();
+            this.source = occurrence.getLocation();
         }
     }
 
@@ -43,33 +48,26 @@ public class Util {
                 JavaNameOccurrence occurrence = it.next();
 
                 if (occurrence.isMethodOrConstructorInvocation()) {
-                    methodCalls.add(new MethodCall(targetOwner, occurrence.getImage()));
+                    if (targetOwner == null) {
+                        System.err.println(occurrence.getLocation().getRoot().getType().getCanonicalName()
+                                + ": Call to unknown target owner (target=" + occurrence.getImage() + ")");
+                    } else {
+                        methodCalls.add(new MethodCall(targetOwner, occurrence));
+                    }
                 }
 
                 // Return type becomes target owner for the next iteration
-                targetOwner = resolveReturnType(targetOwner, occurrence.getImage());
+                targetOwner = null;
+                if (occurrence.getLocation() instanceof TypeNode) {
+                    TypeNode type = (TypeNode) occurrence.getLocation();
+                    if (type.getType() != null) {
+                        targetOwner = type.getType().getCanonicalName();
+                    }
+                }
             }
         }
 
         return methodCalls;
-    }
-
-    public static String resolveReturnType(String targetOwner, String target) {
-        try {
-            Class<?> targetClass = Class.forName(targetOwner);
-            Optional<Method> targetMethods = Arrays.stream(targetClass.getDeclaredMethods())
-                    .filter(targetMethod -> targetMethod.getName().equals(target))
-                    .findFirst();
-            // ^ ignores overloaded methods, can be wrong target
-
-            if (targetMethods.isPresent()) {
-                return targetMethods.get().getReturnType().getCanonicalName();
-            }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 
     public static String getType(NameOccurrence nameOccurrence, Scope scope) {
@@ -78,6 +76,7 @@ public class Util {
         // Search for name in local variables and class fields
         Optional<NameDeclaration> nameDeclaration = Stream
                 .concat(scope.getDeclarations().keySet().stream(), scope.getParent().getDeclarations().keySet().stream())
+                .filter(name -> name.getName() != null)
                 .filter(name -> name.getName().equals(nameOccurrence.getImage()))
                 .findFirst();
         if (nameDeclaration.isPresent()) {
