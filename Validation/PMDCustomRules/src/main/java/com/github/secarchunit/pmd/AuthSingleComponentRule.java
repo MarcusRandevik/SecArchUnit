@@ -2,61 +2,41 @@ package com.github.secarchunit.pmd;
 
 import net.sourceforge.pmd.lang.java.ast.*;
 import net.sourceforge.pmd.lang.java.rule.AbstractJavaRule;
-import net.sourceforge.pmd.properties.PropertyDescriptor;
-import net.sourceforge.pmd.properties.PropertyFactory;
 
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Stream;
 
 public class AuthSingleComponentRule extends AbstractJavaRule {
-    private static final PropertyDescriptor<List<String>> AUTH_POINTS_PROPERTY = PropertyFactory
-            .stringListProperty("authPoints").emptyDefaultValue().build();
-
-    private static final PropertyDescriptor<List<String>> AUTH_ENFORCER_PROPERTY = PropertyFactory
-            .stringListProperty("authEnforcer").emptyDefaultValue().build();
-
-    private final List<String> authPoints;
-    private final List<String> authEnforcer;
+    private static final String AUTH_POINT = "atm.transaction.Transaction";
+    private static final String AUTH_ENFORCER = "atm.transaction.Transaction";
 
     public AuthSingleComponentRule() {
         super();
 
         // Types of nodes to visit
         addRuleChainVisit(ASTClassOrInterfaceDeclaration.class);
-
-        // Rule properties
-        definePropertyDescriptor(AUTH_POINTS_PROPERTY);
-        authPoints = getProperty(AUTH_POINTS_PROPERTY);
-
-        definePropertyDescriptor(AUTH_ENFORCER_PROPERTY);
-        authEnforcer = getProperty(AUTH_ENFORCER_PROPERTY);
     }
 
     @Override
     public Object visit(ASTClassOrInterfaceDeclaration clazz, Object data) {
-        if (!authPoints.contains(clazz.getSimpleName())) {
-            // This class is not an authpoint
-            return data;
-        }
+        boolean isAuthPoint = AUTH_POINT.equals(clazz.getBinaryName());
+        Stream<Util.MethodCall> methodCallsFromClass = clazz.findDescendantsOfType(ASTClassOrInterfaceBodyDeclaration.class).stream()
+                .flatMap(body -> Util.getMethodCallsFrom(body).stream());
 
-        AtomicBoolean containsCallToEnforcer = new AtomicBoolean(false);
+        if (isAuthPoint) {
+            // Ensure at least one call to authentication enforcer
+            boolean callsEnforcer = methodCallsFromClass
+                    .anyMatch(call -> AUTH_ENFORCER.equals(call.targetOwner));
 
-        //Search tree for method calls
-        for (ASTPrimaryPrefix prefix : clazz.findDescendantsOfType(ASTPrimaryPrefix.class)) {
-            prefix.getXPathAttributesIterator().forEachRemaining(attribute -> {
-                //search the attributes to find the type
-                if (attribute.getName().equals("typeIs()")) {
-                    //See if type matches enforcer
-                    if (authEnforcer.contains(attribute.getStringValue())) {
-                        containsCallToEnforcer.set(true);
-                    }
-                }
-            });
-            
-        }
-
-        if (!(containsCallToEnforcer.get())) {
-            addViolation(data, clazz);
+            if (!callsEnforcer) {
+                addViolationWithMessage(data, clazz, "#2 Authentication point must call authentication enforcer");
+            }
+        } else {
+            // Ensure no calls to authenticator
+            methodCallsFromClass.filter(call -> AUTH_ENFORCER.equals(call.targetOwner))
+                    .forEach(offendingCall -> {
+                        String message = "#2 Method invocation to enforcer must be performed at auth point";
+                        addViolationWithMessage(data, offendingCall.source, message);
+                    });
         }
 
         return data;
