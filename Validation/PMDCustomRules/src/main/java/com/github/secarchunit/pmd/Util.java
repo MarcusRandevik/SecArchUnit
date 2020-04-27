@@ -27,9 +27,19 @@ public class Util {
             this.argumentCount = occurrence.getArgumentCount();
             this.source = occurrence.getLocation();
         }
+
+        @Override
+        public String toString() {
+            return "MethodCall{" +
+                    "targetOwner='" + targetOwner + '\'' +
+                    ", target='" + target + '\'' +
+                    ", argumentCount=" + argumentCount +
+                    ", source=" + source +
+                    '}';
+        }
     }
 
-    public static List<MethodCall> getMethodCallsFrom(ScopedNode node) {
+    public static List<MethodCall> getMethodCallsFrom(JavaNode node) {
         List<MethodCall> methodCalls = new ArrayList<>();
 
         // Find expressions that contain at least one method call
@@ -40,8 +50,33 @@ public class Util {
                 .collect(Collectors.toSet());
 
         for (List<JavaNameOccurrence> chain : invocationChains) {
-            // Resolve type of first sub-expression, i.e. owner of target method
-            String targetOwner = getType(chain.get(0), node.getScope());
+            String targetOwner;
+            if (chain.get(0).isMethodOrConstructorInvocation()) {
+                // First sub-expression is method call -> local method, super method or static import
+                // TODO look for static imports?
+                MethodCall call = new MethodCall(node.getFirstParentOfType(ASTClassOrInterfaceDeclaration.class).getBinaryName(), chain.get(0));
+                methodCalls.add(call);
+
+                /*
+                System.err.println("First expression is method call");
+
+
+                System.err.println(" + " + call);
+                try {
+                    boolean targetExists = Arrays.stream(Class.forName(call.targetOwner).getDeclaredMethods())
+                            .anyMatch(method -> method.getName().equals(call.target));
+                    if (!targetExists) {
+                        System.err.println(" + Target does not exist");
+                    }
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                */
+
+            }
+
+            // Resolve type of first sub-expression, i.e. owner of next target method
+            targetOwner = getType(chain.get(0), node.getScope());
 
             // Iterate over suffixes to resolve method calls
             for (Iterator<JavaNameOccurrence> it = chain.listIterator(1); it.hasNext();) {
@@ -49,8 +84,11 @@ public class Util {
 
                 if (occurrence.isMethodOrConstructorInvocation()) {
                     if (targetOwner == null) {
-                        System.err.println(occurrence.getLocation().getRoot().getType().getCanonicalName()
-                                + ": Call to unknown target owner (target=" + occurrence.getImage() + ")");
+                        /*
+                        System.err.println("Call to target with unknown owner (target=" + occurrence.getImage()
+                                + ")" + describeLocation(occurrence.getLocation()));
+                        System.err.println(" + " + chain.toString());
+                        */
                     } else {
                         methodCalls.add(new MethodCall(targetOwner, occurrence));
                     }
@@ -70,17 +108,28 @@ public class Util {
         return methodCalls;
     }
 
+    private static String describeLocation(JavaNode node) {
+        return " in (" + node.getRoot().getType().getSimpleName()
+                + ".java:" + node.getBeginLine()
+                + ")";
+    }
+
     public static String getType(NameOccurrence nameOccurrence, Scope scope) {
         String type = null;
 
-        // Search for name in local variables and class fields
-        Optional<NameDeclaration> nameDeclaration = Stream
-                .concat(scope.getDeclarations().keySet().stream(), scope.getParent().getDeclarations().keySet().stream())
-                .filter(name -> name.getName() != null)
-                .filter(name -> name.getName().equals(nameOccurrence.getImage()))
-                .findFirst();
-        if (nameDeclaration.isPresent()) {
-            type = getType(nameDeclaration.get().getNode());
+        // Search for name in current and parent scopes
+        while (scope != null) {
+            Optional<NameDeclaration> nameDeclaration = scope.getDeclarations().keySet().stream()
+                    .filter(name -> name.getName() != null)
+                    .filter(name -> name.getName().equals(nameOccurrence.getImage()))
+                    .findFirst();
+
+            if (nameDeclaration.isPresent()) {
+                type = getType(nameDeclaration.get().getNode());
+                break;
+            }
+
+            scope = scope.getParent();
         }
 
         if (type == null) {

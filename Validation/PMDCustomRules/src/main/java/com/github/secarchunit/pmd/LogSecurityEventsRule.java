@@ -3,7 +3,8 @@ package com.github.secarchunit.pmd;
 import net.sourceforge.pmd.lang.java.ast.*;
 import net.sourceforge.pmd.lang.java.rule.AbstractJavaRule;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
 
 public class LogSecurityEventsRule extends AbstractJavaRule {
     private static final String LOGGER = "atm.physical.Log";

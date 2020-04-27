@@ -24,15 +24,13 @@ public class CentralSendingRule extends AbstractJavaRule {
         ASTClassOrInterfaceDeclaration owningClass = body.getFirstParentOfType(ASTClassOrInterfaceDeclaration.class);
         boolean isSendingPoint = owningClass != null && SENDING_POINT.equals(owningClass.getBinaryName());
         if (isSendingPoint) {
-            // Skip
+            // Method defined in sending point; skip this method
             return data;
         }
 
         Util.getMethodCallsFrom(body).stream()
                 .filter(call -> SENDERS.contains(call.targetOwner) && call.argumentCount > 0)
-                .forEach(call -> {
-                    addViolation(data, call.source);
-                });
+                .forEach(offendingCall -> addViolation(data, offendingCall.source));
 
         return data;
     }
