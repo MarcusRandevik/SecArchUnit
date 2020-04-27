@@ -15,12 +15,14 @@ import java.util.stream.Collectors;
 public class Util {
     public static class MethodCall {
         public final String targetOwner;
+        public final Class<?> targetOwnerClass;
         public final String target;
         public final int argumentCount;
         public final Node source;
 
-        public MethodCall(String targetOwner, JavaNameOccurrence occurrence) {
-            this.targetOwner = targetOwner;
+        public MethodCall(Class<?> targetOwner, JavaNameOccurrence occurrence) {
+            this.targetOwner = targetOwner == null ? null : targetOwner.getCanonicalName();
+            this.targetOwnerClass = targetOwner;
             this.target = occurrence.getImage();
             this.argumentCount = occurrence.getArgumentCount();
             this.source = occurrence.getLocation();
@@ -30,6 +32,7 @@ public class Util {
         public String toString() {
             return "MethodCall{" +
                     "targetOwner='" + targetOwner + '\'' +
+                    ", targetOwnerClass='" + targetOwnerClass + '\'' +
                     ", target='" + target + '\'' +
                     ", argumentCount=" + argumentCount +
                     ", source=" + source +
@@ -37,23 +40,37 @@ public class Util {
         }
     }
 
-    public static List<MethodCall> getMethodCallsFrom(JavaNode node) {
+    public static List<MethodCall> getMethodCallsFrom(JavaNode body) {
         List<MethodCall> methodCalls = new ArrayList<>();
 
         // Find expressions that contain at least one method call
-        Set<List<JavaNameOccurrence>> invocationChains = node
+        Set<List<JavaNameOccurrence>> invocationChains = body
                 .findDescendantsOfType(ASTPrimaryExpression.class).stream()
                 .map(expr -> new NameFinder(expr).getNames())
                 .filter(names -> names.stream().anyMatch(name -> name.isMethodOrConstructorInvocation()))
                 .collect(Collectors.toSet());
 
         for (List<JavaNameOccurrence> chain : invocationChains) {
-            String targetOwner;
+            Class<?> targetOwner;
             if (chain.get(0).isMethodOrConstructorInvocation()) {
-                // First sub-expression is method call -> local method, super method or static import
-                // TODO look for static imports?
-                MethodCall call = new MethodCall(node.getFirstParentOfType(ASTClassOrInterfaceDeclaration.class).getBinaryName(), chain.get(0));
-                methodCalls.add(call);
+                // First name in chain is a method call
+
+                // Look for previous sibling
+                JavaNode node = chain.get(0).getLocation();
+                if (node.getIndexInParent() > 0) {
+                    // Get return type from sibling
+                    Class<?> siblingType = getType(node.getParent().getChild(node.getIndexInParent() - 1));
+                    if (siblingType != null) {
+                        MethodCall call = new MethodCall(siblingType, chain.get(0));
+                        methodCalls.add(call);
+                    }
+                } else {
+                    // Should be local method, super method or static import
+                    // TODO look for static imports?
+                    Class<?> enclosingClass = body.getFirstParentOfType(ASTClassOrInterfaceDeclaration.class).getType();
+                    MethodCall call = new MethodCall(enclosingClass, chain.get(0));
+                    methodCalls.add(call);
+                }
 
                 /*
                 System.err.println("First expression is method call");
@@ -74,7 +91,7 @@ public class Util {
             }
 
             // Resolve type of first sub-expression, i.e. owner of next target method
-            targetOwner = getType(chain.get(0), node.getScope());
+            targetOwner = getType(chain.get(0), body.getScope());
 
             // Iterate over suffixes to resolve method calls
             for (Iterator<JavaNameOccurrence> it = chain.listIterator(1); it.hasNext();) {
@@ -82,24 +99,16 @@ public class Util {
 
                 if (occurrence.isMethodOrConstructorInvocation()) {
                     if (targetOwner == null) {
-                        /*
-                        System.err.println("Call to target with unknown owner (target=" + occurrence.getImage()
+                        /*System.err.println("Call to target with unknown owner (target=" + occurrence.getImage()
                                 + ")" + describeLocation(occurrence.getLocation()));
-                        System.err.println(" + " + chain.toString());
-                        */
+                        System.err.println(" + " + chain.toString());*/
                     } else {
                         methodCalls.add(new MethodCall(targetOwner, occurrence));
                     }
                 }
 
                 // Return type becomes target owner for the next iteration
-                targetOwner = null;
-                if (occurrence.getLocation() instanceof TypeNode) {
-                    TypeNode type = (TypeNode) occurrence.getLocation();
-                    if (type.getType() != null) {
-                        targetOwner = type.getType().getCanonicalName();
-                    }
-                }
+                targetOwner = getType(occurrence.getLocation());
             }
         }
 
@@ -112,8 +121,8 @@ public class Util {
                 + ")";
     }
 
-    public static String getType(NameOccurrence nameOccurrence, Scope scope) {
-        String type = null;
+    public static Class<?> getType(NameOccurrence nameOccurrence, Scope scope) {
+        Class<?> type = null;
 
         // Search for name in current and parent scopes
         while (scope != null) {
@@ -138,33 +147,11 @@ public class Util {
         return type;
     }
 
-    public static String getType(ScopedNode node) {
-        String canonicalName = null;
-        Class type = null;
-
-        try {
-            if (node instanceof TypeNode) {
-                type = ((TypeNode) node).getType();
-            } else if (node instanceof ASTExpression) {
-                type = node.getFirstChildOfType(ASTPrimaryExpression.class).getFirstChildOfType(ASTName.class).getType();
-            } else if (node instanceof ASTPrimaryExpression) {
-                ASTClassOrInterfaceType classType = node.getFirstChildOfType(ASTClassOrInterfaceType.class);
-                if (classType != null) {
-                    type = classType.getType();
-                } else {
-                    type = node.getFirstChildOfType(ASTName.class).getType();
-                }
-            } else if (node instanceof ASTName) {
-                type = ((ASTName) node).getType();
-            } else {
-                return null;
-            }
-
-            canonicalName = type.getCanonicalName();
-        } catch (Exception ex1) {
-            //ex1.printStackTrace();
+    public static Class<?> getType(ScopedNode node) {
+        if (node instanceof TypeNode) {
+            return ((TypeNode) node).getType();
         }
 
-        return canonicalName;
+        return null;
     }
 }

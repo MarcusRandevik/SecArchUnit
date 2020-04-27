@@ -3,20 +3,13 @@ package com.github.secarchunit.pmd;
 import net.sourceforge.pmd.lang.java.ast.*;
 import net.sourceforge.pmd.lang.java.rule.AbstractJavaRule;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class DumpAnnotations extends AbstractJavaRule {
     private static final List<String> ANNOTATIONS = Arrays.asList(
             "com.github.secarchunit.concepts.UserInput",
-            "com.github.secarchunit.concepts.InputValidator",
-            "com.github.secarchunit.concepts.ResourceRestriction"
+            "com.github.secarchunit.concepts.InputValidator"
     );
 
     public DumpAnnotations() {

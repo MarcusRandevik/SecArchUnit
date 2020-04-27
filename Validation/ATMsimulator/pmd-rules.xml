@@ -18,5 +18,8 @@
   <rule name="ValidateUserInput" language="java" message="#4 User input must be validated directly or indirectly." class="com.github.secarchunit.pmd.ValidateInputRule" >
     <priority>3</priority>
   </rule>
+  <rule name="RestrictThreadSpawning" language="java" message="#5 Thread spawns must be restricted." class="com.github.secarchunit.pmd.RestrictThreadSpawningRule" >
+    <priority>3</priority>
+  </rule>
 
 </ruleset>
