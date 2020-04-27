@@ -4,7 +4,7 @@ This chapter explains how the constraints are expressed and validated with the t
 
 \section{Support in ArchUnit as-is}
 
-ArchUnit contains an extensive vocabulary for expressing typical architectural constraints. These constraints are typically composed of three parts. The first part indicates the type of Java construct that should be inspected. These constructs include classes, methods, fields and constructors. The second part contains a predicate that selects a subset of these constructs. The third part defines the condition that must hold true for all the selected constructs.
+ArchUnit contains an extensive vocabulary for expressing typical architectural constraints. These constraints are generally composed of three parts. The first part indicates the type of Java construct that should be inspected. These constructs include classes, methods, fields and constructors. The second part contains a predicate that selects a subset of these constructs. The third part defines the condition that must hold true for all the selected constructs.
 
 An example of a rule defined solely using this standard vocabulary can be seen in Listing~\ref{lst:standard_vocabulary}, where each of the three aforementioned parts of the constraint has been separated into their own line. The rule is a simple example of complete mediation, where some internal classes must only be accessed through a mediator.
 
@@ -138,7 +138,10 @@ ArchRule centralSendingPoint = SecArchUnit
 \end{lstlisting}
 \end{minipage}
 
-\section{With Additional Information in Code}
+
+
+
+\section{Injecting Information into Source Code}
 
 Some of the architectural constraints require that the developer injects additional information into the source code.
 
@@ -184,7 +187,10 @@ public static ArchRule limitResourceAllocation() {
 \end{lstlisting}
 \end{minipage}
 
-\section{With Extensions to ArchUnit}
+
+
+
+\section{Extending ArchUnit Analysis}
 
 In the current ArchUnit API, a rule that aims to constrain access to a method (or field) must be expressed in terms of the type signatures of the source and target methods. Some of our constraints require knowledge about the type signature of the object that is being passed as a parameter. This is a non-issue when fields and method parameters are of the same types as the objects being passed to them. However, in cases where a method signature accepts a "more general" type, such as an \texttt{Object}, there is no way for ArchUnit to constrain the types of the objects that are actually being passed as arguments.
 

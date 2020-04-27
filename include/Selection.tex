@@ -1,11 +1,14 @@
 \chapter{Selection of Architectural Security Constraints}
 
-This chapter describes the methodology of collecting a final list of security constraints from three sources. 
+This chapter describes the result of compiling a list of security constraints, as described in the previous chapter, and the final selection of constraints used in the validation of the tool.  
 
-\section{Collection of Security constraint}
+\section{Compiled list of Security constraint}
 
-The processed collection of security measures can be seen in Table~\ref{tab:all_measures}.
-\todo{Reformulate everything as constraints}
+The processed collection of security constraints can be seen in Table~\ref{tab:all_measures}. There are in total 18 constraints. As mentioned in Section~\ref{sec:processing}, each constraint was categorized according to the goals of CIAA to ensure full coverage. 
+
+Although both the architectural rules found in Jasser \cite{franch_constraining_2019} and the security patterns presented in Scandariato et al \cite{scandariato_system_2006} were at the appropriate level of design, many of the weaknesses presented in CAWE were not. Common examples include; CAWE-259 "Use of hard-coded password" where the weakness is reliant on a local change of behavior rather than the architectural structure; and CAWE-263 "Password aging with long expiration" where the weakness is introduced by a single variable most likely defined outside of the source code. As a result, a far lower percentage of entries were included from the CAWE-catalog compared to the remaining two sources.
+
+
 % E.g. #5, what is "it"/the subject? Who strips the data?
 % Some of these are just guidelines, not actual constraints.
 
@@ -18,30 +21,30 @@ The processed collection of security measures can be seen in Table~\ref{tab:all_
 \hline
 \textbf{ID} & \textbf{Constraint} & \textbf{Goal} \\
 \hline
-1  & Exceptions shown to the client must be sent to a sanitizer \checkmark & Confidentiality \\
+1  & Exceptions shown to the client must be sent to a sanitizer  & Confidentiality \\
 \rowcolor{RowColor}
-2  & Sensitive information must not bleed to components with lower security classification \checkmark & Confidentiality \\
-3  & Sensitive information must be encrypted before transmission \checkmark & Confidentiality \\
+2  & Sensitive information must not bleed to components with lower security classification  & Confidentiality \\
+3  & Sensitive information must be encrypted before transmission  & Confidentiality \\
 \rowcolor{RowColor}
-4  & Every outbound message must be sent from a single component responsible for transmissions \checkmark & Confidentiality \\
-5  & Data that passes a trust boundary must first be sent to a component responsible for hiding or removing sensitive data \checkmark & Confidentiality \\
+4  & Every outbound message must be sent from a single component responsible for transmissions  & Confidentiality \\
+5  & Data that passes a trust boundary must first be sent to a component responsible for hiding or removing sensitive data  & Confidentiality \\
 \rowcolor{RowColor}
-6  & Secrets must not be exposed in log messages \checkmark & Confidentiality \\
-7  & The system must not provide functionality to decrypt secured log messages \checkmark & Confidentiality \\
+6  & Secrets must not be exposed in log messages  & Confidentiality \\
+7  & The system must not provide functionality to decrypt secured log messages  & Confidentiality \\
 \rowcolor{RowColor}
 8  & Output passing between components must be validated against its specification & Integrity \\
-9  & Input from a user must pass through a component validating the data \checkmark & Integrity \\
+9  & Input from a user must pass through a component validating the data  & Integrity \\
 \rowcolor{RowColor}
-10 & The session object must not be accessible to the user \checkmark & Integrity \\
-11 & Components must store its state as restorable checkpoints \checkmark & Availability \\
+10 & The session object must not be accessible to the user  & Integrity \\
+11 & Components must store its state as restorable checkpoints  & Availability \\
 \rowcolor{RowColor}
-12 & Spawning of threads must be limited or throttled \checkmark & Availability \\
-13 & The system must not have multiple points of access \checkmark & Accountability \\
+12 & Spawning of threads must be limited or throttled  & Availability \\
+13 & The system must not have multiple points of access  & Accountability \\
 \rowcolor{RowColor}
-14 & At least one checkpoint must be initialized after successful authentication and authorization \checkmark & Accountability \\
-15 & Methods related to security events must call the logger \checkmark & Accountability \\
+14 & At least one checkpoint must be initialized after successful authentication and authorization  & Accountability \\
+15 & Methods related to security events must call the logger  & Accountability \\
 \rowcolor{RowColor}
-16 & Authentication and authorization must each be enforced in a single component \checkmark & Accountability \\
+16 & Authentication and authorization must each be enforced in a single component  & Accountability \\
 17 & Security relevant log messages must be encrypted and immutable & Accountability \\
 \hline
 \end{tabular}
@@ -77,14 +80,13 @@ As explained in Section~\ref{sec:limitations}, the aim is not to demonstrate the
 \label{tab:selected_measures}
 \end{table}
 
-\todo{Present each of the final constraints, see notes in comment}
 % For each constraint:
 % * describe what it means
 % * typical way to enforce it
 % * which source it comes from (literature)
 % * maybe describing a security attack scenario that this constraint aims to avoid
 
-\subsection{Log all security events \checkmark} 
+\subsection{Log all security events } 
 
 \textbf{Description:} In any system, several components either directly change or process data, which represents the system's asset, or indirectly by invoking other components to act on its behalf. In either case, the request to perform a particular action originates from an actor (user or external process) who should later be held accountable.  As a consequence, the system should log a security event before performing an action that could breach the specified security policies. Although the term security event has become somewhat ambiguous, the definition used in the context of this report comes from the SANS Institute: "An event is an observable occurrence in an information system that actually happened at some point in time." \footnote{\url{https://www.sans.org/reading-room/whitepapers/incident/events-incidents-646}}
 
@@ -94,7 +96,7 @@ As explained in Section~\ref{sec:limitations}, the aim is not to demonstrate the
 
 \textbf{Attack scenario:} A typical scenario where the logging of security events increases a system's resilience to attacks is that of failed login attempts. An attacker may try and guess the credentials of a user by employing a brute-force attack. During the attack, the attacker performs several failed attempts at guessing the credentials, (hopefully) causing the system to either increase the time between repeated attempts or lock the account entirely though with the added effect of decreased availability for the intended user. Although this type of defense temporarily hinders the attacker, a log of failed attempts facilities the detection of malicious actors and enables administrators to impose more permanent measures. 
 
-\subsection{Enforce AuthN/AuthZ at single point} \checkmark
+\subsection{Enforce AuthN/AuthZ at single point} 
  
  \textbf{Description:} Any system that has more than one user needs to incorporate functionality for authentication (AuthN), as well as authorization (AuthZ) if the privileges between users differ. The difficulty in complex systems where components handle different functionality, thus receiving separate requests and creating multiple entry points, is the fact that the components may have been designed to use various mechanisms of authentication. Instead, AuthN/AuthZ should be delegated to a single component to ensure consistent behavior across all entry points. 
  
@@ -112,7 +114,7 @@ As explained in Section~\ref{sec:limitations}, the aim is not to demonstrate the
  
   An attacker may try and gain access to the least trusted point of entry and later use the granted authority to access services or operation normally requiring a greater level of trust.
 
-\subsection{Messages are sent from a central point} \checkmark
+\subsection{Messages are sent from a central point} 
 
 \textbf{Description:} 
 Communication with external actors, whether they are a client connecting to a server, or the system requesting data from a third party, is commonly performed over insecure networks. Encryption is the preferred method of securing such communication against potential attackers. However, it is challenging to implement an encryption algorithm correctly as a seemingly small deviation might affect the algorithm's mathematical soundness. Having a single component responsible for any outbound communication reduces the risk of introducing an implementation error, potentially causing an otherwise sound algorithm to be insecure.
@@ -125,7 +127,7 @@ Communication with external actors, whether they are a client connecting to a se
  \textbf{Attack scenario:}
  A banking system may properly use a delegated component for the transmission of some of the most critical data (e.g. credit card numbers) but fail to do so for others (e.g. bank account numbers). An attacker who monitors network traffic at an open wireless network can thus intercept the packets and directly read and/or alter the data sent between the user and the system. If the user were to initiate a money transfer, the attacker could potentially change the recipient's account number. 
 
-\subsection{Validate user input} \checkmark
+\subsection{Validate user input} 
 
 \textbf{Description:} 
 The ability to receive and process user input is fundamental to every computer system. However, the same input is also the primary source of untrusted data as an attacker possesses full control of what the system receives. Assuming that all data passed to a system is safe to process can have severe consequences when interpreting user input as a part of a query, often referred to as injection. In order to prevent an attacker from compromising the system by injection, all user input must be validated.
@@ -137,7 +139,7 @@ The ability to receive and process user input is fundamental to every computer s
  \textbf{Sources:} CAWE 20/59/74-79/88-91/93-99/138/150/349/352/472/473/502/601/\newline/641/643/652/790-797/942, Security pattern \textit{input guard}
  
  \textbf{Attack scenario:}
- In an application that uses user input to build a SQL query to retrieve a specific account number (as seen in listing \ref{lst:SQL_vul}) an attacker may construct the request to retrieve all accounts by adding characters that break the query and introduces new parameters, such as \texttt{' or '1'='1}. The resulting operation would retrieve all customer accounts, thus exposing sensitive information.
+ In an application that uses user input to build a SQL query to retrieve a specific account number (as seen in Listing~\ref{lst:SQL_vul}) an attacker may construct the request to retrieve all accounts by adding characters that break the query and introduces new parameters, such as \texttt{' or '1'='1}. The resulting operation would retrieve all customer accounts, thus exposing sensitive information.
  
  \begin{minipage}{\linewidth}
 \begin{lstlisting}[caption={Example of a vulnerable SQL query}, captionpos=b, label=lst:SQL_vul, numbers=left, showstringspaces=false]
@@ -167,13 +169,13 @@ Generally, a specific set of components, which have stricter security requiremen
  \textbf{Sources:} CAWE 488
  
  \textbf{Attack scenario:}
- 
+ \todo{attack scenario}
 
-\subsection{Secrets must not be exposed in log messages} \checkmark
+\subsection{Secrets must not be exposed in log messages} 
 
 \textbf{Description:} Many systems handle secrets that should never touch permanent storage. A password is perhaps the most common example of such a secret. While great care can be taken on the design level to ensure that these secrets are not stored to disk, they may still be exposed unintentionally through log messages. In order to prevent such exposure, messages that are sent to the logger must not contain secrets.
 
- \textbf{Typical enforcement:} Similar to the constraint described in section \ref{sec:trust_boundry_constraint}, the typical approach is to manually review call to the logger to ensure that no secrets are exposed, with the potential ability to use information flow analysis tools.
+ \textbf{Typical enforcement:} Similar to the constraint described in Section~\ref{sec:trust_boundry_constraint}, the typical approach is to manually review call to the logger to ensure that no secrets are exposed, with the potential ability to use information flow analysis tools.
  
  \textbf{Sources:} CAWE 359/532, Jasser rule 13
  
