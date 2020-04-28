@@ -1,0 +1,1 @@
+mvn clean package && copy /b/v/y .\target\pmd-custom-rules-1.0-SNAPSHOT.jar %PMD_HOME%\lib
