@@ -2,11 +2,11 @@
 
 This chapter describes the result of compiling a list of security constraints, as described in the previous chapter, and the final selection of constraints used in the validation of the tool.  
 
-\section{Compiled list of Security constraint}
+\section{Compiled List of Security Constraints}
 
 The processed collection of security constraints can be seen in Table~\ref{tab:all_measures}. There are in total 18 constraints. As mentioned in Section~\ref{sec:processing}, each constraint was categorized according to the goals of CIAA to ensure full coverage. 
 
-Although both the architectural rules found in Jasser \cite{franch_constraining_2019} and the security patterns presented in Scandariato et al \cite{scandariato_system_2006} were at the appropriate level of design, many of the weaknesses presented in CAWE were not. Common examples include; CAWE-259 "Use of hard-coded password" where the weakness is reliant on a local change of behavior rather than the architectural structure; and CAWE-263 "Password aging with long expiration" where the weakness is introduced by a single variable most likely defined outside of the source code. As a result, a far lower percentage of entries were included from the CAWE-catalog compared to the remaining two sources.
+Although both the architectural rules found in Jasser \cite{franch_constraining_2019} and the security patterns presented in Scandariato et al. \cite{scandariato_system_2006} were at the appropriate level of design, many of the weaknesses presented in CAWE were not. Common examples include; CAWE-259 "Use of hard-coded password" where the weakness is reliant on a local change of behavior rather than the architectural structure; and CAWE-263 "Password aging with long expiration" where the weakness is introduced by a single variable most likely defined outside of the source code. As a result, a far lower percentage of entries were included from the CAWE-catalog compared to the remaining two sources.
 
 
 % E.g. #5, what is "it"/the subject? Who strips the data?
@@ -92,7 +92,7 @@ As explained in Section~\ref{sec:limitations}, the aim is not to demonstrate the
 
 \textbf{Typical enforcement:} The usage of the \textit{audit interceptor} forces all requests from a user to first be sent to a component responsible for logging the request and later forwarding it to the intended target. 
 
-\textbf{Sources:} CAWE 223/778, Jasser rule 5, Security pattern \textit{Audit interceptor}
+\textbf{Sources:} CAWE 223/778, Jasser rule 5, Security pattern \textit{Audit interceptor}.
 
 \textbf{Attack scenario:} A typical scenario where the logging of security events increases a system's resilience to attacks is that of failed login attempts. An attacker may try and guess the credentials of a user by employing a brute-force attack. During the attack, the attacker performs several failed attempts at guessing the credentials, (hopefully) causing the system to either increase the time between repeated attempts or lock the account entirely though with the added effect of decreased availability for the intended user. Although this type of defense temporarily hinders the attacker, a log of failed attempts facilities the detection of malicious actors and enables administrators to impose more permanent measures. 
 
@@ -108,7 +108,7 @@ As explained in Section~\ref{sec:limitations}, the aim is not to demonstrate the
  
  \begin{itemize}
      \item There are multiple points of entry; 
-     \item There are different mechanisms to provide AuthN/AuthZ, some having a greater certainty that a user is \todo[inline]{add word for what is greater}
+     \item There are different mechanisms to provide AuthN/AuthZ, some having a greater certainty that a user is properly authenticated or authorized to perform an action
      \item and all points of entry share the same session object
  \end{itemize}
  
@@ -117,15 +117,15 @@ As explained in Section~\ref{sec:limitations}, the aim is not to demonstrate the
 \subsection{Messages are sent from a central point} 
 
 \textbf{Description:} 
-Communication with external actors, whether they are a client connecting to a server, or the system requesting data from a third party, is commonly performed over insecure networks. Encryption is the preferred method of securing such communication against potential attackers. However, it is challenging to implement an encryption algorithm correctly as a seemingly small deviation might affect the algorithm's mathematical soundness. Having a single component responsible for any outbound communication reduces the risk of introducing an implementation error, potentially causing an otherwise sound algorithm to be insecure.
+Communication with external actors, whether they are a client connecting to a server, or the system sending data to a third party, is commonly performed over insecure networks using several components. Encryption is the preferred method of securing such communication against potential attackers, whereas removing secrets from the data to be sent ensures that a user only sees non-sensitive information. Having a single component responsible for any outbound communication reduces the risk of information disclosure (e.g. transmitting a sensitive message via an insecure sender or disclosing implementation details through stack traces), and can prevent harmful output from reaching the client (e.g. cross-site scripting attacks from other users). 
  
  \textbf{Typical enforcement:} 
- A single component is responsible for establishing, performing, and closing external communications. This component may be a part of a network library or implemented inside of the system. 
+ Outbound messages can be intercepted before transmission to facilitate output sanitization. Similarly, outgoing messages can be forced to pass through a single component, designated as the sending point. This sending point can handle sanitization and decide whether the sender is allowed to carry the specified message.
  
- \textbf{Sources:} Jasser rule 11
+ \textbf{Sources:} Jasser rules 11 and 12.
  
  \textbf{Attack scenario:}
- A banking system may properly use a delegated component for the transmission of some of the most critical data (e.g. credit card numbers) but fail to do so for others (e.g. bank account numbers). An attacker who monitors network traffic at an open wireless network can thus intercept the packets and directly read and/or alter the data sent between the user and the system. If the user were to initiate a money transfer, the attacker could potentially change the recipient's account number. 
+ A blog website may properly use a delegated component for the sanitized transmission of some data (e.g. blog entries) but fail to do so for others (e.g. comments). An attacker who posts a comment containing HTML tags may then hijack the browser session of other users visiting the site.
 
 \subsection{Validate user input} 
 
@@ -135,8 +135,7 @@ The ability to receive and process user input is fundamental to every computer s
  \textbf{Typical enforcement:} 
  Placing a component performing validation between the user's input and the component processing the data ensures that the input can be trusted. The approach is commonly referred to as the security pattern \textit{input guard}.
  
- \todo{Perhaps change the number of mentioned entries}
- \textbf{Sources:} CAWE 20/59/74-79/88-91/93-99/138/150/349/352/472/473/502/601/\newline/641/643/652/790-797/942, Security pattern \textit{input guard}
+ \textbf{Sources:} CAWE 20/59/74-79/88-91/93-99/138/150/349/352/472/473/502/601/\newline/641/643/652/790-797/942, Security pattern \textit{input guard}.
  
  \textbf{Attack scenario:}
  In an application that uses user input to build a SQL query to retrieve a specific account number (as seen in Listing~\ref{lst:SQL_vul}) an attacker may construct the request to retrieve all accounts by adding characters that break the query and introduces new parameters, such as \texttt{' or '1'='1}. The resulting operation would retrieve all customer accounts, thus exposing sensitive information.
@@ -152,9 +151,9 @@ String query = "SELECT * FROM accounts WHERE
 
 \textbf{Description:} Computers have finite resources in terms of memory, CPU time and network bandwidth. Systems should be designed with this in mind, employing measures to avoid exhausting the computer's resources. This constraint limits the number of threads that can be spawned on behalf of actors, which could otherwise lead to exhaustion of the CPU.
  
- \textbf{Typical enforcement:} Dispatching tasks to a pool of worker threads that is not allowed to grow beyond a fixed size. Moreover, various mechanisms are employed to throttle or limit requests such that a single actor cannot occupy all of the allotted threads.
+ \textbf{Typical enforcement:} Tasks can be dispatched to a pool of worker threads that is not allowed to grow beyond a fixed size. Moreover, various mechanisms can be employed to throttle or limit requests such that a single actor cannot occupy all of the allotted threads.
  
- \textbf{Sources:} CAWE 770
+ \textbf{Sources:} CAWE 770.
  
  \textbf{Attack scenario:} An attacker may initiate many requests that are each handled by the system in a separate thread. By initiating requests at a higher rate than the server is able to process them, the resources at the server are eventually exhausted. This leads to a denial of service to any legitimate actors attempting to access the system.
 
@@ -166,17 +165,17 @@ Generally, a specific set of components, which have stricter security requiremen
  \textbf{Typical enforcement:}
  A typical approach is to manually review methods that receives or send information to other components and ensure that they do not expose any secrets. As for automated enforcement, various information flow analysis tools, like JOANA\footnote{\url{https://pp.ipd.kit.edu/projects/joana/}}, can be employed to detect these types of information leaks within a system.
  
- \textbf{Sources:} CAWE 488
+ \textbf{Sources:} CAWE 488.
  
  \textbf{Attack scenario:}
- \todo{attack scenario}
+ An asset may be leaked from a component that is supposed to service a single actor, such as a session object, to a component that multiple actors have shared access to. This may subsequently lead to the asset being illegitimately accessed by a malicious actor.
 
 \subsection{Secrets must not be exposed in log messages} 
 
 \textbf{Description:} Many systems handle secrets that should never touch permanent storage. A password is perhaps the most common example of such a secret. While great care can be taken on the design level to ensure that these secrets are not stored to disk, they may still be exposed unintentionally through log messages. In order to prevent such exposure, messages that are sent to the logger must not contain secrets.
 
- \textbf{Typical enforcement:} Similar to the constraint described in Section~\ref{sec:trust_boundry_constraint}, the typical approach is to manually review call to the logger to ensure that no secrets are exposed, with the potential ability to use information flow analysis tools.
+ \textbf{Typical enforcement:} Similar to the constraint described in Section~\ref{sec:trust_boundry_constraint}, the typical approach is to manually review calls to the logger to ensure that no secrets are exposed, with the potential ability to use information flow analysis tools.
  
- \textbf{Sources:} CAWE 359/532, Jasser rule 13
+ \textbf{Sources:} CAWE 359/532, Jasser rule 13.
  
  \textbf{Attack scenario:} Log messages may be accessible to actors who are not otherwise granted direct access to the secrets. By exploiting an unintentional leak of secrets into the log messages, an attacker could systematically extract these without facing the intended restrictions.

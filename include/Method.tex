@@ -30,10 +30,9 @@ Starting from each of the three sources of architectural constraints described i
     \item Although somewhat included in the first criterion as it is a local issue, an entry must not relate to the correctness or best practice of the implementation of an algorithm. Examples include the practice of using session tokens with time-limited validity. \label{criterion_3}
     \item The entry must only relate to the system under design, thus ignoring the correctness and security of any external dependencies. \label{criterion_4}
     \item The entry must not be dependent on externally defined data, such as in the case of user permission. \label{criterion_5}
-    \item \todo{criterion 6}
 \end{enumerate}
 
-\begin{figure}[h]
+\begin{figure}
     \centering
     \includegraphics[width=\textwidth]{figure/Half-time presentation.png}
     \caption{Overview of the process of mapping the three sources to constraints}
@@ -44,7 +43,7 @@ Additionally, we deemed measures defined as the absence of certain functionality
 
 Previous research on design notations of secure systems have shown a skew towards confidentiality and integrity while having little or no support for availability and accountability. We considered it necessary for the final list of constraints to include all of the security goals. As a consequence, once we had selected the applicable entries, we categorized them according to the security goals of CIAA. This categorization ensured that the final list of constraints covered all security goals. 
 
-The last part of compiling a list of security architectural constraints involved combining the selected entries to remove duplicates and group similar concepts. Duplicattion involved both a single source having several entries, such as CAWE having input validation weakness for multiple tools and technologies (e.g., SQL, LDAP) and different sources having entries for the same concept, such as the security pattern input guard and the previously mentioned input validation weaknesses. Grouping similar concepts also allowed for the constraints to be more general, thus making them applicable for a broader set of systems. 
+The last part of compiling a list of security architectural constraints involved combining the selected entries to remove duplicates and group similar concepts. Duplication involved both a single source having several entries, such as CAWE having input validation weakness for multiple tools and technologies (e.g., SQL, LDAP) and different sources having entries for the same concept, such as the security pattern input guard and the previously mentioned input validation weaknesses. Grouping similar concepts also allowed for the constraints to be more general, thus making them applicable for a broader set of systems. 
 
 \section{Validation}
 
