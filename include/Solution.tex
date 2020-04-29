@@ -2,7 +2,7 @@
 
 This chapter explains how the constraints are expressed and validated with the tool. The constraints are divided into three distinct categories. The first category contains the constraints that are possible to express in ArchUnit as-is. The second category describes constraints that are enforceable with the help of additional information in source code. The third and final category details constraints that require an extension of ArchUnit to be possible to enforce.
 
-\section{Support in ArchUnit as-is}
+\section{Support in ArchUnit as-is}\label{sec:as-is}
 
 ArchUnit contains an extensive vocabulary for expressing typical architectural constraints. These constraints are generally composed of three parts. The first part indicates the type of Java construct that should be inspected. These constructs include classes, methods, fields and constructors. The second part contains a predicate that selects a subset of these constructs. The third part defines the condition that must hold true for all the selected constructs.
 
@@ -147,7 +147,9 @@ Some of the architectural constraints require that the developer injects additio
 
 In some cases, this information is simply an indicator that says something about an entire class. Naming the class with a specific suffix is one approach to accomplish this. Another approach is to implement an empty interface, which is the technique used with Java's \texttt{Serializable}\footnote{https://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html} interface. 
 
-In other cases, however, the information may be required for methods of arbitrary signatures and even specific fields. For the purposes of flexibility and minimal obtrusiveness, any extra information is expressed in the form of annotations. These can be applied to classes, fields, methods and parameters without changing the underlying architecture of the system.
+In other cases, however, the information may be required for methods of arbitrary signatures and even specific fields. For the purposes of flexibility and minimizing the obtrusiveness of our approach, any extra information is expressed in the form of annotations. These can be applied to classes, fields, methods and parameters without changing the underlying architecture of the system.
+
+The need for additional information within the source code becomes apparent in the case where a class contains public methods with varying degrees of security requirements. A typical example would be a class responsible for handling user input. Some methods might receive predefined values, such as in the case of checkboxes, whereas others treat strings entered by the user.  The former type of input is guaranteed to be safe, whereas the latter entirely under the control of the attacker, thus introducing the need for sanitation. Using the broader predicate of entire classes (described in section \ref{sec:as-is}) would not allow the constraint to be limited to specific methods within a class (those receiving potentially malicious input), and later trace a call to a method providing sanitation. Thus, annotations provide the granularity needed to limit the scope of a constraint to only the applicable code units.
 
 \todo{Specific example that requires additional information}
 
@@ -168,7 +170,7 @@ public static ArchRule validateUserInput() {
 \end{minipage}
 
 \subsection{Restrict thread spawning}
-While resources is a broad term, this constraint focuses on preventing the exhaustion of CPU and memory resources through the creation of new threads and processes. As such, every block of code that contains a call to the \texttt{start()} method of a \texttt{Thread}\footnote{https://docs.oracle.com/javase/7/docs/api/java/lang/Thread.html} or any of its subclasses, must be marked as containing a resource restriction mechanism. The same rule is applied for calls to \texttt{ProcessBuilder.start()}\footnote{https://docs.oracle.com/javase/7/docs/api/java/lang/Process.html} and \texttt{Runtime.exec()}\footnotemark[3], which lead to the creation of new processes.
+While resources is a broad term, this constraint focuses on preventing the exhaustion of CPU and memory resources through the creation of new threads and processes. As such, every block of code that contains a call to the \texttt{start()} method of a \texttt{Thread}\footnote{\url{https://docs.oracle.com/javase/7/docs/api/java/lang/Thread.html}} or any of its subclasses, must be marked as containing a resource restriction mechanism. The same rule is applied for calls to \texttt{ProcessBuilder.start()}\footnote{\url{https://docs.oracle.com/javase/7/docs/api/java/lang/Process.html}} and \texttt{Runtime.exec()}\footnotemark[3], which lead to the creation of new processes.
 % TODO manual footnote, adjust as necessary
 
 The marking is done with the help of an annotation, either on the relevant method or the entire class. The decision of how the restriction mechanism is implemented is left to the developer of the system.
