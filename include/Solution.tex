@@ -167,7 +167,7 @@ User input comes in many forms, and as such, it is impossible to define a single
     \item \textit{Method A} is annotated with \textbf{UserInput} but is never called.
 \end{itemize}
 
-The rule definition can be seen in Listing \ref{lst:constraint_4_impl}. As shown, the \textbf{UserInput} annotation is used on line 3 to limit the set of applicable code units, whereas the custom condition \texttt{performDirectOrIndirect}.
+The rule definition can be seen in Listing \ref{lst:constraint_4_impl}. As shown, the \textbf{UserInput} annotation is used on line 3 to limit the set of applicable code units, whereas the custom condition \texttt{performDirectOrIndirect} implements the logic to detect violations for each of the four cases outline above.
     
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[caption={Rule definition for constraint 4.}, captionpos=b, label=lst:constraint_4_impl, numbers=left]
@@ -179,6 +179,14 @@ public static ArchRule validateUserInput() {
 \end{lstlisting}
 \end{minipage}
 
+In the example system, a user publishes a status update in the form of a string that the UserService class receives. The status is then passed to the StatusSanitizer class, where it is validated. The affected methods of each class are marked with the appropriate annotation, as shown in figure \ref{fig:validate_input_toy_system}.  
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figure/toyexamples/validate_input_toy_system.png}
+    \caption{Applying constraint 4 to the model of the example system using added annotations}
+    \label{fig:validate_input_toy_system}
+\end{figure}
 
 \subsection{Restrict thread spawning}
 While resources is a broad term, this constraint focuses on preventing the exhaustion of CPU and memory resources through the creation of new threads and processes. As such, every block of code that contains a call to the \texttt{start()} method of a \texttt{Thread}\footnote{\url{https://docs.oracle.com/javase/7/docs/api/java/lang/Thread.html}} or any of its subclasses, must be marked as containing a resource restriction mechanism. The same rule is applied for calls to \texttt{ProcessBuilder.start()}\footnote{\url{https://docs.oracle.com/javase/7/docs/api/java/lang/Process.html}} and \texttt{Runtime.exec()}\footnotemark[3], which lead to the creation of new processes.
