@@ -1,0 +1,16 @@
+@startuml
+
+package "ASM" <<Frame>> {
+    class MethodVisitor {
+        + void visitFieldInsn(int opcode, String owner, String name, String descriptor)
+        + void visitMethodInsn(int opcode, String owner, String name, String descriptor)
+        + void visitVarInsn(int opcode, int var)
+    }
+}
+
+class MethodProcessor {
+}
+
+MethodProcessor --|> MethodVisitor
+
+@enduml
