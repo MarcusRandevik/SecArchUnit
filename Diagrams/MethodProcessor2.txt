@@ -5,8 +5,8 @@ package "ASM" <<Frame>> {
     }
 
     class AnalyzerAdapter {
-        - List<Object> locals
-        - List<Object> stack
+        # List<Object> locals
+        # List<Object> stack
     }
 
     AnalyzerAdapter --|> MethodVisitor
