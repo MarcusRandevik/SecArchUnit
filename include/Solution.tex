@@ -184,7 +184,7 @@ In the example system, a user publishes a status update in the form of a string 
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{figure/toyexamples/validate_input_toy_system.png}
-    \caption{Applying constraint 4 to the model of the example system using added annotations}
+    \caption{Applying constraint 4 to the model of the example system using added annotations.}
     \label{fig:validate_input_toy_system}
 \end{figure}
 
@@ -215,7 +215,7 @@ public static ArchRule limitResourceAllocation() {
 
 In the current ArchUnit API, a rule that aims to constrain method calls can only be defined in terms of the type signatures of the method and its parameters. This is a non-issue when the arguments being passed to a method are of the same type as the parameters. However, in cases where a method parameter accepts a "more general" type, such as an \texttt{Object}, there is no way for ArchUnit to constrain the types of the objects that are actually being passed as arguments.
 
-Consider constraint 7, which aims to ensure that no secrets are passed to the logger. We can attempt to enforce this with the current ArchUnit API and a few custom predicates, as seen in Listing~\ref{lst:constraint_6_attempt}. However, a typical logger class will accept either a plain string, or a format string along with an array of objects to be formatted. In such cases, this architectural rule will be unable to catch secrets that are passed to the logger.
+Consider constraint 7, which aims to ensure that no secrets are passed to the logger. Say there is a \texttt{Secret} annotation that marks all the classes whose instances must not be passed to the logger. We can attempt to enforce the constraint with the current ArchUnit API and a few custom predicates, as seen in Listing~\ref{lst:constraint_6_attempt}. However, a typical logger class will accept either a plain string, or a format string along with an array of objects to be formatted. In such cases, this architectural rule will be unable to catch secrets that are passed to the logger.
 
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[caption={A first attempt to implement constraint 7.}, captionpos=b, label=lst:constraint_6_attempt, numbers=left]
@@ -229,17 +229,37 @@ public static ArchRule doNotLogSecrets(Class<?> logger) {
 \end{lstlisting}
 \end{minipage}
 
-For the final 2 constraints, there is a need for an extension that allows constraints to be defined against arguments, rather than parameters. Preferably, there should also be information about where these arguments have been derived from. In the following sections, we will describe the extensions that have been made to ArchUnit and how these are utilized in the definitions of our constraints.
+For the final 2 constraints, there is a need for an extension that allows constraints to be defined against arguments, rather than parameters. There should also be hints about where these arguments may have been derived from, e.g. which types that make up the components of a concatenated string. In the following sections, we will describe the extensions that have been made to ArchUnit and how these are utilized in the definitions of our constraints.
 
 \subsection{Extensions}
+\todo{Parts of this section probably belong in the background}
 
-Java is a stack-oriented programming language,\todo{citation} meaning that arguments to method calls and field assignments are passed via the stack. As such, inspecting the stack at the time of a method call or field assignment will allow us to learn the types of the arguments that are being passed.
+ArchUnit builds its representation of the architecture using ASM\footnote{\url{https://asm.ow2.io/}}, a Java bytecode analysis framework. ASM reads bytecode and generates callbacks to methods in its various visitor classes\footnote{\url{https://asm.ow2.io/javadoc/org/objectweb/asm/package-summary.html}}. The visitor of most interest to us is \texttt{MethodVisitor}, which is responsible for processing the contents of a method, constructor or static initializer. These are collectively named \textit{code units} in ArchUnit's domain, i.e. anything that contains code. 
 
-ArchUnit builds its representation of the architecture using ASM\footnote{\url{https://asm.ow2.io/}}, a Java bytecode analysis framework. This framework contains functionality for keeping track of the stack and local variables while analyzing the instructions of a method.
+ArchUnit extends the \texttt{MethodVisitor} class in \texttt{MethodProcessor} and translates the instructions into information about field accesses, method invocations, et. cetera, building its representation of the architecture. A short excerpt of the various callbacks available to this visitor can be seen in Figure~\ref{fig:method_processor_1}. The class \texttt{MethodProcessor} extends
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.6\textwidth]{figure/extension/MethodProcessor1.png}
+    \caption{The immediate context of the \texttt{MethodProcessor} class in ArchUnit, responsible for processing bytecode instructions.}
+    \label{fig:method_processor_1}
+\end{figure}
+
+
+Java is a stack-oriented programming language, meaning that arguments to method calls and field assignments are passed via the stack \cite{hutchison_information_2005}. As such, inspecting the stack at the time of a method call or field assignment will allow us to learn the types of the arguments that are being passed.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{figure/extension/MethodProcessor2.png}
+    \caption{Changes made to the \texttt{MethodProcessor} class and its surroundings.}
+    \label{fig:method_processor_2}
+\end{figure}
+
 \todo{describe our information flow analysis, reference existing approaches}
 
-Our extension provides this additional information in ArchUnit's representation of accesses to fields and methods, which the rule definitions can then make use of.
+\todo{Diagram of changes to ArchUnit domain}
 
+Our extension provides this additional information in ArchUnit's representation of accesses to fields and methods, which the rule definitions can then make use of.
 
 
 \todo{Detail the extensions we made}
