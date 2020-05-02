@@ -19,6 +19,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Optional;
 
+import com.github.secarchunit.concepts.UserInput;
+
 /**
  * The Class CartItem.
  *
@@ -58,6 +60,7 @@ public class CartItem implements Serializable {
     return quantity;
   }
 
+  @UserInput
   public void setQuantity(int quantity) {
     this.quantity = quantity;
     calculateTotal();

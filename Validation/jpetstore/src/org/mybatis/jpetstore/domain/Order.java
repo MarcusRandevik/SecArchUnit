@@ -22,6 +22,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import com.github.secarchunit.concepts.UserInput;
+
 /**
  * The Class Order.
  *
@@ -87,6 +89,7 @@ public class Order implements Serializable {
     return shipAddress1;
   }
 
+  @UserInput
   public void setShipAddress1(String shipAddress1) {
     this.shipAddress1 = shipAddress1;
   }
@@ -95,6 +98,7 @@ public class Order implements Serializable {
     return shipAddress2;
   }
 
+  @UserInput
   public void setShipAddress2(String shipAddress2) {
     this.shipAddress2 = shipAddress2;
   }
@@ -103,6 +107,7 @@ public class Order implements Serializable {
     return shipCity;
   }
 
+  @UserInput
   public void setShipCity(String shipCity) {
     this.shipCity = shipCity;
   }
@@ -111,6 +116,7 @@ public class Order implements Serializable {
     return shipState;
   }
 
+  @UserInput
   public void setShipState(String shipState) {
     this.shipState = shipState;
   }
@@ -119,6 +125,7 @@ public class Order implements Serializable {
     return shipZip;
   }
 
+  @UserInput
   public void setShipZip(String shipZip) {
     this.shipZip = shipZip;
   }
@@ -127,6 +134,7 @@ public class Order implements Serializable {
     return shipCountry;
   }
 
+  @UserInput
   public void setShipCountry(String shipCountry) {
     this.shipCountry = shipCountry;
   }
@@ -135,6 +143,7 @@ public class Order implements Serializable {
     return billAddress1;
   }
 
+  @UserInput
   public void setBillAddress1(String billAddress1) {
     this.billAddress1 = billAddress1;
   }
@@ -143,6 +152,7 @@ public class Order implements Serializable {
     return billAddress2;
   }
 
+  @UserInput
   public void setBillAddress2(String billAddress2) {
     this.billAddress2 = billAddress2;
   }
@@ -151,6 +161,7 @@ public class Order implements Serializable {
     return billCity;
   }
 
+  @UserInput
   public void setBillCity(String billCity) {
     this.billCity = billCity;
   }
@@ -159,6 +170,7 @@ public class Order implements Serializable {
     return billState;
   }
 
+  @UserInput
   public void setBillState(String billState) {
     this.billState = billState;
   }
@@ -167,6 +179,7 @@ public class Order implements Serializable {
     return billZip;
   }
 
+  @UserInput
   public void setBillZip(String billZip) {
     this.billZip = billZip;
   }
@@ -175,6 +188,7 @@ public class Order implements Serializable {
     return billCountry;
   }
 
+  @UserInput
   public void setBillCountry(String billCountry) {
     this.billCountry = billCountry;
   }
@@ -199,6 +213,7 @@ public class Order implements Serializable {
     return billToFirstName;
   }
 
+  @UserInput
   public void setBillToFirstName(String billToFirstName) {
     this.billToFirstName = billToFirstName;
   }
@@ -207,6 +222,7 @@ public class Order implements Serializable {
     return billToLastName;
   }
 
+  @UserInput
   public void setBillToLastName(String billToLastName) {
     this.billToLastName = billToLastName;
   }
@@ -215,6 +231,7 @@ public class Order implements Serializable {
     return shipToFirstName;
   }
 
+  @UserInput
   public void setShipToFirstName(String shipFoFirstName) {
     this.shipToFirstName = shipFoFirstName;
   }
@@ -223,6 +240,7 @@ public class Order implements Serializable {
     return shipToLastName;
   }
 
+  @UserInput
   public void setShipToLastName(String shipToLastName) {
     this.shipToLastName = shipToLastName;
   }
@@ -231,6 +249,7 @@ public class Order implements Serializable {
     return creditCard;
   }
 
+  @UserInput
   public void setCreditCard(String creditCard) {
     this.creditCard = creditCard;
   }
@@ -239,6 +258,7 @@ public class Order implements Serializable {
     return expiryDate;
   }
 
+  @UserInput
   public void setExpiryDate(String expiryDate) {
     this.expiryDate = expiryDate;
   }
@@ -247,6 +267,7 @@ public class Order implements Serializable {
     return cardType;
   }
 
+  @UserInput
   public void setCardType(String cardType) {
     this.cardType = cardType;
   }

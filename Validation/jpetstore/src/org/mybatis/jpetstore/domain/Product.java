@@ -17,6 +17,8 @@ package org.mybatis.jpetstore.domain;
 
 import java.io.Serializable;
 
+import com.github.secarchunit.concepts.UserInput;
+
 /**
  * The Class Product.
  *
@@ -35,6 +37,7 @@ public class Product implements Serializable {
     return productId;
   }
 
+  @UserInput
   public void setProductId(String productId) {
     this.productId = productId.trim();
   }

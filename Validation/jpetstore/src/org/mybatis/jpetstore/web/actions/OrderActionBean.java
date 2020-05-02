@@ -29,6 +29,9 @@ import net.sourceforge.stripes.integration.spring.SpringBean;
 import org.mybatis.jpetstore.domain.Order;
 import org.mybatis.jpetstore.service.OrderService;
 
+import com.github.secarchunit.concepts.InputValidator;
+import com.github.secarchunit.concepts.UserInput;
+
 /**
  * The Class OrderActionBean.
  *
@@ -63,6 +66,7 @@ public class OrderActionBean extends AbstractActionBean {
     return order.getOrderId();
   }
 
+  @UserInput // TODO
   public void setOrderId(int orderId) {
     order.setOrderId(orderId);
   }
@@ -79,6 +83,7 @@ public class OrderActionBean extends AbstractActionBean {
     return shippingAddressRequired;
   }
 
+  @UserInput @InputValidator
   public void setShippingAddressRequired(boolean shippingAddressRequired) {
     this.shippingAddressRequired = shippingAddressRequired;
   }

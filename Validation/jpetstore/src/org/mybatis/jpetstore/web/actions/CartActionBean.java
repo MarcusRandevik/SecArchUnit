@@ -29,6 +29,9 @@ import org.mybatis.jpetstore.domain.CartItem;
 import org.mybatis.jpetstore.domain.Item;
 import org.mybatis.jpetstore.service.CatalogService;
 
+import com.github.secarchunit.concepts.InputValidator;
+import com.github.secarchunit.concepts.UserInput;
+
 /**
  * The Class CartActionBean.
  *
@@ -56,6 +59,7 @@ public class CartActionBean extends AbstractActionBean {
     this.cart = cart;
   }
 
+  @UserInput
   public void setWorkingItemId(String workingItemId) {
     this.workingItemId = workingItemId;
   }
@@ -102,6 +106,7 @@ public class CartActionBean extends AbstractActionBean {
    *
    * @return the resolution
    */
+  @UserInput @InputValidator
   public Resolution updateCartQuantities() {
     HttpServletRequest request = context.getRequest();
 

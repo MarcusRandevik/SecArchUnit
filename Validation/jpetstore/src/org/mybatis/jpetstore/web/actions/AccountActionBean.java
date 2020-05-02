@@ -34,6 +34,9 @@ import org.mybatis.jpetstore.domain.Product;
 import org.mybatis.jpetstore.service.AccountService;
 import org.mybatis.jpetstore.service.CatalogService;
 
+import com.github.secarchunit.concepts.InputValidator;
+import com.github.secarchunit.concepts.UserInput;
+
 /**
  * The Class AccountActionBean.
  *
@@ -73,6 +76,7 @@ public class AccountActionBean extends AbstractActionBean {
     return account.getUsername();
   }
 
+  @UserInput @InputValidator
   @Validate(required = true, on = { "signon", "newAccount", "editAccount" })
   public void setUsername(String username) {
     account.setUsername(username);
@@ -82,6 +86,7 @@ public class AccountActionBean extends AbstractActionBean {
     return account.getPassword();
   }
 
+  @UserInput @InputValidator
   @Validate(required = true, on = { "signon", "newAccount", "editAccount" })
   public void setPassword(String password) {
     account.setPassword(password);

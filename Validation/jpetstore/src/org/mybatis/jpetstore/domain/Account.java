@@ -17,6 +17,9 @@ package org.mybatis.jpetstore.domain;
 
 import java.io.Serializable;
 
+import com.github.secarchunit.concepts.InputValidator;
+import com.github.secarchunit.concepts.UserInput;
+
 import net.sourceforge.stripes.validation.Validate;
 
 /**
@@ -67,6 +70,7 @@ public class Account implements Serializable {
     return email;
   }
 
+  @UserInput
   public void setEmail(String email) {
     this.email = email;
   }
@@ -75,6 +79,7 @@ public class Account implements Serializable {
     return firstName;
   }
 
+  @UserInput @InputValidator
   @Validate(required = true, on = { "newAccount", "editAccount" })
   public void setFirstName(String firstName) {
     this.firstName = firstName;
@@ -84,6 +89,7 @@ public class Account implements Serializable {
     return lastName;
   }
 
+  @UserInput @InputValidator
   @Validate(required = true, on = { "newAccount", "editAccount" })
   public void setLastName(String lastName) {
     this.lastName = lastName;
@@ -93,6 +99,7 @@ public class Account implements Serializable {
     return status;
   }
 
+  @UserInput
   public void setStatus(String status) {
     this.status = status;
   }
@@ -101,6 +108,7 @@ public class Account implements Serializable {
     return address1;
   }
 
+  @UserInput
   public void setAddress1(String address1) {
     this.address1 = address1;
   }
@@ -109,6 +117,7 @@ public class Account implements Serializable {
     return address2;
   }
 
+  @UserInput
   public void setAddress2(String address2) {
     this.address2 = address2;
   }
@@ -117,6 +126,7 @@ public class Account implements Serializable {
     return city;
   }
 
+  @UserInput
   public void setCity(String city) {
     this.city = city;
   }
@@ -125,6 +135,7 @@ public class Account implements Serializable {
     return state;
   }
 
+  @UserInput
   public void setState(String state) {
     this.state = state;
   }
@@ -133,6 +144,7 @@ public class Account implements Serializable {
     return zip;
   }
 
+  @UserInput
   public void setZip(String zip) {
     this.zip = zip;
   }
@@ -141,6 +153,7 @@ public class Account implements Serializable {
     return country;
   }
 
+  @UserInput
   public void setCountry(String country) {
     this.country = country;
   }
@@ -149,6 +162,7 @@ public class Account implements Serializable {
     return phone;
   }
 
+  @UserInput
   public void setPhone(String phone) {
     this.phone = phone;
   }
@@ -157,6 +171,7 @@ public class Account implements Serializable {
     return favouriteCategoryId;
   }
 
+  @UserInput
   public void setFavouriteCategoryId(String favouriteCategoryId) {
     this.favouriteCategoryId = favouriteCategoryId;
   }
@@ -165,6 +180,7 @@ public class Account implements Serializable {
     return languagePreference;
   }
 
+  @UserInput
   public void setLanguagePreference(String languagePreference) {
     this.languagePreference = languagePreference;
   }
@@ -189,6 +205,7 @@ public class Account implements Serializable {
     return bannerName;
   }
 
+  @UserInput
   public void setBannerName(String bannerName) {
     this.bannerName = bannerName;
   }

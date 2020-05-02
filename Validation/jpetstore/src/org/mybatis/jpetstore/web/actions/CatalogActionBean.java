@@ -27,6 +27,8 @@ import org.mybatis.jpetstore.domain.Item;
 import org.mybatis.jpetstore.domain.Product;
 import org.mybatis.jpetstore.service.CatalogService;
 
+import com.github.secarchunit.concepts.UserInput;
+
 /**
  * The Class CatalogActionBean.
  *
@@ -64,6 +66,7 @@ public class CatalogActionBean extends AbstractActionBean {
     return keyword;
   }
 
+  @UserInput
   public void setKeyword(String keyword) {
     this.keyword = keyword;
   }
@@ -72,6 +75,7 @@ public class CatalogActionBean extends AbstractActionBean {
     return categoryId;
   }
 
+  @UserInput
   public void setCategoryId(String categoryId) {
     this.categoryId = categoryId;
   }
@@ -80,6 +84,7 @@ public class CatalogActionBean extends AbstractActionBean {
     return productId;
   }
 
+  @UserInput
   public void setProductId(String productId) {
     this.productId = productId;
   }
@@ -88,6 +93,7 @@ public class CatalogActionBean extends AbstractActionBean {
     return itemId;
   }
 
+  @UserInput
   public void setItemId(String itemId) {
     this.itemId = itemId;
   }
