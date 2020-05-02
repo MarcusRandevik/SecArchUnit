@@ -185,11 +185,12 @@ public class SecArchUnit {
                             return;
                         }
 
+                        boolean calledAtLeastOnce = !codeUnit.getAccessesToSelf().isEmpty();
                         boolean onlyCalledByValidators = codeUnit.getAccessesToSelf().stream()
                                 .map(call -> call.getOrigin())
                                 .allMatch(origin -> origin.isAnnotatedWith(InputValidator.class)
                                         || origin.getOwner().isAnnotatedWith(InputValidator.class));
-                        if (onlyCalledByValidators) {
+                        if (calledAtLeastOnce && onlyCalledByValidators) {
                             // Is only called by validators => condition passed
                             return;
                         }
