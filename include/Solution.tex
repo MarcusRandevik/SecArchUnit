@@ -163,11 +163,9 @@ User input comes in many forms, and as such, it is impossible to define a single
     \item \textit{Method A} is annotated with \textbf{UserInput} and calls a \textit{method B} that is annotated with \textbf{InputValidator}.
     
     \item \textit{Method A} is annotated with \textbf{UserInput} and is only called by methods that are annotated with \textbf{InputValidator}.
-    
-    \item \textit{Method A} is annotated with \textbf{UserInput} but is never called.
 \end{itemize}
 
-The rule definition can be seen in Listing \ref{lst:constraint_4_impl}. As shown, the \textbf{UserInput} annotation is used on line 3 to limit the set of applicable code units, whereas the custom condition \texttt{performDirectOrIndirect} implements the logic to detect violations for each of the four cases outline above.
+The rule definition can be seen in Listing \ref{lst:constraint_4_impl}. As shown, the \textbf{UserInput} annotation is used on line 3 to limit the set of applicable code units, whereas the custom condition \texttt{performDirectOrIndirect} implements the logic to detect violations for each of the three cases outlined above.
     
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[caption={Rule definition for constraint 4.}, captionpos=b, label=lst:constraint_4_impl, numbers=left]
@@ -215,7 +213,7 @@ public static ArchRule limitResourceAllocation() {
 
 In the current ArchUnit API, a rule that aims to constrain method calls can only be defined in terms of the type signatures of the method and its parameters. This is a non-issue when the arguments being passed to a method are of the same type as the parameters. However, in cases where a method parameter accepts a "more general" type, such as an \texttt{Object}, there is no way for ArchUnit to constrain the types of the objects that are actually being passed as arguments.
 
-Consider constraint 7, which aims to ensure that no secrets are passed to the logger. Say there is a \texttt{Secret} annotation that marks all the classes whose instances must not be passed to the logger. We can attempt to enforce the constraint with the current ArchUnit API and a few custom predicates, as seen in Listing~\ref{lst:constraint_6_attempt}. However, a typical logger class will accept either a plain string, or a format string along with an array of objects to be formatted. In such cases, this architectural rule will be unable to catch secrets that are passed to the logger.
+Consider constraint 7, which aims to ensure that no secrets are passed to the logger. Say there is a \texttt{Secret} annotation that marks all the classes whose instances must not be passed to the logger. We can attempt to enforce the constraint with the current ArchUnit API and a custom predicate, as seen in Listing~\ref{lst:constraint_6_attempt}. However, a typical logger class will accept either a plain string, or a format string along with an array of objects to be formatted. In such cases, this architectural rule will be unable to catch secrets that are passed to the logger.
 
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[caption={A first attempt to implement constraint 7.}, captionpos=b, label=lst:constraint_6_attempt, numbers=left]
@@ -236,33 +234,27 @@ For the final 2 constraints, there is a need for an extension that allows constr
 
 ArchUnit builds its representation of the architecture using ASM\footnote{\url{https://asm.ow2.io/}}, a Java bytecode analysis framework. ASM reads bytecode and generates callbacks to methods in its various visitor classes\footnote{\url{https://asm.ow2.io/javadoc/org/objectweb/asm/package-summary.html}}. The visitor of most interest to us is \texttt{MethodVisitor}, which is responsible for processing the contents of a method, constructor or static initializer. These are collectively named \textit{code units} in ArchUnit's domain, i.e. anything that contains code. 
 
-ArchUnit extends the \texttt{MethodVisitor} class in \texttt{MethodProcessor} and translates the instructions into information about field accesses, method invocations, et. cetera, building its representation of the architecture. A short excerpt of the various callbacks available to this visitor can be seen in Figure~\ref{fig:method_processor_1}. The class \texttt{MethodProcessor} extends
+ArchUnit extends the \texttt{MethodVisitor} class in \texttt{MethodProcessor}, which primarily visits instructions related to field accesses and method invocations (see Figure~\ref{fig:method_processor_1}). ArchUnit processes these instructions into information about accesses between Java members, not entirely unlike the information provided by a static call graph.
 
 \begin{figure}
     \centering
     \includegraphics[width=0.6\textwidth]{figure/extension/MethodProcessor1.png}
-    \caption{The immediate context of the \texttt{MethodProcessor} class in ArchUnit, responsible for processing bytecode instructions.}
+    \caption{The immediate context of the \texttt{MethodProcessor} class in ArchUnit, responsible for processing instructions.}
     \label{fig:method_processor_1}
 \end{figure}
 
-
-Java is a stack-oriented programming language, meaning that arguments to method calls and field assignments are passed via the stack \cite{hutchison_information_2005}. As such, inspecting the stack at the time of a method call or field assignment will allow us to learn the types of the arguments that are being passed.
+Java, as a stack-oriented programming language, passes arguments to method calls and field assignments via the operand stack \cite{hutchison_information_2005}. As such, inspecting the arguments passed to a method requires inspecting the state of this stack at the time of a method call. ASM provides an extension of its \texttt{MethodVisitor} class, called \texttt{AnalyzerAdapter}, which is capable of simulating the effect that each instruction has on the operand stack. As seen in Figure~\ref{fig:method_processor_2}, our extension makes \texttt{MethodProcessor} extend this class and utilize the information about the operand stack to perform information flow analysis.
 
 \begin{figure}
     \centering
     \includegraphics[width=0.8\textwidth]{figure/extension/MethodProcessor2.png}
-    \caption{Changes made to the \texttt{MethodProcessor} class and its surroundings.}
+    \caption{Changes made to \texttt{MethodProcessor} and its surroundings.}
     \label{fig:method_processor_2}
 \end{figure}
 
-\todo{describe our information flow analysis, reference existing approaches}
-
+\todo{Describe our information flow analysis, reference existing approaches}
 \todo{Diagram of changes to ArchUnit domain}
 
-Our extension provides this additional information in ArchUnit's representation of accesses to fields and methods, which the rule definitions can then make use of.
-
-
-\todo{Detail the extensions we made}
 
 \todo{Show rule definition for each constraint}
 \todo{Show how each constraint is used in our toy app}
