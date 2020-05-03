@@ -5,14 +5,12 @@ import com.tngtech.archunit.base.DescribedPredicate;
 import com.tngtech.archunit.core.domain.*;
 import com.tngtech.archunit.lang.*;
 
-import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.tngtech.archunit.core.domain.AccessTarget.Predicates.declaredIn;
 import static com.tngtech.archunit.core.domain.JavaAccess.Predicates.targetOwner;
-import static com.tngtech.archunit.core.domain.properties.CanBeAnnotated.Predicates.annotatedWith;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.*;
 
 public class SecArchUnit {
@@ -84,8 +82,11 @@ public class SecArchUnit {
                     @Override
                     public boolean apply(JavaAccess<?> access) {
                         boolean passesSecretArgument = InformationFlow.recurseOnHints(access.getArgumentHints())
-                                .anyMatch(hint -> hint.getJavaClass().isAnnotatedWith(Secret.class)
-                                        || hint.getMemberOrigin() != null && hint.getMemberOrigin().isAnnotatedWith(Secret.class));
+                                .anyMatch(hint -> hint.getType().isAnnotatedWith(Secret.class)
+                                        || hint.getMemberOrigin() != null && (
+                                                hint.getMemberOrigin().isAnnotatedWith(Secret.class)
+                                                || hint.getMemberOrigin().getOwner().isAnnotatedWith(Secret.class))
+                                );
 
                         return passesSecretArgument;
                     }
@@ -251,11 +252,11 @@ public class SecArchUnit {
     }
 
     private static class InformationFlow {
-        private static Stream<Hint> recurseOnHints(Collection<Hint> hints) {
+        private static Stream<Hint> recurseOnHints(Set<Hint> hints) {
             return recurseOnHints(hints, 5).distinct();
         }
 
-        private static Stream<Hint> recurseOnHints(Collection<Hint> hints, int depth) {
+        private static Stream<Hint> recurseOnHints(Set<Hint> hints, int depth) {
             if (depth == 0 || hints.isEmpty()) {
                 return hints.stream();
             }
