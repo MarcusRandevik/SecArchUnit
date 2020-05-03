@@ -1,6 +1,18 @@
 \chapter{Enforcing Constraints}
 
-This chapter explains how the constraints are expressed and validated with the tool. The constraints are divided into three distinct categories. The first category contains the constraints that are possible to express in ArchUnit as-is. The second category describes constraints that are enforceable with the help of additional information in source code. The third and final category details constraints that require an extension of ArchUnit to be possible to enforce.
+This chapter explains how the constraints are expressed and validated with the tool using both the general definition of a rule as well as by providing a modeled example system. The constraints are divided into three distinct categories. The first category contains the constraints that are possible to express in ArchUnit as-is. The second category describes constraints that are enforceable with the help of additional information in source code. The third and final category details constraints that require an extension of ArchUnit to be possible to enforce.
+
+\section{Example system}\todo{improve heading}
+The constraints used within the report are not system-specific but instead defined to by generally applicable. However, a toy system called \textit{BloggerWeb} has been modeled to allow us to showcase a specific example for each constraint. Blogger is by no means intended to be a complex or complete system, but rather big enough to provide the functionality to support the constraints. An UML class diagram of BlogWeb is illustrated in figure \ref{fig:toy_application}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figure/ToyApp.png}
+    \caption{An example of a system, for the purpose of illustrating how the constraints are applied.}
+    \label{fig:toy_application}
+\end{figure}
+
+BlogWeb is, as the name suggests, a blog website providing users with the ability to publish statuses to their blogs. Being a website means that the system receives actions to execute via Http requests. These requests are received by the RequestHandler to be later forwarded to the UserService, which provides public methods for sign in and publishing a status update. The UserService has a reference to both a UserAuthorizer and a UserAuthenticator implementing the logic for authorization and authentication. The UserService also uses the Logger to perform the necessary logging of user requests. StatusSanitizer is used to sanitize the status updates received by users before its stored while OutBoundMessageSanitizer is responsible for sanitizing requests responses. Finally, as the RequestHandler may serve several users at once, a thread is spawned for each request to make the execution concurrent. 
 
 \section{Support in ArchUnit as-is}\label{sec:as-is}
 
@@ -48,13 +60,6 @@ ArchRule logSecurityEvents = SecArchUnit
     .logSecurityEvents(type(UserService.class), Logger.class);
 \end{lstlisting}
 \end{minipage}
-
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{figure/ToyApp.png}
-    \caption{An example of a system, for the purpose of illustrating how the constraints are applied.}
-    \label{fig:toy_application}
-\end{figure}
 
 \subsection{Enforce AuthN/AuthZ at single point}
 % Description
@@ -165,11 +170,11 @@ User input comes in many forms, and as such, it is impossible to define a single
     \item \textit{Method A} is annotated with \textbf{UserInput} and is only called by methods that are annotated with \textbf{InputValidator}.
 \end{itemize}
 
-The rule definition can be seen in Listing \ref{lst:constraint_4_impl}. As shown, the \textbf{UserInput} annotation is used on line 3 to limit the set of applicable code units, whereas the custom condition \texttt{performDirectOrIndirect} implements the logic to detect violations for each of the three cases outlined above.
+The rule definition can be seen in Listing~\ref{lst:constraint_4_impl}. As shown, the \textbf{UserInput} annotation is used on line 3 to limit the set of applicable code units, whereas the custom condition \texttt{performDirectOrIndirectValidation} implements the logic to detect violations for each of the three cases outlined above.
     
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[caption={Rule definition for constraint 4.}, captionpos=b, label=lst:constraint_4_impl, numbers=left]
-public static ArchRule validateUserInput() {
+ArchRule validateUserInput() {
     return codeUnits()
         .that().areAnnotatedWith(UserInput.class)
         .should(performDirectOrIndirectValidation);
@@ -177,24 +182,23 @@ public static ArchRule validateUserInput() {
 \end{lstlisting}
 \end{minipage}
 
-In the example system, a user publishes a status update in the form of a string that the UserService class receives. The status is then passed to the StatusSanitizer class, where it is validated. The affected methods of each class are marked with the appropriate annotation, as shown in figure \ref{fig:validate_input_toy_system}.  
+In the example system, a user publishes a status update in the form of a string that the UserService class receives. The status is then passed to the StatusSanitizer class, where it is validated. The affected methods of each class are marked with the appropriate annotation, as shown in Figure~\ref{fig:validate_input_toy_system}. If the two annotations were to be added, without a call from the UserService class to the StatusSanitizer, the ArchUnit rule would fail and mark it as a violation of an architectural constraint.
 
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{figure/toyexamples/validate_input_toy_system.png}
-    \caption{Applying constraint 4 to the model of the example system using added annotations.}
+    \caption{Applying constraint 4 to the model of the example system using added annotations on the UserService and StatusSanitizer class.}
     \label{fig:validate_input_toy_system}
 \end{figure}
 
 \subsection{Restrict thread spawning}
-While resources is a broad term, this constraint focuses on preventing the exhaustion of CPU and memory resources through the creation of new threads and processes. As such, every block of code that contains a call to the \texttt{start()} method of a \texttt{Thread}\footnote{\url{https://docs.oracle.com/javase/7/docs/api/java/lang/Thread.html}} or any of its subclasses, must be marked as containing a resource restriction mechanism. The same rule is applied for calls to \texttt{ProcessBuilder.start()}\footnote{\url{https://docs.oracle.com/javase/7/docs/api/java/lang/Process.html}} and \texttt{Runtime.exec()}\footnotemark[3], which lead to the creation of new processes.
-% TODO manual footnote, adjust as necessary
+While resources is a broad term, this constraint focuses on preventing the exhaustion of CPU and memory resources through the creation of new threads and processes. As such, every block of code that contains a call to the \texttt{start()} method of a \texttt{Thread}\footnote{\url{https://docs.oracle.com/javase/7/docs/api/java/lang/Thread.html}} or any of its subclasses, must be marked as containing a resource restriction mechanism. The same rule is applied for calls to \texttt{ProcessBuilder.start()}\footnote{\url{https://docs.oracle.com/javase/7/docs/api/java/lang/Process.html}\label{fnt:java_process}} and \texttt{Runtime.exec()}\footref{fnt:java_process}, which lead to the creation of new processes.
 
 The marking is done with the help of an annotation, either on the relevant method or the entire class. The decision of how the restriction mechanism is implemented is left to the developer of the system.
 
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[caption={Rule definition for constraint 5.}, captionpos=b, label=lst:constraint_5_impl, numbers=left]
-public static ArchRule limitResourceAllocation() {
+ArchRule limitResourceAllocation() {
     return noClasses()
         .that().areNotAnnotatedWith(ResourceRestriction.class)
         .should().callMethodWhere(
@@ -207,17 +211,25 @@ public static ArchRule limitResourceAllocation() {
 \end{minipage}
 
 
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figure/toyexamples/resource_restriction.png}
+    \caption{Applying constraint 5 to the model of the example system using the added annotation on the RequestHandler class}
+    \label{fig:toy_resource_restriction}
+\end{figure}
+
+
 
 
 \section{Extending ArchUnit Analysis}
 
-In the current ArchUnit API, a rule that aims to constrain method calls can only be defined in terms of the type signatures of the method and its parameters. This is a non-issue when the arguments being passed to a method are of the same type as the parameters. However, in cases where a method parameter accepts a "more general" type, such as an \texttt{Object}, there is no way for ArchUnit to constrain the types of the objects that are actually being passed as arguments.
+In the current ArchUnit API, a rule that aims to constrain method calls can only be defined in terms of the signatures of the method and its parameters. This is a non-issue when the arguments passed to a method are of the same type as the parameters. However, the argument might also be a descendant of the parameter type. There is currently no support in ArchUnit to constrain the types of the objects that are actually being passed as arguments.
 
-Consider constraint 7, which aims to ensure that no secrets are passed to the logger. Say there is a \texttt{Secret} annotation that marks all the classes whose instances must not be passed to the logger. We can attempt to enforce the constraint with the current ArchUnit API and a custom predicate, as seen in Listing~\ref{lst:constraint_6_attempt}. However, a typical logger class will accept either a plain string, or a format string along with an array of objects to be formatted. In such cases, this architectural rule will be unable to catch secrets that are passed to the logger.
+Consider constraint 7, which aims to ensure that no secrets are passed to the logger. Say there is a \texttt{Secret} annotation that marks all the classes whose instances must not be passed to the logger. An attempt can be made to enforce the constraint with the current ArchUnit API using a custom predicate, as seen in Listing~\ref{lst:constraint_6_attempt}. Given that a typical logger will accept either a plain string, or a format string along with an array of objects to be formatted, this architectural rule does little in the way of preventing secrets from being passed to such a logger.
 
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[caption={A first attempt to implement constraint 7.}, captionpos=b, label=lst:constraint_6_attempt, numbers=left]
-public static ArchRule doNotLogSecrets(Class<?> logger) {
+ArchRule doNotLogSecrets(Class<?> logger) {
     return noClasses()
         .should().callMethodWhere(
             parameterTypeAnnotatedWith(Secret.class)
@@ -227,40 +239,126 @@ public static ArchRule doNotLogSecrets(Class<?> logger) {
 \end{lstlisting}
 \end{minipage}
 
-For the final 2 constraints, there is a need for an extension that allows constraints to be defined against arguments, rather than parameters. There should also be hints about where these arguments may have been derived from, e.g. which types that make up the components of a concatenated string. In the following sections, we will describe the extensions that have been made to ArchUnit and how these are utilized in the definitions of our constraints.
+For the final 2 constraints, there is a need for an extension that allows constraints to be defined against method arguments rather than parameters. There should also be hints about where these arguments have been derived from, e.g. which types that make up the components of a concatenated string. The following sections describe the extensions that have been made to ArchUnit, both in regards to its analysis and the information represented in its domain, as well as how these extensions are utilized in the definitions of the final constraints.
 
 \subsection{Extensions}
 \todo{Parts of this section probably belong in the background}
 
-ArchUnit builds its representation of the architecture using ASM\footnote{\url{https://asm.ow2.io/}}, a Java bytecode analysis framework. ASM reads bytecode and generates callbacks to methods in its various visitor classes\footnote{\url{https://asm.ow2.io/javadoc/org/objectweb/asm/package-summary.html}}. The visitor of most interest to us is \texttt{MethodVisitor}, which is responsible for processing the contents of a method, constructor or static initializer. These are collectively named \textit{code units} in ArchUnit's domain, i.e. anything that contains code. 
-
-ArchUnit extends the \texttt{MethodVisitor} class in \texttt{MethodProcessor}, which primarily visits instructions related to field accesses and method invocations (see Figure~\ref{fig:method_processor_1}). ArchUnit processes these instructions into information about accesses between Java members, not entirely unlike the information provided by a static call graph.
+ArchUnit builds its representation of the architecture using ASM\footnote{\url{https://asm.ow2.io/}}, a Java bytecode analysis framework. ASM reads bytecode and generates callbacks to methods in its various visitor classes\footnote{\url{https://asm.ow2.io/javadoc/org/objectweb/asm/package-summary.html}}. 
+The visitor of most interest to us is \texttt{MethodVisitor}, which is responsible for processing the contents of a method, constructor or static initializer. These are collectively named \textit{code units} in ArchUnit's domain, i.e. anything that may contain code.
 
 \begin{figure}
     \centering
     \includegraphics[width=0.6\textwidth]{figure/extension/MethodProcessor1.png}
-    \caption{The immediate context of the \texttt{MethodProcessor} class in ArchUnit, responsible for processing instructions.}
+    \caption{The immediate context of the \texttt{MethodProcessor} class in ArchUnit, responsible for analyzing code units.}
     \label{fig:method_processor_1}
 \end{figure}
 
-Java, as a stack-oriented programming language, passes arguments to method calls and field assignments via the operand stack \cite{hutchison_information_2005}. As such, inspecting the arguments passed to a method requires inspecting the state of this stack at the time of a method call. ASM provides an extension of its \texttt{MethodVisitor} class, called \texttt{AnalyzerAdapter}, which is capable of simulating the effect that each instruction has on the operand stack. As seen in Figure~\ref{fig:method_processor_2}, our extension makes \texttt{MethodProcessor} extend this class and utilize the information about the operand stack to perform information flow analysis.
+ArchUnit extends the \texttt{MethodVisitor} class in \texttt{MethodProcessor}, which primarily visits instructions related to field accesses and method invocations (see Figure~\ref{fig:method_processor_1}). These instructions are processed into information about accesses between Java members, not entirely unlike the information provided by a static call graph.
+
+Java, as a stack-oriented programming language, passes arguments to method calls and field assignments via the operand stack \cite{hutchison_information_2005}. As such, an inspection of the operand stack at the time of a method call yields information about the arguments being passed.
+Conveniently, ASM provides an extension of its \texttt{MethodVisitor} class, called \texttt{AnalyzerAdapter}, which is capable of simulating the effect that each instruction has on the operand stack. As seen in Figure~\ref{fig:method_processor_2}, \texttt{MethodProcessor} now extends this class and utilizes the information about the operand stack to perform an analysis of information flow within a code unit.
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.8\textwidth]{figure/extension/MethodProcessor2.png}
-    \caption{Changes made to \texttt{MethodProcessor} and its surroundings.}
+    \includegraphics[width=0.7\textwidth]{figure/extension/MethodProcessor2.png}
+    \caption{Changes made to analysis of code units.}
     \label{fig:method_processor_2}
 \end{figure}
 
-\todo{Describe our information flow analysis, reference existing approaches}
-\todo{Diagram of changes to ArchUnit domain}
+The information flow analysis of a code unit can be boiled down to the following key points:
 
+\begin{itemize}
+    \item Loading a field onto the stack yields a hint in that stack position about its originating member, i.e. the field.
+    \item Invoking a method that has a return value yields a hint in the stack position of the resulting object about its originating member, i.e. the invoked method.
+    \item Invoking a static method transfers the hints about the arguments, if any, into the stack position of the resulting object, if the method has a return value.
+    \item Invoking a non-static method additionally transfers the hints about the arguments into the instance the method was invoked on, and the hints about the instance into the resulting object.
+    \item Storing an object in an array transfers the hints about the object into the array.
+    \item Loading an object from an array transfers the hints about the array into the object.
+    \item Storing or loading a local variable transfers the hints from the stack to the local variable and vice versa.
+    \item Duplicating a reference also duplicates the collection holding the hints for that reference, such that hints that flow into the duplicate also flow into the original reference.
+\end{itemize}
+
+Once the analysis of all classes has been completed and ArchUnit has built its representation of the architecture, the raw hints are resolved into hints referencing the actual type (\texttt{JavaClass}) and its origin (\texttt{JavaMember}), if any. As seen in Figure~\ref{fig:domain_changes_1}, \texttt{JavaAccess} now contain hints about the references that flow into the arguments. Additionally, \texttt{JavaMethod} contains hints about the references that flow into the return value of the method. These changes to the domain aim to facilitate the definition of rules that constrain information flow.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{figure/extension/DomainChanges1.png}
+    \caption{Changes made to the domain surrounding code units.}
+    \label{fig:domain_changes_1}
+\end{figure}
 
 \todo{Show rule definition for each constraint}
 \todo{Show how each constraint is used in our toy app}
-
 \subsection{Sensitive information must stay within trust boundary}
-...
+% Description
+Constraint six aims to constrain how assets that consist of sensitive information are allowed to flow between components. The constraint deals with the two concepts of assets and asset handlers, which are expressed in the form of \texttt{Asset} and \texttt{AssetHandler} annotations. An asset is a field that should only flow to classes marked with a high security level, i.e. an asset handler.
+
+% Rule definition
+The definition of the rule can be seen in Listing~\ref{lst:constraint_6_impl}. The rule itself requires no arguments, as all the necessary information is injected into the source code in the form of annotations. The custom condition, \texttt{notBleedToInsecureComponents}, utilizes the information flow extension to ensure that the assets only flow into code units belonging to classes marked as asset handlers.
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[caption={Rule definition for constraint 6.}, captionpos=b, label=lst:constraint_6_impl, numbers=left]
+ArchRule doNotBleedAssetsBetweenComponents() {
+    return fields()
+        .that().areAnnotatedWith(Asset.class)
+        .should(notBleedToInsecureComponents);
+\end{lstlisting}
+\end{minipage}
+
+% Applied to toy app
+In the example system, the \texttt{password} field is considered an asset, while \texttt{UserLoginRequest} and \texttt{UserAuthenticator} are considered asset handlers (see Figure~\ref{fig:assets_toy_system}).
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\textwidth]{figure/toyexamples/Assets.png}
+    \caption{Application of constraint 6 to the example system.}
+    \label{fig:assets_toy_system}
+\end{figure}
 
 \subsection{Secrets must not be exposed in log messages}
-...
+% Description
+The seventh and final constraint dictates that secrets must not flow into a logger. 
+
+% Rule definition
+The architectural rule is defined in Listing~\ref{lst:constraint_7_impl}. 
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[caption={Rule definition for constraint 7.}, captionpos=b, label=lst:constraint_7_impl, numbers=left]
+ArchRule doNotLogSecrets(
+        DescribedPredicate<? super JavaClass> loggerDescriptor) {
+    return noClasses()
+        .should().callMethodWhere(
+            targetOwner(loggerDescriptor).and(passSecretArgument)
+        );
+\end{lstlisting}
+\end{minipage}
+
+% Applied to toy app
+\begin{figure}
+\centering
+\begin{minipage}{.6\textwidth}
+  \centering
+    \begin{lstlisting}[label=lst:constraint_7_rule, numbers=left]
+@ArchTest
+ArchRule doNotLogSecrets =
+    SecArchUnit.doNotLogSecrets(type(Logger.class));
+    \end{lstlisting}
+  \label{fig:test1}
+\end{minipage}%
+\begin{minipage}{.4\textwidth}
+  \centering
+  \includegraphics[width=.4\linewidth]{figure/toyexamples/Secrets.png}
+  \captionof{figure}{Another figure}
+  \label{fig:test2}
+\end{minipage}
+\end{figure}
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.3\textwidth]{figure/toyexamples/Secrets.png}
+    \caption{Application of constraint 7 to the example system.}
+    \label{fig:assets_toy_system}
+\end{figure}
