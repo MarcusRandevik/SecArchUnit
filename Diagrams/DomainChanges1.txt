@@ -1,0 +1,27 @@
+@startuml
+
+class Hint {
+    + JavaClass getJavaClass()
+    + JavaMember getMemberOrigin()
+}
+
+class JavaAccess {
+    + Set<Hint> getArgumentHints()
+}
+
+JavaAccess *-- Hint
+
+class JavaCall extends JavaAccess {}
+class JavaFieldAccess extends JavaAccess {}
+
+class JavaCodeUnit {}
+
+JavaCodeUnit *-- JavaAccess
+
+class JavaMethod extends JavaCodeUnit {
+    + Set<Hint> getReturnValueHints()
+}
+
+JavaMethod *-- Hint
+
+@enduml

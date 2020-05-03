@@ -20,20 +20,15 @@ MethodProcessor --|> AnalyzerAdapter
 class InformationFlow {
     # Set<RawHint> getArgumentHints(int argumentCount)
     # Set<RawHint> getReturnValueHints()
-    # void linkStackHints(int originIndex, int targetIndex)
-    # void loadLocalVar(int index)
-    # void putReturnValueHints(Set<RawHint> hints)
     # void putStackHint(int index, RawHint hint)
+    # void putReturnValueHints(Set<RawHint> hints)
+    # void loadLocalVar(int index)
     # void storeLocalVar(int index)
 }
 
 MethodProcessor --> InformationFlow
 
 class RawHint {
-    - JavaType type
-    - JavaType memberOwner
-    - String memberName
-    - String memberDescriptor
     + JavaType getType()
     + JavaType getMemberOwner()
     + JavaMember resolveMemberIn(JavaClass ownerClass)
