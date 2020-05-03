@@ -1,7 +1,7 @@
 @startuml
 
 class Hint {
-    + JavaClass getJavaClass()
+    + JavaClass getType()
     + JavaMember getMemberOrigin()
 }
 
