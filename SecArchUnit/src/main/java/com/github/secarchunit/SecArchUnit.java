@@ -240,8 +240,7 @@ public class SecArchUnit {
                                 .filter(access -> access.getOrigin() instanceof JavaMethod)
                                 .map(access -> (JavaMethod) access.getOrigin())
                                 .filter(method -> method.getReturnValueHints().stream().anyMatch(hint -> field.equals(hint.getMemberOrigin())))
-                                .map(method -> method.getCallsOfSelf())
-                                .flatMap(calls -> calls.stream())
+                                .flatMap(method -> method.getCallsOfSelf().stream())
                                 .filter(call -> !call.getOriginOwner().isAnnotatedWith(AssetHandler.class))
                                 .forEach(offendingMethodCall -> {
                                     String message = offendingMethodCall + ": access to asset " + field.getName() + " (via getter method)";
@@ -267,11 +266,12 @@ public class SecArchUnit {
                     .map(hint -> hint.getMemberOrigin())
                     .collect(Collectors.toSet());
 
-            // Hints flowing into a member
+            // Hints flowing into a field
             Stream<Hint> hintsFlowingIntoMembers = hintOrigins.stream()
+                    .filter(member -> member instanceof JavaField)
+                    .map(member -> (JavaField) member)
                     .flatMap(hint -> hint.getAccessesToSelf().stream())
                     .flatMap(access -> access.getArgumentHints().stream());
-            // ^ This assumes that all arguments that flowed into a method also flow into the method's return value...
 
             // Hints flowing out of a method
             Stream<Hint> hintsFlowingOutOfMethods = hintOrigins.stream()
