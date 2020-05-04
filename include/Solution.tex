@@ -3,7 +3,7 @@
 This chapter explains how the constraints are expressed and validated with the tool using both the general definition of a rule as well as by providing a modeled example system. The constraints are divided into three distinct categories. The first category contains the constraints that are possible to express in ArchUnit as-is. The second category describes constraints that are enforceable with the help of additional information in source code. The third and final category details constraints that require an extension of ArchUnit to be possible to enforce.
 
 \section{Example system}\todo{improve heading}
-The constraints used within the report are not system-specific but instead defined to by generally applicable. However, a toy system called \textit{BloggerWeb} has been modeled to allow us to showcase a specific example for each constraint. Blogger is by no means intended to be a complex or complete system, but rather big enough to provide the functionality to support the constraints. An UML class diagram of BlogWeb is illustrated in figure \ref{fig:toy_application}.
+The constraints used within the report are not system-specific but instead defined to by generally applicable. However, a toy system called \textit{BlogWeb} has been modeled to allow us to showcase a specific example for each constraint. BlogWeb is by no means intended to be a complex or complete system, but rather big enough to provide the functionality to support the constraints. A UML class diagram of BlogWeb is illustrated in Figure~\ref{fig:toy_application}.
 
 \begin{figure}
     \centering
@@ -12,7 +12,7 @@ The constraints used within the report are not system-specific but instead defin
     \label{fig:toy_application}
 \end{figure}
 
-BlogWeb is, as the name suggests, a blog website providing users with the ability to publish statuses to their blogs. Being a website means that the system receives actions to execute via Http requests. These requests are received by the RequestHandler to be later forwarded to the UserService, which provides public methods for sign in and publishing a status update. The UserService has a reference to both a UserAuthorizer and a UserAuthenticator implementing the logic for authorization and authentication. The UserService also uses the Logger to perform the necessary logging of user requests. StatusSanitizer is used to sanitize the status updates received by users before its stored while OutBoundMessageSanitizer is responsible for sanitizing requests responses. Finally, as the RequestHandler may serve several users at once, a thread is spawned for each request to make the execution concurrent. 
+BlogWeb is, as the name suggests, a blog website providing users with the ability to publish statuses to their blogs. Being a website means that the system receives actions to execute via HTTP requests. These requests are received by the RequestHandler to be later forwarded to the UserService, which provides public methods for sign in and publishing a status update. The UserService has a reference to both a UserAuthorizer and a UserAuthenticator implementing the logic for authorization and authentication. The UserService also uses the Logger to perform the necessary logging of user requests. StatusSanitizer is used to sanitize the status updates received by users before its stored while OutBoundMessageSanitizer is responsible for sanitizing requests responses. Finally, as the RequestHandler may serve several users at once, a thread is spawned for each request to make the execution concurrent. 
 
 \section{Support in ArchUnit as-is}\label{sec:as-is}
 
@@ -51,10 +51,10 @@ ArchRule logSecurityEvents(
 \end{minipage}
 
 % Applied to toy app
-In the example system, illustrated in Figure~\ref{fig:toy_application}, the logging facility is the class named \texttt{Logger} while the only security service is the \texttt{UserService} class. An application of the constraint on this system can be as simple as the one shown in Listing~\ref{lst:constraint_1_toy}.
+In BlogWeb, illustrated in Figure~\ref{fig:toy_application}, the logging facility is the class named \texttt{Logger} while the only security service is the \texttt{UserService} class. An application of the constraint on this system can be as simple as the one shown in Listing~\ref{lst:constraint_1_toy}.
 
 \begin{minipage}{\linewidth}
-\begin{lstlisting}[caption={Application of constraint 1 to the example system.}, captionpos=b, label=lst:constraint_1_toy, numbers=left]
+\begin{lstlisting}[caption={Application of constraint 1 to BlogWeb.}, captionpos=b, label=lst:constraint_1_toy, numbers=left]
 @ArchTest
 ArchRule logSecurityEvents = SecArchUnit
     .logSecurityEvents(type(UserService.class), Logger.class);
@@ -95,10 +95,10 @@ ArchRule enforceAuthorizationAtCentralPoint(
 \end{minipage}
 
 % Applied to toy app
-In the example system, the authentication and authorization points are both situated in the \texttt{UserService} class while authentication and authorization are enforced by the classes \texttt{UserAuthenticator} and \texttt{UserAuthorizer} respectively. The application of the rule can be seen in Listing~\ref{lst:constraint_2_toy}.
+In BlogWeb, the authentication and authorization points are both situated in the \texttt{UserService} class while authentication and authorization are enforced by the classes \texttt{UserAuthenticator} and \texttt{UserAuthorizer} respectively. The application of the rule can be seen in Listing~\ref{lst:constraint_2_toy}.
 
 \begin{minipage}{\linewidth}
-\begin{lstlisting}[caption={Application of constraint 2 to the example system.}, captionpos=b, label=lst:constraint_2_toy, numbers=left]
+\begin{lstlisting}[caption={Application of constraint 2 to BlogWeb.}, captionpos=b, label=lst:constraint_2_toy, numbers=left]
 @ArchTest
 ArchRule enforceAuthentication = SecArchUnit
     .enforceAuthenticationAtCentralPoint(UserService.class, UserAuthenticator.class);
@@ -130,10 +130,10 @@ ArchRule sendOutboundMessagesFromCentralPoint(
 \end{minipage}
 
 % Applied to toy app
-Listing~\ref{lst:constraint_3_toy} showcases how the constraint can be applied to the example system. In this system, there is a single sender class \texttt{HttpResponse}, responsible for returning a response to a client. The central sending point is the \texttt{OutboundMessageSanitizer} class. 
+Listing~\ref{lst:constraint_3_toy} showcases how the constraint can be applied to BlogWeb. In this system, there is a single sender class \texttt{HttpResponse}, responsible for returning a response to a client. The central sending point is the \texttt{OutboundMessageSanitizer} class. 
 
 \begin{minipage}{\linewidth}
-\begin{lstlisting}[caption={Application of constraint 3 to the example system.}, captionpos=b, label=lst:constraint_3_toy, numbers=left]
+\begin{lstlisting}[caption={Application of constraint 3 to BlogWeb.}, captionpos=b, label=lst:constraint_3_toy, numbers=left]
 @ArchTest
 ArchRule centralSendingPoint = SecArchUnit
     .sendOutboundMessagesFromCentralPoint(
@@ -153,11 +153,6 @@ Some of the architectural constraints require that the developer injects additio
 In other cases, however, the information may be required for methods of arbitrary signatures and even specific fields. For the purposes of flexibility and minimizing the obtrusiveness of our approach, any extra information is expressed in the form of annotations. These can be applied to classes, fields, methods and parameters without changing the underlying architecture of the system.
 
 The need for additional information within the source code becomes apparent in the case where a class contains public methods with varying degrees of security requirements. A typical example is found in constraint 4, where a class is responsible for handling user input. Some methods might receive predefined values, such as in the case of checkboxes, whereas others treat strings entered by the user.  The former type of input is guaranteed to be safe, whereas the latter entirely under the control of the attacker, thus introducing the need for sanitation. Using the broader predicate of entire classes (described in section \ref{sec:as-is}) would not allow the constraint to be limited to specific methods within a class (those receiving potentially malicious input), and later trace a call to a method providing sanitation. Thus, annotations provide the granularity needed to limit the scope of a constraint to only the applicable code units.
-
-\todo{Specific example that requires additional information}
-
-\todo{Show rule definition for each constraint}
-\todo{Show how each constraint is used in our toy app}
 
 \subsection{Validate user input}
 User input comes in many forms, and as such, it is impossible to define a single algorithm to validate properly every single type. The problem grows further as queries (such as SQL) or other types of processed data (such as XML), each with its own set of grammar, are often formed using strings. As a consequence, the implemented constraint is more abstract as it checks whether a class that receives user input is said to either perform validation on its own or delegate the task another method. In total, four distinct cases conforming to the constraint where considered: 
@@ -182,12 +177,12 @@ ArchRule validateUserInput() {
 \end{lstlisting}
 \end{minipage}
 
-In the example system, a user publishes a status update in the form of a string that the UserService class receives. The status is then passed to the StatusSanitizer class, where it is validated. The affected methods of each class are marked with the appropriate annotation, as shown in Figure~\ref{fig:validate_input_toy_system}. If the two annotations were to be added, without a call from the UserService class to the StatusSanitizer, the ArchUnit rule would fail and mark it as a violation of an architectural constraint.
+In BlogWeb, a user publishes a status update in the form of a string that the UserService class receives. The status is then passed to the StatusSanitizer class, where it is validated. The affected methods of each class are marked with the appropriate annotation, as shown in Figure~\ref{fig:validate_input_toy_system}. If the two annotations were to be added, without a call from the UserService class to the StatusSanitizer, the ArchUnit rule would fail and mark it as a violation of an architectural constraint.
 
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{figure/toyexamples/validate_input_toy_system.png}
-    \caption{Applying constraint 4 to the model of the example system using added annotations on the UserService and StatusSanitizer class.}
+    \caption{Applying constraint 4 to the model of BlogWeb using added annotations on the UserService and StatusSanitizer class.}
     \label{fig:validate_input_toy_system}
 \end{figure}
 
@@ -210,11 +205,12 @@ ArchRule limitResourceAllocation() {
 \end{lstlisting}
 \end{minipage}
 
+In BlogWeb, the RequestHandler class spawns new threads in order to handle several user requests concurrently. For the system to conform to the constraint, the ResourceRestriction annotation either has to be added to the entire class or a specific method, as shown in figure \ref{fig:toy_resource_restriction}. If not, the rule will fail, and the developer will have to ensure that the class cannot excessively spawn new threads.
 
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{figure/toyexamples/resource_restriction.png}
-    \caption{Applying constraint 5 to the model of the example system using the added annotation on the RequestHandler class}
+    \caption{Applying constraint 5 to the model of BlogWeb using the added annotation on the RequestHandler class}
     \label{fig:toy_resource_restriction}
 \end{figure}
 
@@ -242,7 +238,7 @@ ArchRule doNotLogSecrets(Class<?> logger) {
 For the final 2 constraints, there is a need for an extension that allows constraints to be defined against method arguments rather than parameters. There should also be hints about where these arguments have been derived from, e.g. which types that make up the components of a concatenated string. The following sections describe the extensions that have been made to ArchUnit, both in regards to its analysis and the information represented in its domain, as well as how these extensions are utilized in the definitions of the final constraints.
 
 \subsection{Extensions}
-\todo{Parts of this section probably belong in the background}
+\todo{Parts of this section might belong in the background?}
 
 ArchUnit builds its representation of the architecture using ASM\footnote{\url{https://asm.ow2.io/}}, a Java bytecode analysis framework. ASM reads bytecode and generates callbacks to methods in its various visitor classes\footnote{\url{https://asm.ow2.io/javadoc/org/objectweb/asm/package-summary.html}}. 
 The visitor of most interest to us is \texttt{MethodVisitor}, which is responsible for processing the contents of a method, constructor or static initializer. These are collectively named \textit{code units} in ArchUnit's domain, i.e. anything that may contain code.
@@ -279,7 +275,7 @@ The information flow analysis of a code unit can be boiled down to the following
     \item Duplicating a reference also duplicates the collection holding the hints for that reference, such that hints that flow into the duplicate also flow into the original reference.
 \end{itemize}
 
-Once the analysis of all classes has been completed and ArchUnit has built its representation of the architecture, the raw hints are resolved into hints referencing the actual type (\texttt{JavaClass}) and its origin (\texttt{JavaMember}), if any. As seen in Figure~\ref{fig:domain_changes_1}, \texttt{JavaAccess} now contain hints about the references that flow into the arguments. Additionally, \texttt{JavaMethod} contains hints about the references that flow into the return value of the method. These changes to the domain aim to facilitate the definition of rules that constrain information flow.
+Once the analysis of all classes has been completed and ArchUnit has built its representation of the architecture, the raw hints are resolved into hints referencing the actual type (\texttt{JavaClass}) and its origin (\texttt{JavaMember}), if any. As seen in Figure~\ref{fig:domain_changes_1}, \texttt{JavaAccess} now contains hints about the references that flow into the arguments. Additionally, \texttt{JavaMethod} contains hints about the references that flow into the return value of the method. These changes to the domain aim to facilitate the definition of rules that constrain information flow.
 
 \begin{figure}
     \centering
@@ -288,14 +284,12 @@ Once the analysis of all classes has been completed and ArchUnit has built its r
     \label{fig:domain_changes_1}
 \end{figure}
 
-\todo{Show rule definition for each constraint}
-\todo{Show how each constraint is used in our toy app}
 \subsection{Sensitive information must stay within trust boundary}
 % Description
-Constraint six aims to constrain how assets that consist of sensitive information are allowed to flow between components. The constraint deals with the two concepts of assets and asset handlers, which are expressed in the form of \texttt{Asset} and \texttt{AssetHandler} annotations. An asset is a field that should only flow to classes marked with a high security level, i.e. an asset handler.
+Constraint six aims to constrain how assets that consist of sensitive information are allowed to flow between components. The constraint deals with the two concepts of assets and asset handlers, which are expressed in the form of \texttt{Asset} and \texttt{AssetHandler} annotations. An asset is a member that should only flow to classes marked with a high security level, i.e. an asset handler.
 
 % Rule definition
-The definition of the rule can be seen in Listing~\ref{lst:constraint_6_impl}. The rule itself requires no arguments, as all the necessary information is injected into the source code in the form of annotations. The custom condition, \texttt{notBleedToInsecureComponents}, utilizes the information flow extension to ensure that the assets only flow into code units belonging to classes marked as asset handlers.
+The definition of the rule can be seen in Listing~\ref{lst:constraint_6_impl}. The rule itself requires no arguments, as all the necessary information is injected into the source code in the form of annotations. The custom condition, \texttt{notBleedToInsecureComponents}, ensures that the asset is only accessed directly by asset handlers. Moreover, it utilizes the information about return value flow to ensure that the asset is not accessed indirectly through intermediate methods.
 
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[caption={Rule definition for constraint 6.}, captionpos=b, label=lst:constraint_6_impl, numbers=left]
@@ -307,21 +301,21 @@ ArchRule doNotBleedAssetsBetweenComponents() {
 \end{minipage}
 
 % Applied to toy app
-In the example system, the \texttt{password} field is considered an asset, while \texttt{UserLoginRequest} and \texttt{UserAuthenticator} are considered asset handlers (see Figure~\ref{fig:assets_toy_system}).
+In BlogWeb, the \texttt{password} field is considered an asset that must stay within the trust boundary of \texttt{UserLoginRequest} and \texttt{UserAuthenticator}. The appropriate annotations in this scenario can be seen in Figure~\ref{fig:assets_toy_system}.
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.6\textwidth]{figure/toyexamples/Assets.png}
-    \caption{Application of constraint 6 to the example system.}
+    \caption{Application of constraint 6 to BlogWeb.}
     \label{fig:assets_toy_system}
 \end{figure}
 
 \subsection{Secrets must not be exposed in log messages}
 % Description
-The seventh and final constraint dictates that secrets must not flow into a logger. 
+The seventh and final constraint dictates that secrets must not be exposed in logs. There are a multitude of ways that a secret field or type can be exposed in a log message, e.g. through string concatenation, string formatting, or wrapping it in a different object and converting that object to its string representation. What these exposures have in common are that they issue method call to the logger where the secret has, in some way, flowed into the arguments.
 
 % Rule definition
-The architectural rule is defined in Listing~\ref{lst:constraint_7_impl}. 
+The architectural rule is defined in Listing~\ref{lst:constraint_7_impl}. Rather than a single class representing the preferred logger, the constraint should prevent exposures in any loggers present in the system. As such, it accepts a predicate that should select all such logging facilities. The custom predicate \texttt{passSecretArgument} inspects the argument hints for any members marked with the \texttt{Secret} annotation. Additionally, for each originating member found in the hints, it recursively checks the hints that have flowed into that member, in an attempt to constrain information flow with intermediate steps in different code units.
 
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[caption={Rule definition for constraint 7.}, captionpos=b, label=lst:constraint_7_impl, numbers=left]
@@ -335,30 +329,19 @@ ArchRule doNotLogSecrets(
 \end{minipage}
 
 % Applied to toy app
-\begin{figure}
-\centering
-\begin{minipage}{.6\textwidth}
-  \centering
-    \begin{lstlisting}[label=lst:constraint_7_rule, numbers=left]
+In BlogWeb, the constraint can be applied as seen in Listing~\ref{lst:constraint_7_rule}. The only secret in this system is the password field, annotated in Figure~\ref{fig:secrets_toy_system}.
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[caption={Application of constraint 7 to BlogWeb.}, captionpos=b, label=lst:constraint_7_rule, numbers=left]
 @ArchTest
-ArchRule doNotLogSecrets =
-    SecArchUnit.doNotLogSecrets(type(Logger.class));
-    \end{lstlisting}
-  \label{fig:test1}
-\end{minipage}%
-\begin{minipage}{.4\textwidth}
-  \centering
-  \includegraphics[width=.4\linewidth]{figure/toyexamples/Secrets.png}
-  \captionof{figure}{Another figure}
-  \label{fig:test2}
+ArchRule doNotLogSecrets = SecArchUnit
+    .doNotLogSecrets(type(Logger.class));
+\end{lstlisting}
 \end{minipage}
-\end{figure}
-
-
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.3\textwidth]{figure/toyexamples/Secrets.png}
-    \caption{Application of constraint 7 to the example system.}
-    \label{fig:assets_toy_system}
+    \includegraphics[width=0.2\textwidth]{figure/toyexamples/Secrets.png}
+    \caption{Annotation added to BlogWeb for constraint 7.}
+    \label{fig:secrets_toy_system}
 \end{figure}

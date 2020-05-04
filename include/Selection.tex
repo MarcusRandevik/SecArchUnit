@@ -4,7 +4,7 @@ This chapter describes the result of compiling a list of security constraints, a
 
 \section{Compiled List of Security Constraints}
 
-The processed collection of security constraints can be seen in Table~\ref{tab:all_measures}. There are in total 18 constraints. As mentioned in Section~\ref{sec:processing}, each constraint was categorized according to the goals of CIAA to ensure full coverage. 
+The filtered collection of security constraints can be seen in Table~\ref{tab:all_measures}. There are in total 18 constraints. As mentioned in Section~\ref{sec:processing}, each constraint was categorized according to the goals of CIAA to ensure full coverage. 
 
 Although both the architectural rules found in Jasser \cite{franch_constraining_2019} and the security patterns presented in Scandariato et al. \cite{scandariato_system_2006} were at the appropriate level of design, many of the weaknesses presented in CAWE were not. Common examples include; CAWE-259 "Use of hard-coded password" where the weakness is reliant on a local change of behavior rather than the architectural structure; and CAWE-263 "Password aging with long expiration" where the weakness is introduced by a single variable most likely defined outside of the source code. As a result, a far lower percentage of entries were included from the CAWE-catalog compared to the remaining two sources.
 
@@ -140,12 +140,14 @@ The ability to receive and process user input is fundamental to every computer s
  \textbf{Attack scenario:}
  In an application that uses user input to build a SQL query to retrieve a specific account number (as seen in Listing~\ref{lst:SQL_vul}) an attacker may construct the request to retrieve all accounts by adding characters that break the query and introduces new parameters, such as \texttt{' or '1'='1}. The resulting operation would retrieve all customer accounts, thus exposing sensitive information.
  
- \begin{minipage}{\linewidth}
+ \begin{center}
+\begin{minipage}{0.65\textwidth}
 \begin{lstlisting}[caption={Example of a vulnerable SQL query}, captionpos=b, label=lst:SQL_vul, numbers=left, showstringspaces=false]
 String query = "SELECT * FROM accounts WHERE 
     custID='" + userInput + "'";
 \end{lstlisting}
 \end{minipage}
+\end{center}
 
 \subsection{Restrict thread spawning}
 

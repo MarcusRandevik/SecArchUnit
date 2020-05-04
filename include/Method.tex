@@ -13,23 +13,24 @@ The Common Architectural Weakness Enumeration catalog \cite{santos_catalog_2017}
 Similar to the usage of general design patterns made famous in \cite{gamma_design_1995}, security patterns provide a reusable and domain-independent solution to a known problem. More specifically, this study focused on security patterns for the design phase, as defined in \cite{yoshioka_survey_2008}. While the security pattern repository\footnote{http://sefm.cs.utsa.edu/repository/} lists over 170 security patterns, not all are provided with sufficient detail or at the appropriate level of abstraction. As a result, the report by Scandariato et al. \cite{scandariato_system_2006}  which provides a filtered list of patterns.
 
 
-\textbf{Security rules:}
+\textbf{Security rules:} \label{subsec:security_rules}
 Architectural security rules constrain the implementation of a system while being less solution-oriented compared to security patterns. Eden and Kazman differentiate architectural security rules from those defined on a level of source code based on two criteria, locality and intension/extension \cite{eden_architecture_2003}. Architectural rules are both non-local and intensional, meaning that they affect all or several parts of the system while having \say{infinitely-many possible instances}. In \cite{franch_constraining_2019}, Jasser presents a catalog of architectural security rules. Although the entire catalog of 150 security rules is not yet available, the initial list of 22 included in the paper was used in our study.
 
-\section{Processing}\label{sec:processing}
+\section{Filtering}\label{sec:processing}
 
 %Elaborate. Perhaps explaining how the sources were analyzed. Did you analyse one right after the other, were there iterations, did you meet after each iteration to discuss your findings and synchronize individually derived subset, or did you work together? How many constraints were taken from individual sources, which of those were grouped? What is the proportion of CIAA coverage in the final list (Show CIAA in table 4.2 and show #ID linking the chosen ones from 4.1)? What was the rational for grouping? Perhaps explicitly enumerating  the "rules" you followed for inclusion would be nice (if there are more than two :) ...), e.g.:
 %1) only security related architectural constraints were considered
 %2) only constraints that can be enforced statically (FYI: prepare for the question, what is an example of a constraint that can not be statically enforced?),
 %3) ...
-Starting from each of the three sources of architectural constraints described in Section~\ref{sec:data_collection}, the first step of the process, shown in Figure~\ref{fig:mapping_process}, was to select entries that were within the scope of the project. The criteria for inclusion were the following: 
+Starting from each of the three sources of architectural constraints described in Section~\ref{sec:data_collection}, the first step of the process, shown in Figure~\ref{fig:mapping_process}, was to select the entries that could be formulated as enforcable constraint in the context of our project. The criteria for inclusion were the following: 
 
 \begin{enumerate}
-    \item The entry must be related to the architectural design of a system, i.e., non-local and intensional. \label{criterion_1}
-    \item It must be possible to enforce the entry through static analysis. Examples of non-enforceable constraints include, but is not limited to; "No two instances of a microservice are deployed on the same machine" as the number of machines deployed is a dynamic property. \label{criterion_2}
+    \item The entry must be related to the architectural design of a system, i.e., non-local and intensional (as described in section \ref{subsec:security_rules}. \label{criterion_1}
+    \item It must be possible to enforce the entry through static analysis. An example on a non enforceable constraint is "No two instances of a microservice are deployed on the same machine", as the number of machines deployed is a dynamic property. \label{criterion_2}
     \item Although somewhat included in the first criterion as it is a local issue, an entry must not relate to the correctness or best practice of the implementation of an algorithm. Examples include the practice of using session tokens with time-limited validity. \label{criterion_3}
-    \item The entry must only relate to the system under design, thus ignoring the correctness and security of any external dependencies. \label{criterion_4}
-    \item The entry must not be dependent on externally defined data, such as in the case of user permission. \label{criterion_5}
+    \item The entry must only relate to the system under design, thus ignoring the correctness and security of any external dependencies. An example can be found in SonarQube where the usage of a version of a library with known vulnerabilities is reported as a weakness. \label{criterion_4}
+    \item The entry must not be dependent on externally defined data. A common example is that of user permissions where the mapping between a regulated functions and a users rights is performed using an access control list. \label{criterion_5}
+    \item Additionally, we deemed measures defined as the absence of certain functionality as less valuable due to the increased difficulty of enforcement \cite{haley_security_2008}.
 \end{enumerate}
 
 \begin{figure}
@@ -38,8 +39,6 @@ Starting from each of the three sources of architectural constraints described i
     \caption{Overview of the process of mapping the three sources to constraints}
     \label{fig:mapping_process}
 \end{figure}
-
-Additionally, we deemed measures defined as the absence of certain functionality as less valuable due to the increased difficulty of enforcement \cite{haley_security_2008}.
 
 Previous research on design notations of secure systems have shown a skew towards confidentiality and integrity while having little or no support for availability and accountability. We considered it necessary for the final list of constraints to include all of the security goals. As a consequence, once we had selected the applicable entries, we categorized them according to the security goals of CIAA. This categorization ensured that the final list of constraints covered all security goals. 
 
