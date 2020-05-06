@@ -68,8 +68,10 @@ public class Util {
                     // Should be local method, super method or static import
                     // TODO look for static imports?
                     Class<?> enclosingClass = body.getFirstParentOfType(ASTClassOrInterfaceDeclaration.class).getType();
-                    MethodCall call = new MethodCall(enclosingClass, chain.get(0));
-                    methodCalls.add(call);
+                    if (enclosingClass != null) {
+                        MethodCall call = new MethodCall(enclosingClass, chain.get(0));
+                        methodCalls.add(call);
+                    }
                 }
 
                 /*
@@ -99,9 +101,9 @@ public class Util {
 
                 if (occurrence.isMethodOrConstructorInvocation()) {
                     if (targetOwner == null) {
-                        /*System.err.println("Call to target with unknown owner (target=" + occurrence.getImage()
+                        System.err.println("Call to target with unknown owner (target=" + occurrence.getImage()
                                 + ")" + describeLocation(occurrence.getLocation()));
-                        System.err.println(" + " + chain.toString());*/
+                        System.err.println(" + " + chain.toString());
                     } else {
                         methodCalls.add(new MethodCall(targetOwner, occurrence));
                     }
@@ -116,9 +118,12 @@ public class Util {
     }
 
     private static String describeLocation(JavaNode node) {
-        return " in (" + node.getRoot().getType().getSimpleName()
-                + ".java:" + node.getBeginLine()
-                + ")";
+        Class<?> type = node.getRoot().getType();
+        if (type != null) {
+            return " in (" + type.getSimpleName() + ".java:" + node.getBeginLine() + ")";
+        }
+
+        return " in unknown class (" + node.toString() + ")";
     }
 
     public static Class<?> getType(NameOccurrence nameOccurrence, Scope scope) {
