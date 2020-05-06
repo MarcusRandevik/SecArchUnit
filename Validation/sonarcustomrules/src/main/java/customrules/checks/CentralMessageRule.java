@@ -16,9 +16,9 @@ import java.util.List;
         description = "Outbound messages must be sent from central point"
 )
 public class CentralMessageRule extends IssuableSubscriptionVisitor {
-    private static final String SENDING_POINT = "Transaction";
+    private static final String SENDING_POINT = "AbstractActionBean";
     private static final MethodMatchers SENDERS = MethodMatchers.create()
-            .ofTypes("atm.physical.NetworkToBank")
+            .ofTypes("net.sourceforge.stripes.action.ActionBeanContext")
             .anyName()
             .addParametersMatcher(parameters -> !parameters.isEmpty())
             .build();

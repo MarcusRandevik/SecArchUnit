@@ -21,18 +21,12 @@ import java.util.List;
 
 public class LogSecurityEventsRule extends IssuableSubscriptionVisitor {
 
-    public static String LOGGER_CLASS_TEST = "java.math.BigDecimal";
-    public static String LOGGER_CLASS = "atm.physical.Log";
+    public static String LOGGER_CLASS = "java.util.logging.Logger";
     public static List<String> SECURITY_CLASSES = new ArrayList<String>(Arrays.asList(
-            "LogSecurityEventsCheck".toLowerCase(),
-            "CardReader".toLowerCase(),
-            "CashDispenser".toLowerCase(),
-            "EnvelopeAcceptor".toLowerCase(),
-            "NetworkToBank".toLowerCase(),
-            "Transaction".toLowerCase()
+            "AccountService".toLowerCase(),
+            "OrderService".toLowerCase()
     ));
 
-    MethodMatchers loggerMethodsTest = MethodMatchers.create().ofTypes(LOGGER_CLASS_TEST).anyName().withAnyParameters().build();
     MethodMatchers loggerMethods = MethodMatchers.create().ofTypes(LOGGER_CLASS).anyName().withAnyParameters().build();
 
     @Override
@@ -56,9 +50,8 @@ public class LogSecurityEventsRule extends IssuableSubscriptionVisitor {
             for (Tree blockTree : block.elements()) {
                 if (blockTree.is(Tree.Kind.METHOD_INVOCATION)) {
                     MethodInvocationTree mit = (MethodInvocationTree) blockTree;
-                    if (loggerMethodsTest.matches(mit) || loggerMethods.matches(mit)) {
+                    if (loggerMethods.matches(mit)) {
                         containsCallToLogger = true;
-
                     }
                 }
             }

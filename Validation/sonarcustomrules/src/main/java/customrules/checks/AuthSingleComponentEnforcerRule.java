@@ -19,18 +19,12 @@ import java.util.List;
 )
 public class AuthSingleComponentEnforcerRule extends IssuableSubscriptionVisitor {
 
-    public static String AUTHN_POINT_CLASS_TEST = "AuthSingleComponentEnforcerCheck".toLowerCase();
-    public static String AUTHN_POINT_CLASS = "Transaction".toLowerCase();
-    public static List<String> AUTH_POINT_CLASSES = new ArrayList<>(Arrays.asList(AUTHN_POINT_CLASS, AUTHN_POINT_CLASS_TEST));
+    public static String AUTHN_POINT_CLASS = "OrderActionBean".toLowerCase();
+    public static List<String> AUTH_POINT_CLASSES = new ArrayList<>(Arrays.asList(AUTHN_POINT_CLASS));
 
-    public static String AUTHN_CLASS_TEST = "java.math.BigDecimal";
-    public static String AUTHN_CLASS = "atm.transaction.Transaction";
+    public static String AUTHN_CLASS = "org.mybatis.jpetstore.web.actions.OrderActionBean";
 
-    MethodMatchers enforcerMethodsTest = MethodMatchers.create().ofTypes(AUTHN_CLASS_TEST).anyName().withAnyParameters().build();
     MethodMatchers enforcerMethods = MethodMatchers.create().ofTypes(AUTHN_CLASS).anyName().withAnyParameters().build();
-
-    MethodMatchers mitBoth = MethodMatchers.or(enforcerMethodsTest, enforcerMethods);
-
 
     @Override
     public List<Tree.Kind> nodesToVisit() {
@@ -41,7 +35,7 @@ public class AuthSingleComponentEnforcerRule extends IssuableSubscriptionVisitor
     public void visitNode(Tree tree) {
         MethodInvocationTree mit = (MethodInvocationTree) tree;
 
-        if (mitBoth.matches(mit)) {
+        if (enforcerMethods.matches(mit)) {
             // Get the class of the calling method
             Tree parent = mit.parent();
             while (!parent.is(Tree.Kind.CLASS)) {

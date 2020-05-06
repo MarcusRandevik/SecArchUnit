@@ -19,14 +19,11 @@ import java.util.*;
 )
 public class AuthSingleComponentRule extends IssuableSubscriptionVisitor {
 
-    public static String AUTHN_POINT_CLASS_TEST = "AuthSingleComponentCheck".toLowerCase();
-    public static String AUTHN_POINT_CLASS = "Transaction".toLowerCase();
-    public static List<String> AUTH_POINT_CLASSES = new ArrayList<>(Arrays.asList(AUTHN_POINT_CLASS_TEST, AUTHN_POINT_CLASS));
+    public static String AUTHN_POINT_CLASS = "OrderActionBean".toLowerCase();
+    public static List<String> AUTH_POINT_CLASSES = new ArrayList<>(Arrays.asList(AUTHN_POINT_CLASS));
 
-    public static String AUTHN_CLASS_TEST = "java.math.BigDecimal";
-    public static String AUTHN_CLASS = "atm.transaction.Transaction";
+    public static String AUTHN_CLASS = "org.mybatis.jpetstore.web.actions.OrderActionBean";
 
-    MethodMatchers authNMethodsTest = MethodMatchers.create().ofTypes(AUTHN_CLASS_TEST).anyName().withAnyParameters().build();
     MethodMatchers authNMethods = MethodMatchers.create().ofTypes(AUTHN_CLASS).anyName().withAnyParameters().build();
 
     private static int INITIAL_AMOUNT_OF_METHODS = -1;
@@ -68,7 +65,7 @@ public class AuthSingleComponentRule extends IssuableSubscriptionVisitor {
             for (Tree blockTree : block.elements()) {
                 if (blockTree.is(Tree.Kind.METHOD_INVOCATION)) {
                     MethodInvocationTree mit = (MethodInvocationTree) blockTree;
-                    if (authNMethodsTest.matches(mit) || authNMethods.matches(mit)) {
+                    if (authNMethods.matches(mit)) {
                         containsCallToEnforcer = true;
                     }
                 }
