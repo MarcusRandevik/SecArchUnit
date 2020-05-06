@@ -1,6 +1,6 @@
 \chapter{Enforcing Constraints}
 
-This chapter explains how the constraints are expressed and validated with the tool using both the general definition of a rule as well as by providing a modeled example system. The constraints are divided into three distinct categories. The first category contains the constraints that are possible to express in ArchUnit as-is. The second category describes constraints that are enforceable with the help of additional information in source code. The third and final category details constraints that require an extension of ArchUnit to be possible to enforce.
+This chapter explains how the constraints are expressed and validated using the tool using both the general definition of a rule as well as by providing a modeled example system. The constraints are divided into three distinct categories. The first category contains the constraints that are possible to express in ArchUnit as-is. The second category describes constraints that are enforceable with the help of additional information in source code. The third and final category details constraints that require an extension of ArchUnit to be possible to enforce.
 
 \section{Example system}\todo{improve heading}
 The constraints used within the report are not system-specific but instead defined to by generally applicable. However, a toy system called \textit{BlogWeb} has been modeled to allow us to showcase a specific example for each constraint. BlogWeb is by no means intended to be a complex or complete system, but rather big enough to provide the functionality to support the constraints. A UML class diagram of BlogWeb is illustrated in Figure~\ref{fig:toy_application}.
@@ -16,7 +16,7 @@ BlogWeb is, as the name suggests, a blog website providing users with the abilit
 
 \section{Support in ArchUnit as-is}\label{sec:as-is}
 
-ArchUnit contains an extensive vocabulary for expressing typical architectural constraints. These constraints are generally composed of three parts. The first part indicates the type of Java construct that should be inspected. These constructs include classes, methods, fields and constructors. The second part contains a predicate that selects a subset of these constructs. The third part defines the condition that must hold true for all the selected constructs.
+ArchUnit contains an extensive vocabulary for expressing typical architectural constraints. These constraints are generally composed of three parts: a construct, a predicate and a condition. The construct defines the type of Java construct that should be inspected, and includes classes, methods, fields and constructors. The predicate then selects a subset of these constructs, for which the condition must hold true.
 
 An example of a rule defined solely using this standard vocabulary can be seen in Listing~\ref{lst:standard_vocabulary}, where each of the three aforementioned parts of the constraint has been separated into their own line. The rule is a simple example of complete mediation, where some internal classes must only be accessed through a mediator.
 
@@ -32,10 +32,10 @@ In situations where this vocabulary is insufficient for expressing a constraint,
 
 \subsection{Log all security events}
 % Description
-This constraint is expressed with the assumption that there are services, in the form of classes, that are responsible for performing security related events. Any publicly accessible methods in these services perform a security event and must therefore contain a call to the logging facility.
+This constraint is expressed with the assumption that there are services, in the form of classes, that are responsible for performing security related events. Every publicly accessible method in such a service is assumed to perform a security event and must therefore contain a call to the logging facility.
 
 % Rule definition
-The definition of the architectural rule can be seen in Listing~\ref{lst:constraint_1_impl}. The predicate that selects the security services, and the class that is responsible for logging, are passed as arguments to the architectural rule. This leaves no need for injecting information into the source code of the target system. Furthermore, by using a predicate to select the security services, the developer is left with some flexibility in how they decide to apply the constraint. As opposed to a plain list of classes, a predicate can match all classes belonging to a specific package or following a set naming scheme, minimizing the need for revisiting the constraint as the system evolves.
+The definition of the architectural rule can be seen in Listing~\ref{lst:constraint_1_impl}. The predicate that selects the security services, and the class that is responsible for logging, are passed as arguments to the architectural rule. Hence, there is no need for injecting information into the source code of the target system. Furthermore, by using a predicate to select the security services, the developer is left with some flexibility in how they decide to apply the constraint. As opposed to a plain list of classes, a predicate can match all classes belonging to a specific package or following a set naming scheme, minimizing the need for revisiting the constraint as the system evolves.
 
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[caption={Rule definition for constraint 1.}, captionpos=b, label=lst:constraint_1_impl, numbers=left]
@@ -63,7 +63,7 @@ ArchRule logSecurityEvents = SecArchUnit
 
 \subsection{Enforce AuthN/AuthZ at single point}
 % Description
-The second constraint is defined in terms of two concepts: an authentication point and an authentication enforcer. Authentication is performed through a method call to the authentication enforcer, which is a class whose sole responsibility is to authenticate an actor. This call should occur at the authentication point, and at no other points in the system, for the sake of ensuring a uniform authentication mechanism throughout the system. Authorization is enforced in the same manner, with the concepts of an authorization point and an authorization enforcer.
+The second constraint is defined in terms of two concepts: an authentication point and an authentication enforcer. Authentication is performed through a method call to the authentication enforcer, which is a class whose sole responsibility is to authenticate an actor. This call should only occur at the authentication point for the sake of ensuring a uniform authentication mechanism throughout the system. Authorization is enforced in the same manner, with the concepts of an authorization point and an authorization enforcer.
 
 % Rule definition
 The definition of the second constraint is detailed in Listing~\ref{lst:constraint_2_impl}. The constraint is defined as two separate rules, for the sake of clarity, but their implementations are identical.
@@ -205,12 +205,12 @@ ArchRule limitResourceAllocation() {
 \end{lstlisting}
 \end{minipage}
 
-In BlogWeb, the RequestHandler class spawns new threads in order to handle several user requests concurrently. For the system to conform to the constraint, the ResourceRestriction annotation either has to be added to the entire class or a specific method, as shown in figure \ref{fig:toy_resource_restriction}. If not, the rule will fail, and the developer will have to ensure that the class cannot excessively spawn new threads.
+In BlogWeb, the RequestHandler class spawns new threads in order to handle several user requests concurrently. For the system to conform to the constraint, the ResourceRestriction annotation either has to be added to the entire class, or to the specific method that spawns the thread as shown in Figure~\ref{fig:toy_resource_restriction}. If not, the rule will fail, and the developer will have to ensure that the class cannot excessively spawn new threads.
 
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{figure/toyexamples/resource_restriction.png}
-    \caption{Applying constraint 5 to the model of BlogWeb using the added annotation on the RequestHandler class}
+    \caption{Applying constraint 5 to the model of BlogWeb using the added annotation on the RequestHandler class.}
     \label{fig:toy_resource_restriction}
 \end{figure}
 
@@ -240,8 +240,8 @@ For the final 2 constraints, there is a need for an extension that allows constr
 \subsection{Extensions}
 \todo{Parts of this section might belong in the background?}
 
-ArchUnit builds its representation of the architecture using ASM\footnote{\url{https://asm.ow2.io/}}, a Java bytecode analysis framework. ASM reads bytecode and generates callbacks to methods in its various visitor classes\footnote{\url{https://asm.ow2.io/javadoc/org/objectweb/asm/package-summary.html}}. 
-The visitor of most interest to us is \texttt{MethodVisitor}, which is responsible for processing the contents of a method, constructor or static initializer. These are collectively named \textit{code units} in ArchUnit's domain, i.e. anything that may contain code.
+ArchUnit builds its representation of the architecture using ASM\footnote{\url{https://asm.ow2.io/}}, a Java bytecode analysis framework. ASM reads bytecode and generates callbacks to methods in its various visitor classes. 
+The visitor of most interest to us is \texttt{MethodVisitor}\footnote{\url{https://asm.ow2.io/javadoc/org/objectweb/asm/MethodVisitor.html}}, which is responsible for processing the contents of a method, constructor or static initializer. These are collectively named \textit{code units} in ArchUnit's domain, i.e. anything that may contain code.
 
 \begin{figure}
     \centering
@@ -258,7 +258,7 @@ Conveniently, ASM provides an extension of its \texttt{MethodVisitor} class, cal
 \begin{figure}
     \centering
     \includegraphics[width=0.7\textwidth]{figure/extension/MethodProcessor2.png}
-    \caption{Changes made to analysis of code units.}
+    \caption{Changes made to the analysis of code units.}
     \label{fig:method_processor_2}
 \end{figure}
 

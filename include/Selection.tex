@@ -6,7 +6,7 @@ This chapter describes the result of compiling a list of security constraints, a
 
 The filtered collection of security constraints can be seen in Table~\ref{tab:all_measures}. There are in total 18 constraints. As mentioned in Section~\ref{sec:processing}, each constraint was categorized according to the goals of CIAA to ensure full coverage. 
 
-Although both the architectural rules found in Jasser \cite{franch_constraining_2019} and the security patterns presented in Scandariato et al. \cite{scandariato_system_2006} were at the appropriate level of design, many of the weaknesses presented in CAWE were not. Common examples include; CAWE-259 "Use of hard-coded password" where the weakness is reliant on a local change of behavior rather than the architectural structure; and CAWE-263 "Password aging with long expiration" where the weakness is introduced by a single variable most likely defined outside of the source code. As a result, a far lower percentage of entries were included from the CAWE-catalog compared to the remaining two sources.
+Although both the architectural rules found in Jasser \cite{franch_constraining_2019} and the security patterns presented in Scandariato et al. \cite{scandariato_system_2006} were at the appropriate level of design, many of the weaknesses presented in CAWE were not. Common examples include; CAWE-259 "Use of hard-coded password" where the weakness is reliant on a local change of behavior rather than the architectural structure; and CAWE-263 "Password aging with long expiration" where the weakness is introduced by a single variable most likely defined outside of the source code. As a result, a far lower percentage of entries were included from the CAWE-catalog compared to the other sources.
 
 
 % E.g. #5, what is "it"/the subject? Who strips the data?
@@ -55,7 +55,7 @@ Although both the architectural rules found in Jasser \cite{franch_constraining_
 
 \section{Final Selection}
 
-As explained in Section~\ref{sec:limitations}, the aim is not to demonstrate the enforceability of as many constraints as possible, but rather to investigate the feasibility of using the tool in this manner. To that end, a subset of the full list of security constraints is selected for enforcement. The final list contains 7 architectural security constraints, as this allows us to cover at least one constraint from each goal. The selected constraints can be seen in Table~\ref{tab:selected_measures}. The remainder of this section presents each selected constraint in further detail.
+As explained in Section~\ref{sec:limitations}, the aim is not to demonstrate the enforceability of as many constraints as possible, but rather to investigate the feasibility of using the tool in this manner. To that end, a subset of the full list of security constraints is selected for enforcement. The final list contains 7 architectural security constraints, as this allows us to cover at least one constraint from each goal in the CIAA model. The selected constraints can be seen in Table~\ref{tab:selected_measures}. The remainder of this section presents each selected constraint in further detail.
 
 \begin{table}
 \begin{center}
@@ -76,7 +76,7 @@ As explained in Section~\ref{sec:limitations}, the aim is not to demonstrate the
 \hline
 \end{tabular}
 \end{center}
-\caption{Constraints that have been selected for enforcement.}
+\caption{Constraints that have been selected for enforcement. Column \#\textsubscript{4.1} refers to the ID of the constraint in Table~\ref{tab:all_measures}.}
 \label{tab:selected_measures}
 \end{table}
 
@@ -117,7 +117,7 @@ As explained in Section~\ref{sec:limitations}, the aim is not to demonstrate the
 \subsection{Messages are sent from a central point} 
 
 \textbf{Description:} 
-Communication with external actors, whether they are a client connecting to a server, or the system sending data to a third party, is commonly performed over insecure networks using several components. Encryption is the preferred method of securing such communication against potential attackers, whereas removing secrets from the data to be sent ensures that a user only sees non-sensitive information. Having a single component responsible for any outbound communication reduces the risk of information disclosure (e.g. transmitting a sensitive message via an insecure sender or disclosing implementation details through stack traces), and can prevent harmful output from reaching the client (e.g. cross-site scripting attacks from other users). 
+Communication with external actors, whether they are a client connecting to a server, or the system sending data to a third party, is commonly performed over insecure networks using several components. Encryption is the preferred method of securing such communication against potential attackers, whereas removing secrets from the data to be sent ensures that a user only sees non-sensitive information. Having a single component responsible for all outbound communication reduces the risk of information disclosure (e.g. transmitting a sensitive message via an insecure network or disclosing implementation details through stack traces), and can prevent harmful output from reaching the client (e.g. cross-site scripting attacks from other users). 
  
  \textbf{Typical enforcement:} 
  Outbound messages can be intercepted before transmission to facilitate output sanitization. Similarly, outgoing messages can be forced to pass through a single component, designated as the sending point. This sending point can handle sanitization and decide whether the sender is allowed to carry the specified message.
@@ -151,13 +151,13 @@ String query = "SELECT * FROM accounts WHERE
 
 \subsection{Restrict thread spawning}
 
-\textbf{Description:} Computers have finite resources in terms of memory, CPU time and network bandwidth. Systems should be designed with this in mind, employing measures to avoid exhausting the computer's resources. This constraint limits the number of threads that can be spawned on behalf of actors, which could otherwise lead to exhaustion of the CPU.
+\textbf{Description:} Computers have finite resources in terms of memory, CPU time and network bandwidth. Systems should be designed with this in mind, employing measures to avoid exhausting the computer's resources. This constraint limits the number of threads that can be spawned on behalf of actors, which could otherwise lead to a malicious actor occupying all of the available CPU time.
  
  \textbf{Typical enforcement:} Tasks can be dispatched to a pool of worker threads that is not allowed to grow beyond a fixed size. Moreover, various mechanisms can be employed to throttle or limit requests such that a single actor cannot occupy all of the allotted threads.
  
  \textbf{Sources:} CAWE 770.
  
- \textbf{Attack scenario:} An attacker may initiate many requests that are each handled by the system in a separate thread. By initiating requests at a higher rate than the server is able to process them, the resources at the server are eventually exhausted. This leads to a denial of service to any legitimate actors attempting to access the system.
+ \textbf{Attack scenario:} An attacker may initiate many requests that are each handled by the system in a separate thread. By initiating requests at a higher rate than the server is able to process them, the resources at the server are eventually exhausted. This leads to a denial of service for any legitimate actors attempting to access the system.
 
 \subsection{Sensitive information must stay within trust boundary}\label{sec:trust_boundry_constraint}
 
