@@ -1,0 +1,56 @@
+{"mappings": [
+	{"pm": "java.lang.String", "secdfd": "productID"},
+	{"pm": "org.mybatis.jpetstore.domain.Product", "secdfd": "product"},	
+	{"pm": "java.lang.String", "secdfd": "itemID"},
+	{"pm": "org.mybatis.jpetstore.domain.Item", "secdfd": "item"},
+	{"pm": "org.mybatis.jpetstore.domain.CartItem", "secdfd": "item"},
+	{"pm": "org.mybatis.jpetstore.domain.LineItem", "secdfd": "item"},
+	{"pm": "org.mybatis.jpetstore.domain.Account", "secdfd": "account_info"},
+	{"pm": "java.lang.String", "secdfd": "username"},
+	{"pm": "java.lang.String", "secdfd": "password"},
+	{"pm": "java.lang.String", "secdfd": "keyword"},
+	{"pm": "org.mybatis.jpetstore.domain.Cart", "secdfd": "cart"},
+	{"pm": "org.mybatis.jpetstore.domain.CartItem", "secdfd": "cart"},
+	{"pm": "org.mybatis.jpetstore.domain.Order", "secdfd": "order"},
+
+	{"pm": "java.util.HashMap", "secdfd": "CartDB"},
+	{"pm": "java.util.Map", "secdfd": "CartDB"},
+	{"pm": "java.util.AbstractMap", "secdfd": "CartDB"},
+
+	{"pm": "org.mybatis.jpetstore.mapper.AccountMapper", "secdfd": "AccountDB"},
+	{"pm": "org.mybatis.jpetstore.service.AccountService", "secdfd": "AccountDB"},
+	{"pm": "org.mybatis.jpetstore.domain.Account", "secdfd": "AccountDB"},
+
+	{"pm": "org.mybatis.jpetstore.mapper.OrderMapper", "secdfd": "Orders_And_ProductsDB"},
+	{"pm": "org.mybatis.jpetstore.mapper.ProductMapper", "secdfd": "Orders_And_ProductsDB"},
+	{"pm": "org.mybatis.jpetstore.service.OrderService", "secdfd": "Orders_And_ProductsDB"},
+	{"pm": "org.mybatis.jpetstore.service.CatalogService", "secdfd": "Orders_And_ProductsDB"},
+
+	{"pm": "org.mybatis.jpetstore.web.actions.AccountActionBean.isAuthenticated():boolean", "secdfd": "Authenticate"},
+
+	{"pm": "org.mybatis.jpetstore.mapper.ProductMapper.searchProductList(String):List", "secdfd": "Search_Products"},
+	{"pm": "org.mybatis.jpetstore.mapper.ProductMapper.getProductListByCategory(String):List", "secdfd": "Search_Products"},
+	{"pm": "org.mybatis.jpetstore.mapper.ProductMapper.getProduct(String):Product", "secdfd": "Search_Products"},
+	{"pm": "org.mybatis.jpetstore.service.CatalogService.searchProductList(String):List", "secdfd": "Search_Products"},
+	{"pm": "org.mybatis.jpetstore.service.CatalogService.getProductListByCategory(String):List", "secdfd": "Search_Products"},
+	{"pm": "org.mybatis.jpetstore.service.CatalogService.getProduct(String):Product", "secdfd": "Search_Products"},
+
+	{"pm": "org.mybatis.jpetstore.domain.Order.initOrder(Account,Cart):void", "secdfd": "Purchase_Order"},
+	{"pm": "org.mybatis.jpetstore.service.OrderService.insertOrder(Order):void", "secdfd": "Purchase_Order"},
+
+	{"pm": "org.mybatis.jpetstore.domain.Cart.addItem(Item,boolean):void", "secdfd": "AddRemove_Items"},
+	{"pm": "org.mybatis.jpetstore.domain.Cart.removeItemById(String):Item", "secdfd": "AddRemove_Items"},
+	{"pm": "org.mybatis.jpetstore.domain.Cart.incrementQuantityByItemId(String):void", "secdfd": "AddRemove_Items"},
+	{"pm": "org.mybatis.jpetstore.domain.Order.addlineitem(CartItem):void", "secdfd": "AddRemove_Items"},
+	{"pm": "org.mybatis.jpetstore.domain.Order.addlineitem(LineItem):void", "secdfd": "AddRemove_Items"},
+	
+	{"pm": "org.mybatis.jpetstore.service.AccountService.insertAccount(Account):void", "secdfd": "Manage_Account"},
+	{"pm": "org.mybatis.jpetstore.service.AccountService.updateAccount(Account):void", "secdfd": "Manage_Account"},
+	{"pm": "org.mybatis.jpetstore.service.AccountService.getAccount(String,String):Account", "secdfd": "Manage_Account"},
+	{"pm": "org.mybatis.jpetstore.service.AccountService.getAccount(String):Account", "secdfd": "Manage_Account"},
+	{"pm": "org.mybatis.jpetstore.mapper.AccountMapper.insertAccount(Account):void", "secdfd": "Manage_Account"},
+	{"pm": "org.mybatis.jpetstore.mapper.AccountMapper.insertProfile(Account):void", "secdfd": "Manage_Account"},
+	{"pm": "org.mybatis.jpetstore.mapper.AccountMapper.updateAccount(Account):void", "secdfd": "Manage_Account"},
+	{"pm": "org.mybatis.jpetstore.mapper.AccountMapper.updateProfile(Account):void", "secdfd": "Manage_Account"}
+]
+}

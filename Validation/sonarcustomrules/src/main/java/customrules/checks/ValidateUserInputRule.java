@@ -46,24 +46,31 @@ public class ValidateUserInputRule extends IssuableSubscriptionVisitor {
             }
 
             // Check if all callers are marked as validators
-            boolean validatedInAllCallers = true;
-            for (IdentifierTree caller : methodTree.symbol().usages()) {
-                if (caller.symbol().metadata().isAnnotatedWith(INPUT_VALIDATOR)) {
-                    // Caller method is validator
-                    continue;
+            boolean hasCallers = !methodTree.symbol().usages().isEmpty();
+            if (hasCallers) {
+                boolean validatedInAllCallers = true;
+
+                for (IdentifierTree caller : methodTree.symbol().usages()) {
+                    if (caller.symbol().metadata().isAnnotatedWith(INPUT_VALIDATOR)) {
+                        // Caller method is validator
+                        continue;
+                    }
+
+                    if (caller.symbol().enclosingClass().metadata().isAnnotatedWith(INPUT_VALIDATOR)) {
+                        // Caller class is validator
+                        continue;
+                    }
+
+                    validatedInAllCallers = false;
+                    break;
                 }
 
-                if (caller.symbol().enclosingClass().metadata().isAnnotatedWith(INPUT_VALIDATOR)) {
-                    // Caller class is validator
-                    continue;
+                if (validatedInAllCallers) {
+                    return;
                 }
-
-                validatedInAllCallers = false;
             }
 
-            if (!validatedInAllCallers) {
-                reportIssue(methodTree, "User input must be validated");
-            }
+            reportIssue(methodTree, "User input must be validated");
         }
     }
 }
