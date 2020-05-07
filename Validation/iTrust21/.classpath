@@ -32,5 +32,11 @@
 	<classpathentry kind="lib" path="lib/htmlunit-2.9.jar"/>
 	<classpathentry kind="lib" path="lib/commons-codec-1.10.jar"/>
 	<classpathentry kind="lib" path="lib/httpunit-1.5.4-atlassian-13.jar"/>
+	<classpathentry kind="lib" path="lib/secarchunit-1.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/archunit-0.13.1.jar"/>
+	<classpathentry kind="lib" path="lib/archunit-junit4-0.13.1.jar"/>
+	<classpathentry kind="lib" path="lib/junit-4.13.jar"/>
+	<classpathentry kind="lib" path="lib/hamcrest-core-1.3.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.7.25.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
