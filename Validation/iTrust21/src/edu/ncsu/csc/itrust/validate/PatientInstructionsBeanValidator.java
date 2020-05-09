@@ -4,6 +4,9 @@
 package edu.ncsu.csc.itrust.validate;
 
 import org.apache.commons.validator.UrlValidator;
+
+import com.github.secarchunit.concepts.InputValidator;
+
 import edu.ncsu.csc.itrust.beans.PatientInstructionsBean;
 import edu.ncsu.csc.itrust.exception.ErrorList;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
@@ -11,6 +14,7 @@ import edu.ncsu.csc.itrust.exception.FormValidationException;
 /**
  *  Validates a patient instructions bean.
  */
+@InputValidator
 public class PatientInstructionsBeanValidator extends BeanValidator<PatientInstructionsBean> {
 
 	/* (non-Javadoc)

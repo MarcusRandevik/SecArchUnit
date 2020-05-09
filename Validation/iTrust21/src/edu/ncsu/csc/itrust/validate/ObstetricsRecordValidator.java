@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.validate;
 
+import com.github.secarchunit.concepts.InputValidator;
+
 import edu.ncsu.csc.itrust.beans.ObstetricsRecordBean;
 import edu.ncsu.csc.itrust.enums.PregnancyStatus;
 import edu.ncsu.csc.itrust.exception.ErrorList;
@@ -8,6 +10,7 @@ import edu.ncsu.csc.itrust.exception.FormValidationException;
 /**
  * The validator used by {@link AddObstetricsAction}. 
  */
+@InputValidator
 public class ObstetricsRecordValidator extends BeanValidator<ObstetricsRecordBean> {
 	/**
 	 * The default constructor.

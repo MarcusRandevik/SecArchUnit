@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.github.secarchunit.concepts.InputValidator;
+
 import edu.ncsu.csc.itrust.beans.SleepEntryBean;
 import edu.ncsu.csc.itrust.exception.ErrorList;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
@@ -13,6 +15,7 @@ import edu.ncsu.csc.itrust.exception.FormValidationException;
  * that a sleep entry has only appropriate values before it is loaded into the
  * database
  */
+@InputValidator
 public class SleepEntryValidator extends BeanValidator<SleepEntryBean> {
 
 	/**

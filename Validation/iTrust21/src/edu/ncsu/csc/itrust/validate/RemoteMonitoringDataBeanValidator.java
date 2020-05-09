@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.validate;
 
+import com.github.secarchunit.concepts.InputValidator;
+
 import edu.ncsu.csc.itrust.action.AddRemoteMonitoringDataAction;
 import edu.ncsu.csc.itrust.beans.RemoteMonitoringDataBean;
 import edu.ncsu.csc.itrust.exception.ErrorList;
@@ -9,6 +11,7 @@ import edu.ncsu.csc.itrust.exception.FormValidationException;
  * Validator used to validate adding new remote monitoring data in {@link AddRemoteMonitoringDataAction}
  * 
  */
+@InputValidator
 public class RemoteMonitoringDataBeanValidator extends BeanValidator<RemoteMonitoringDataBean> {
 	/**
 	 * The default constructor.

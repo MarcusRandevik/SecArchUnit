@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.validate;
 
+import com.github.secarchunit.concepts.InputValidator;
+
 import edu.ncsu.csc.itrust.beans.OverrideReasonBean;
 import edu.ncsu.csc.itrust.exception.ErrorList;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
@@ -8,6 +10,7 @@ import edu.ncsu.csc.itrust.exception.FormValidationException;
  * Validates reason code beans, from {@link UpdateReasonCodeListAction}
  * 
  */
+@InputValidator
 public class OverrideReasonBeanValidator extends BeanValidator<OverrideReasonBean> {
 	/**
 	 * The default constructor.

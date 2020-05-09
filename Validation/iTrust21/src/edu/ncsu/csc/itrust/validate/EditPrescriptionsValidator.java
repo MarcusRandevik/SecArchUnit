@@ -6,6 +6,9 @@ package edu.ncsu.csc.itrust.validate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import com.github.secarchunit.concepts.InputValidator;
+
 import edu.ncsu.csc.itrust.beans.forms.EditPrescriptionsForm;
 import edu.ncsu.csc.itrust.exception.ErrorList;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
@@ -14,6 +17,7 @@ import edu.ncsu.csc.itrust.exception.FormValidationException;
  *  
  *
  */
+@InputValidator
 public class EditPrescriptionsValidator extends BeanValidator<EditPrescriptionsForm> {
 	
 	private String defaultInstructions;

@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.validate;
 
+import com.github.secarchunit.concepts.InputValidator;
+
 import edu.ncsu.csc.itrust.action.EditHealthHistoryAction;
 import edu.ncsu.csc.itrust.beans.forms.HealthRecordForm;
 import edu.ncsu.csc.itrust.exception.ErrorList;
@@ -11,6 +13,7 @@ import edu.ncsu.csc.itrust.exception.FormValidationException;
  *  
  * 
  */
+@InputValidator
 public class HealthRecordFormValidator extends BeanValidator<HealthRecordForm> {
 	/**
 	 * Performs the act of validating the bean in question, which varies depending on the

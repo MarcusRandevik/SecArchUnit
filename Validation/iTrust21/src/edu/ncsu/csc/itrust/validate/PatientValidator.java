@@ -5,6 +5,9 @@ import edu.ncsu.csc.itrust.beans.PatientBean;
 import edu.ncsu.csc.itrust.exception.ErrorList;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
 import org.apache.commons.validator.CreditCardValidator;
+
+import com.github.secarchunit.concepts.InputValidator;
+
 import java.util.Date;
 
 /**
@@ -13,6 +16,7 @@ import java.util.Date;
  *  
  * 
  */
+@InputValidator
 public class PatientValidator extends BeanValidator<PatientBean> {
 	/**
 	 * The default constructor.

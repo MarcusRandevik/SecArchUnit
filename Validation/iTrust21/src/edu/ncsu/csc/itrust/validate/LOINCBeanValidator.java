@@ -1,6 +1,8 @@
 package edu.ncsu.csc.itrust.validate;
 
 
+import com.github.secarchunit.concepts.InputValidator;
+
 import edu.ncsu.csc.itrust.beans.LOINCbean;
 import edu.ncsu.csc.itrust.exception.ErrorList;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
@@ -9,6 +11,7 @@ import edu.ncsu.csc.itrust.exception.FormValidationException;
 /**
  * Validator used to validate LOINCbean
  */
+@InputValidator
 public class LOINCBeanValidator extends BeanValidator<LOINCbean> {
 	/**
 	 * The default constructor.

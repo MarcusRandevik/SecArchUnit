@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.github.secarchunit.concepts.InputValidator;
+
 import edu.ncsu.csc.itrust.beans.ExerciseEntryBean;
 import edu.ncsu.csc.itrust.enums.ExerciseType;
 import edu.ncsu.csc.itrust.exception.ErrorList;
@@ -14,6 +16,7 @@ import edu.ncsu.csc.itrust.exception.FormValidationException;
  * that a exercise entry has only appropriate values before it is loaded into the
  * database
  */
+@InputValidator
 public class ExerciseEntryValidator extends BeanValidator<ExerciseEntryBean> {
 
 	/**

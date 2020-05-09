@@ -4,7 +4,10 @@ package edu.ncsu.csc.itrust.validate;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
 import org.apache.commons.validator.*;
 
+import com.github.secarchunit.concepts.InputValidator;
 
+
+@InputValidator
 public class MailValidator extends EmailValidator {
 	/**
 	 * The default constructor.

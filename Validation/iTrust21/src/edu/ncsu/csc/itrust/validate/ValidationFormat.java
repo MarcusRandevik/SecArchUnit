@@ -2,6 +2,8 @@ package edu.ncsu.csc.itrust.validate;
 
 import java.util.regex.Pattern;
 
+import com.github.secarchunit.concepts.InputValidator;
+
 /**
  * Enum with all of the validation formats that fit into a regex.
  * 

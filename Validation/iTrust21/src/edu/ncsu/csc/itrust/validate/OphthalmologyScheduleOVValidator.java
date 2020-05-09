@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.validate;
 
+import com.github.secarchunit.concepts.InputValidator;
+
 import edu.ncsu.csc.itrust.beans.OphthalmologyScheduleOVRecordBean;
 import edu.ncsu.csc.itrust.exception.ErrorList;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
@@ -8,6 +10,7 @@ import edu.ncsu.csc.itrust.exception.FormValidationException;
  * Validator class for OphthalmologyScheduleOVRecordBean. Used in order to verify that a beans
  * contents are consistent with the data format section of UC88.
  */
+@InputValidator
 public class OphthalmologyScheduleOVValidator extends BeanValidator<OphthalmologyScheduleOVRecordBean> {
 	
 	/** Validates an scheduled Ophthalmology ov bean passed to it.

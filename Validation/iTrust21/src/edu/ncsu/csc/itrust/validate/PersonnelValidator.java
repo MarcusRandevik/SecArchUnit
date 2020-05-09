@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.validate;
 
+import com.github.secarchunit.concepts.InputValidator;
+
 import edu.ncsu.csc.itrust.action.EditPersonnelAction;
 import edu.ncsu.csc.itrust.beans.PersonnelBean;
 import edu.ncsu.csc.itrust.exception.ErrorList;
@@ -11,6 +13,7 @@ import edu.ncsu.csc.itrust.exception.FormValidationException;
  *  
  * 
  */
+@InputValidator
 public class PersonnelValidator extends BeanValidator<PersonnelBean> {
 	/**
 	 * The default constructor.
