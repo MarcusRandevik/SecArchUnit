@@ -2,7 +2,6 @@ import org.junit.runner.RunWith;
 
 import com.github.secarchunit.SecArchUnit;
 import com.tngtech.archunit.core.domain.JavaClass;
-import com.tngtech.archunit.core.importer.ImportOption.*;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.junit.ArchUnitRunner;
@@ -64,7 +63,7 @@ import edu.ncsu.csc.itrust.dao.mysql.FakeEmailDAO;
 import edu.ncsu.csc.itrust.dao.mysql.MessageDAO;
 
 @RunWith(ArchUnitRunner.class)
-@AnalyzeClasses(packages = "edu.ncsu.csc.itrust", importOptions = {DoNotIncludeTests.class, DoNotIncludeJars.class, DoNotIncludeArchives.class})
+@AnalyzeClasses(packages = "edu.ncsu.csc.itrust")
 public class SecurityTest {
 	@ArchTest
 	ArchRule c1 = SecArchUnit.logSecurityEvents(JavaClass.Predicates.belongToAnyOf(
@@ -134,4 +133,10 @@ public class SecurityTest {
 	
 	@ArchTest
 	ArchRule c5 = SecArchUnit.limitResourceAllocation();
+	
+	@ArchTest
+	ArchRule c6 = SecArchUnit.doNotBleedAssetsBetweenComponents();
+	
+	@ArchTest
+	ArchRule c7 = SecArchUnit.doNotLogSecrets(JavaClass.Predicates.belongToAnyOf(EventLoggingAction.class));
 }
