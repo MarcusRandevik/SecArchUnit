@@ -4,6 +4,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.beans.HospitalBean;
 import edu.ncsu.csc.itrust.beans.PatientBean;
 import edu.ncsu.csc.itrust.beans.RecordsReleaseBean;
@@ -84,6 +87,7 @@ public class RequestRecordsReleaseAction {
 	 * 
 	 * @return
 	 */
+	@UserInput
 	public String addRecordsRelease(RecordsReleaseForm form) {
 		RecordsReleaseBean release;
 		try {

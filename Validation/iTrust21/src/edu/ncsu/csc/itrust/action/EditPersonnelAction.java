@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.action;
 
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.action.base.PersonnelBaseAction;
 import edu.ncsu.csc.itrust.beans.PersonnelBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
@@ -54,6 +56,7 @@ public class EditPersonnelAction extends PersonnelBaseAction {
 	 * @throws ITrustException
 	 * @throws FormValidationException
 	 */
+	@UserInput
 	public void updateInformation(PersonnelBean personnelForm) throws ITrustException,
 			FormValidationException {
 		personnelForm.setMID(pid);

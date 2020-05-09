@@ -2,6 +2,9 @@ package edu.ncsu.csc.itrust.action;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
+
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.beans.ApptBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
 import edu.ncsu.csc.itrust.exception.DBException;
@@ -15,6 +18,7 @@ public class AddApptAction extends ApptAction {
 		super(factory, loggedInMID);
 	}
 	
+	@UserInput
 	public String addAppt(ApptBean appt, boolean ignoreConflicts) throws FormValidationException, SQLException, DBException {
 		validator.validate(appt);
 		if(appt.getDate().before(new Timestamp(System.currentTimeMillis()))) {

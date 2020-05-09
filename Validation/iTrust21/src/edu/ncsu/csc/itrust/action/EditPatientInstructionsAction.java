@@ -2,6 +2,9 @@ package edu.ncsu.csc.itrust.action;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.action.base.EditOfficeVisitBaseAction;
 import edu.ncsu.csc.itrust.beans.PatientInstructionsBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
@@ -65,6 +68,7 @@ public class EditPatientInstructionsAction extends EditOfficeVisitBaseAction {
 	 * @param bean The instructions to add.
 	 * @throws ITrustException
 	 */
+	@UserInput
 	public void addPatientInstructions(PatientInstructionsBean bean) throws ITrustException {
 		verifySaved();
 		instructionsDAO.add(bean);
@@ -75,6 +79,7 @@ public class EditPatientInstructionsAction extends EditOfficeVisitBaseAction {
 	 * @param bean The instructions to modify
 	 * @throws ITrustException
 	 */
+	@UserInput
 	public void editPatientInstructions(PatientInstructionsBean bean) throws ITrustException {
 		verifySaved();
 		instructionsDAO.edit(bean);
@@ -85,6 +90,7 @@ public class EditPatientInstructionsAction extends EditOfficeVisitBaseAction {
 	 * @param bean The instructions to delete.
 	 * @throws ITrustException
 	 */
+	@UserInput
 	public void deletePatientInstructions(PatientInstructionsBean bean) throws ITrustException {
 		verifySaved();
 		instructionsDAO.remove(bean.getId());
@@ -96,6 +102,7 @@ public class EditPatientInstructionsAction extends EditOfficeVisitBaseAction {
 	 * @throws ITrustException
 	 * @throws FormValidationException
 	 */
+	@UserInput
 	public void validate(PatientInstructionsBean bean) throws ITrustException, FormValidationException {
 		verifySaved();
 		PatientInstructionsBeanValidator validator = new PatientInstructionsBeanValidator();

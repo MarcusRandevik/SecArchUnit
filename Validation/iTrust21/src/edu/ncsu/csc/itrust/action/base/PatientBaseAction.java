@@ -1,5 +1,8 @@
 package edu.ncsu.csc.itrust.action.base;
 
+import com.github.secarchunit.concepts.InputValidator;
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.HtmlEncoder;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
 import edu.ncsu.csc.itrust.exception.ITrustException;
@@ -40,6 +43,7 @@ public class PatientBaseAction {
 	 * @throws ITrustException
 	 *             If the patient's ID is incorrect or there is a DB problem.
 	 */
+	@UserInput
 	public PatientBaseAction(DAOFactory factory, String pidString) throws ITrustException {
 		this.factory = factory;
 		this.pid = checkPatientID(pidString);
@@ -54,6 +58,7 @@ public class PatientBaseAction {
 	 * @throws ITrustException
 	 *             If the patient does not exist or there is a DB Problem.
 	 */
+	@InputValidator
 	private long checkPatientID(String input) throws ITrustException {
 		try {
 			long pid = Long.valueOf(input);

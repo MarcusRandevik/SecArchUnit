@@ -2,6 +2,9 @@ package edu.ncsu.csc.itrust.action;
 
 import java.util.Arrays;
 import java.util.List;
+
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.EmailUtil;
 import edu.ncsu.csc.itrust.beans.Email;
 import edu.ncsu.csc.itrust.beans.LabProcedureBean;
@@ -41,6 +44,7 @@ public class LabProcUAPAction {
 	 * @throws DBException
 	 * @throws FormValidationException
 	 */
+	@UserInput
 	public void updateProcedure(LabProcedureBean b) throws DBException, FormValidationException{
 		validator.validate(b);
 		//need to check if status is what's being changed - if new status!=old status send email

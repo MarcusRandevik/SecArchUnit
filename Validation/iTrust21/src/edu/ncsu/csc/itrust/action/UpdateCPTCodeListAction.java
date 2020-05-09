@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.action;
 
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.beans.ProcedureBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
 import edu.ncsu.csc.itrust.dao.mysql.CPTCodesDAO;
@@ -39,6 +41,7 @@ public class UpdateCPTCodeListAction {
 	 * @return status message
 	 * @throws FormValidationException
 	 */
+	@UserInput
 	public String addCPTCode(ProcedureBean proc) throws FormValidationException {
 		validator.validate(proc);
 		try {
@@ -62,6 +65,7 @@ public class UpdateCPTCodeListAction {
 	 * @return Status message
 	 * @throws FormValidationException
 	 */
+	@UserInput
 	public String updateInformation(ProcedureBean proc) throws FormValidationException {
 		validator.validate(proc);
 		try {

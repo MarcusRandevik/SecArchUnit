@@ -1,6 +1,9 @@
 package edu.ncsu.csc.itrust.action;
 
 import java.util.Calendar;
+
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.beans.SurveyBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
 import edu.ncsu.csc.itrust.dao.mysql.OfficeVisitDAO;
@@ -32,6 +35,7 @@ public class SurveyAction {
 	 * @param visitID The Office Visit ID corresponding to this Survey.
 	 * @throws DBException
 	 */
+	@UserInput
 	public void addSurvey(SurveyBean surveyBean, long visitID) throws DBException {
 		
 		surveyBean.setVisitID(visitID); //now set visit ID in the survey bean

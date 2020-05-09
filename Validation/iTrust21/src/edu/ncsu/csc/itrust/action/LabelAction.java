@@ -2,6 +2,8 @@ package edu.ncsu.csc.itrust.action;
 
 import java.util.List;
 
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.beans.LabelBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
 import edu.ncsu.csc.itrust.dao.mysql.LabelDAO;
@@ -68,6 +70,7 @@ public class LabelAction {
 		}
 	}
 	
+	@UserInput
 	public String addLabel(LabelBean label) throws FormValidationException {
 		try {
 			label.setPatientID(loggedInMID);
@@ -92,6 +95,7 @@ public class LabelAction {
 	 * exceed 1)
 	 * @throws ITrustException
 	 */
+	@UserInput
 	public int editLabel(LabelBean label) 
 			throws ITrustException, FormValidationException {
 		int numUpdated;
@@ -115,6 +119,7 @@ public class LabelAction {
 	 * @return the number of rows deleted (should never exceed 1)
 	 * @throws ITrustException
 	 */
+	@UserInput
 	public int deleteLabel(long entryID) throws ITrustException {
 		try {
 			int numDeleted = labelDAO.deleteLabel(entryID, loggedInMID);

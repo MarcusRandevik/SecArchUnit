@@ -2,6 +2,9 @@ package edu.ncsu.csc.itrust.action;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.action.base.EditOfficeVisitBaseAction;
 import edu.ncsu.csc.itrust.beans.ProcedureBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
@@ -47,16 +50,19 @@ public class EditImmunizationsAction extends EditOfficeVisitBaseAction {
 		}
 	}
 	
+	@UserInput
 	public void addImmunization(ProcedureBean bean) throws ITrustException {
 		verifySaved();
 		proceduresDAO.add(bean);
 	}
 	
+	@UserInput
 	public void editImmunization(ProcedureBean bean) throws ITrustException {
 		verifySaved();
 		proceduresDAO.edit(bean);
 	}
 	
+	@UserInput
 	public void deleteImmunization(ProcedureBean bean) throws ITrustException {
 		verifySaved();
 		proceduresDAO.remove(bean.getOvProcedureID());

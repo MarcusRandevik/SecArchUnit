@@ -1,6 +1,9 @@
 package edu.ncsu.csc.itrust.action;
 
 import java.util.List;
+
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.beans.DrugInteractionBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
 import edu.ncsu.csc.itrust.dao.mysql.DrugInteractionDAO;
@@ -35,7 +38,7 @@ public class DrugInteractionAction {
 	 * @param description
 	 * @return
 	 */
-	
+	@UserInput
 	public String reportInteraction(String firstDrug, String secondDrug, String description) throws ITrustException, FormValidationException{
 		if (firstDrug.equals(secondDrug)){
 			return "Interactions can only be recorded between two different drugs";
@@ -64,6 +67,7 @@ public class DrugInteractionAction {
 	 * @param secondDrug
 	 * @return interaction
 	 */
+	@UserInput
 	public String deleteInteraction(String firstDrug, String secondDrug) throws ITrustException, FormValidationException{
 		DrugInteractionBean drugInt = new DrugInteractionBean();
 		drugInt.setFirstDrug(firstDrug);

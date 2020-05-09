@@ -3,6 +3,8 @@ package edu.ncsu.csc.itrust.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.beans.FlagsBean;
 import edu.ncsu.csc.itrust.beans.HealthRecord;
 import edu.ncsu.csc.itrust.beans.ObstetricsRecordBean;
@@ -65,6 +67,7 @@ public class AddObstetricsAction {
 	 * @throws FormValidationException if the patient is not successfully validated
 	 * @throws ITrustException 
 	 */
+	@UserInput
 	public void addObstetricsRecord(ObstetricsRecordBean p, ArrayList<FlagsBean> flags) 
 			throws FormValidationException, ITrustException {
 		if (p != null) {

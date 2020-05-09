@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.action;
 
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.beans.DiagnosisBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
 import edu.ncsu.csc.itrust.dao.mysql.ICDCodesDAO;
@@ -41,6 +43,7 @@ public class UpdateICDCodeListAction {
 	 * @return Status message
 	 * @throws FormValidationException
 	 */
+	@UserInput
 	public String addICDCode(DiagnosisBean diagn) throws FormValidationException {
 		validator.validate(diagn);
 		try {
@@ -64,6 +67,7 @@ public class UpdateICDCodeListAction {
 	 * @return Status message
 	 * @throws FormValidationException
 	 */
+	@UserInput
 	public String updateInformation(DiagnosisBean diagn) throws FormValidationException {
 		validator.validate(diagn);
 		try {

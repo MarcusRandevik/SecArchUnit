@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.action;
 
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.action.base.AddEntryAction;
 import edu.ncsu.csc.itrust.beans.EntryBean;
 import edu.ncsu.csc.itrust.beans.FoodEntryBean;
@@ -49,6 +51,7 @@ public class AddFoodEntryAction implements AddEntryAction {
 	 *         a string saying there was an error
 	 * @throws FormValidationException
 	 */
+	@UserInput
 	public String addEntry(EntryBean entry)
 			throws FormValidationException {
 		try {

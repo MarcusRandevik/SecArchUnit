@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.action;
 
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.beans.OphthalmologySurgeryRecordBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
 import edu.ncsu.csc.itrust.dao.mysql.OphthalmologySurgeryRecordDAO;
@@ -41,6 +43,7 @@ public class EditOphthalmologySurgeryAction {
 	 * @throws FormValidationException if the patient is not successfully validated.
 	 * @throws ITrustException thrown if the database encounters an issue.
 	 */
+	@UserInput
 	public void editOphthalmologySurgery(long oid, OphthalmologySurgeryRecordBean p)
     		throws FormValidationException, ITrustException {
 		if(p != null){

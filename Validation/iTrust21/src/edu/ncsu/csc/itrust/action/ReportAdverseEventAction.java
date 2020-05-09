@@ -2,6 +2,9 @@ package edu.ncsu.csc.itrust.action;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.EmailUtil;
 import edu.ncsu.csc.itrust.beans.Email;
 import edu.ncsu.csc.itrust.beans.AdverseEventBean;
@@ -67,6 +70,7 @@ public class ReportAdverseEventAction {
 	 * @throws ITrustException
 	 * @throws FormValidationException
 	 */
+	@UserInput
 	public Email sendMails(List<AdverseEventBean> aeList) throws ITrustException, FormValidationException{
 		List<String> MIDlist = new ArrayList<String>();
 		String patientID = "";
@@ -118,6 +122,7 @@ public class ReportAdverseEventAction {
 	 * @throws ITrustException
 	 * @throws FormValidationException
 	 */
+	@UserInput
 	public Email sendMail (AdverseEventBean aeBean)throws ITrustException, FormValidationException{
 		Email email = new Email();
 		String fromEmail;
@@ -151,6 +156,7 @@ public class ReportAdverseEventAction {
 	 * @throws FormValidationException
 	 * @throws SQLException 
 	 */
+	@UserInput
 	public String addReport(AdverseEventBean aeBean)throws ITrustException, FormValidationException, SQLException {
 		
 		try{

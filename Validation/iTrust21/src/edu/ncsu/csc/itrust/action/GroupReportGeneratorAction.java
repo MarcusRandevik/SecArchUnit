@@ -3,6 +3,10 @@ package edu.ncsu.csc.itrust.action;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+
+import com.github.secarchunit.concepts.InputValidator;
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.beans.GroupReportBean;
 import edu.ncsu.csc.itrust.beans.PatientBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
@@ -71,6 +75,7 @@ public class GroupReportGeneratorAction {
 	 * 
 	 * @param filters HttpServletRequest to grab and parse parameters from
 	 */
+	@UserInput
 	public GroupReportGeneratorAction(DAOFactory factory, HttpServletRequest request){
 		this.factory=factory;
 		this.filters = new ArrayList<ReportFilter>();
@@ -208,6 +213,7 @@ public class GroupReportGeneratorAction {
 	 * 
 	 * @param request with form parameters to create the filter list
 	 */
+	@InputValidator
 	private void parseFilters(HttpServletRequest request){
 		boolean hasDeactivatedFilter = false;
 		if (request.getParameter("demoparams") != null && !request.getParameter("demoparams").isEmpty()) {

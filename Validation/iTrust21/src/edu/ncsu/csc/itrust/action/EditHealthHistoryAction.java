@@ -2,6 +2,9 @@ package edu.ncsu.csc.itrust.action;
 
 import java.util.Calendar;
 import java.util.List;
+
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.action.base.EditOfficeVisitBaseAction;
 import edu.ncsu.csc.itrust.beans.HealthRecord;
 import edu.ncsu.csc.itrust.beans.OfficeVisitBean;
@@ -108,6 +111,7 @@ public class EditHealthHistoryAction extends EditOfficeVisitBaseAction {
 	 * @return message - "Information Recorded" or exception's message
 	 * @throws FormValidationException
 	 */
+	@UserInput
 	public String addHealthRecord(long pid, HealthRecordForm hr, long ovID) throws FormValidationException,
 			ITrustException {	
 		

@@ -4,6 +4,10 @@ import java.text.SimpleDateFormat;
 //import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.github.secarchunit.concepts.InputValidator;
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.EmailUtil;
 import edu.ncsu.csc.itrust.action.base.EditOfficeVisitBaseAction;
 import edu.ncsu.csc.itrust.beans.*;
@@ -87,6 +91,7 @@ public class EditPrescriptionsAction extends EditOfficeVisitBaseAction {
 	 * @param pres The prescription bean.
 	 * @throws ITrustException
 	 */
+	@UserInput @InputValidator
 	private void checkForAllergiesAndInteractions(PrescriptionBean pres) throws ITrustException {
 		List<String> warnings = checkInteraction(pres);
 		warnings.addAll(checkAllergy(pres));
@@ -223,6 +228,7 @@ public class EditPrescriptionsAction extends EditOfficeVisitBaseAction {
 	 * @param pres The prescription bean that has been changed.
 	 * @throws ITrustException 
 	 */
+	@UserInput
 	public void editPrescription(PrescriptionBean pres) throws ITrustException {
 		verifySaved();
 		checkForAllergiesAndInteractions(pres);
@@ -246,6 +252,7 @@ public class EditPrescriptionsAction extends EditOfficeVisitBaseAction {
 	 * @param pres
 	 * @throws ITrustException
 	 */
+	@UserInput
 	public void addPrescription(PrescriptionBean pres) throws ITrustException {
 		verifySaved();
 		checkForAllergiesAndInteractions(pres);
@@ -262,6 +269,7 @@ public class EditPrescriptionsAction extends EditOfficeVisitBaseAction {
 	 * @throws DBException
 	 * @throws ITrustException
 	 */
+	@UserInput
 	public void deletePrescription(PrescriptionBean pres) throws DBException, ITrustException {
 		verifySaved();
 		psDAO.remove(pres.getId());
@@ -285,6 +293,7 @@ public class EditPrescriptionsAction extends EditOfficeVisitBaseAction {
 	 * @throws FormValidationException
 	 * @throws DBException
 	 */
+	@UserInput
 	public PrescriptionBean formToBean(EditPrescriptionsForm form, String defaultInstructions) throws FormValidationException, DBException {
 		EditPrescriptionsValidator validator = new EditPrescriptionsValidator(defaultInstructions);
 		validator.validate(form);

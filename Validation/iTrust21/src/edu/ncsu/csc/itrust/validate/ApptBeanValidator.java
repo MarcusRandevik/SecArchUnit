@@ -1,9 +1,12 @@
 package edu.ncsu.csc.itrust.validate;
 
+import com.github.secarchunit.concepts.InputValidator;
+
 import edu.ncsu.csc.itrust.beans.ApptBean;
 import edu.ncsu.csc.itrust.exception.ErrorList;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
 
+@InputValidator
 public class ApptBeanValidator extends BeanValidator<ApptBean>{
 
 	@Override

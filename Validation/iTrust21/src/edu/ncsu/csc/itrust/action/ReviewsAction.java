@@ -2,6 +2,8 @@ package edu.ncsu.csc.itrust.action;
 
 import java.util.List;
 
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.beans.PersonnelBean;
 import edu.ncsu.csc.itrust.beans.ReviewsBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
@@ -29,8 +31,9 @@ public class ReviewsAction {
    * Add a review based on the input params for input of a bean.  
    * @return true if added and false otherwise
    */
+  @UserInput
   public boolean addReview(ReviewsBean b) throws DBException{
-        return dao.addReview(b);
+      return dao.addReview(b);
   }
   
   /**

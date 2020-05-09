@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.action;
 
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.beans.MessageBean;
 import edu.ncsu.csc.itrust.beans.ReferralBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
@@ -49,6 +51,7 @@ public class EditSingleReferralAction {
 	 * @param bean
 	 * @throws Exception
 	 */
+	@UserInput
 	public void addReferral(ReferralBean bean) throws Exception {
 		if (bean.getSenderID() != hcpid) {
 			throw new ITrustException("New referrals must be from the current HCP.");
@@ -63,6 +66,7 @@ public class EditSingleReferralAction {
 	 * @param bean
 	 * @throws ITrustException
 	 */
+	@UserInput
 	public void editReferral(ReferralBean bean) throws ITrustException {
 		if (bean.getSenderID() != hcpid) {
 			throw new ITrustException("Edited referrals must be from the current HCP.");
@@ -75,6 +79,7 @@ public class EditSingleReferralAction {
 	 * @param bean
 	 * @throws Exception
 	 */
+	@UserInput
 	public void deleteReferral(ReferralBean bean) throws Exception {
 		if (bean.getSenderID() != hcpid) {
 			throw new ITrustException("Deleted referrals must be from the current HCP.");
@@ -117,6 +122,7 @@ public class EditSingleReferralAction {
 	 * @param bean
 	 * @throws Exception
 	 */
+	@UserInput
 	public void sendReferralCreatedMessages(ReferralBean bean) throws Exception {
 		StringBuilder body = new StringBuilder();
 		body.append("Referral information:\n");

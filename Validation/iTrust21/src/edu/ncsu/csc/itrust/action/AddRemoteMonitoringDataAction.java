@@ -1,6 +1,9 @@
 package edu.ncsu.csc.itrust.action;
 
 import java.util.List;
+
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.beans.RemoteMonitoringDataBean;
 import edu.ncsu.csc.itrust.beans.TelemedicineBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
@@ -47,6 +50,7 @@ public class AddRemoteMonitoringDataAction {
 	 * @param pedometerReading
 	 * @throws DBException
 	 */
+	@UserInput
 	public void addRemoteMonitoringData(RemoteMonitoringDataBean rmdBean)
 	  throws DBException, FormValidationException, ITrustException {
 		validator.validate(rmdBean);

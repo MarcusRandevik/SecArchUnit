@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.action;
 
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.action.base.EditEntryAction;
 import edu.ncsu.csc.itrust.beans.EntryBean;
 import edu.ncsu.csc.itrust.beans.SleepEntryBean;
@@ -46,6 +48,7 @@ public class EditSleepEntryAction implements EditEntryAction {
 	 * exceed 1)
 	 * @throws ITrustException
 	 */
+	@UserInput
 	public int editEntry(EntryBean entry) 
 			throws ITrustException, FormValidationException {
 		SleepEntryBean sleepEntry = (SleepEntryBean) entry;

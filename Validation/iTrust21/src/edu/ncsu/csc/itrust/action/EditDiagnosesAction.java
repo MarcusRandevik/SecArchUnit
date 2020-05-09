@@ -5,6 +5,9 @@ package edu.ncsu.csc.itrust.action;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.action.base.EditOfficeVisitBaseAction;
 import edu.ncsu.csc.itrust.beans.DiagnosisBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
@@ -51,17 +54,20 @@ public class EditDiagnosesAction extends EditOfficeVisitBaseAction {
 		}
 	}
 	
+	@UserInput
 	public void addDiagnosis(DiagnosisBean bean) throws ITrustException {
 		verifySaved();
 		diagnosesDAO.add(bean);
 	}
 	
+	@UserInput
 	public void editDiagnosis(DiagnosisBean bean) throws ITrustException {
 		verifySaved();
 		diagnosesDAO.edit(bean);
 		
 	}
 	
+	@UserInput
 	public void deleteDiagnosis(DiagnosisBean bean) throws ITrustException {
 		verifySaved();
 		diagnosesDAO.remove(bean.getOvDiagnosisID());

@@ -1,6 +1,8 @@
 package edu.ncsu.csc.itrust.action;
 
 
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.RandomPassword;
 import edu.ncsu.csc.itrust.beans.PatientBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
@@ -46,6 +48,7 @@ public class AddPatientAction {
 	 * @throws FormValidationException if the patient is not successfully validated
 	 * @throws ITrustException 
 	 */
+	@UserInput
 	public long addDependentPatient(PatientBean p, long repId) throws FormValidationException, ITrustException {
 		new AddPatientValidator().validate(p);
 		long newMID = patientDAO.addEmptyPatient();
@@ -60,6 +63,7 @@ public class AddPatientAction {
 		return newMID;
 	}
 	
+	@UserInput
 	public long addPatient(PatientBean p) throws FormValidationException, ITrustException {
 		new AddPatientValidator().validate(p);
 		long newMID = patientDAO.addEmptyPatient();

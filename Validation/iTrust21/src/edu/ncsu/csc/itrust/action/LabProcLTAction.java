@@ -1,6 +1,9 @@
 package edu.ncsu.csc.itrust.action;
 
 import java.util.List;
+
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.beans.LabProcedureBean;
 import edu.ncsu.csc.itrust.beans.OfficeVisitBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
@@ -48,6 +51,7 @@ public class LabProcLTAction {
 		return personDAO.getName(b.getHcpID());
 	}
 	
+	@UserInput
 	public Boolean submitResults(String id, String numericalResults, String numericalResultsUnit, String upperBound, String lowerBound) throws FormValidationException {
 			try {
 				long procedureID = Long.parseLong(id);

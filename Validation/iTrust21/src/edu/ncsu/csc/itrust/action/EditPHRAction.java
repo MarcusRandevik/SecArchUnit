@@ -3,6 +3,8 @@ package edu.ncsu.csc.itrust.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.EmailUtil;
 import edu.ncsu.csc.itrust.action.base.PatientBaseAction;
 import edu.ncsu.csc.itrust.beans.MedicationBean;
@@ -91,6 +93,7 @@ public class EditPHRAction extends PatientBaseAction {
 	 * @throws FormValidationException
 	 * @throws ITrustException
 	 */
+	@UserInput
 	public String updateAllergies(long pid, String description) throws FormValidationException, ITrustException {
 		AllergyBean bean = new AllergyBean();
 		bean.setPatientID(pid);

@@ -2,6 +2,9 @@ package edu.ncsu.csc.itrust.action;
 
 import java.sql.SQLException;
 import java.util.List;
+
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.beans.ApptTypeBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
 import edu.ncsu.csc.itrust.dao.mysql.ApptTypeDAO;
@@ -21,6 +24,7 @@ public class EditApptTypeAction {
 		return apptTypeDAO.getApptTypes();
 	}
 	
+	@UserInput
 	public String addApptType(ApptTypeBean apptType) throws SQLException, FormValidationException, DBException {
 		validator.validate(apptType);
 		
@@ -41,6 +45,7 @@ public class EditApptTypeAction {
 		} 
 	}
 	
+	@UserInput
 	public String editApptType(ApptTypeBean apptType) throws SQLException, FormValidationException, DBException {
 		validator.validate(apptType);
 		

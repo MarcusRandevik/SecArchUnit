@@ -2,6 +2,9 @@ package edu.ncsu.csc.itrust.action;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.action.base.EditOfficeVisitBaseAction;
 import edu.ncsu.csc.itrust.beans.LOINCbean;
 import edu.ncsu.csc.itrust.beans.LabProcedureBean;
@@ -88,6 +91,7 @@ public class EditLabProceduresAction extends EditOfficeVisitBaseAction {
 	 * @param bean bean
 	 * @throws ITrustException
 	 */
+	@UserInput
 	public void addLabProcedure(LabProcedureBean bean) throws ITrustException {
 		verifySaved();
 		//choose lab tech if not assigned in bean
@@ -102,6 +106,7 @@ public class EditLabProceduresAction extends EditOfficeVisitBaseAction {
 	 * @param bean bean
 	 * @throws ITrustException
 	 */
+	@UserInput
 	public void editLabProcedure(LabProcedureBean bean) throws ITrustException {
 		verifySaved();
 		labProcedureDAO.updateLabProcedure(bean);
@@ -112,6 +117,7 @@ public class EditLabProceduresAction extends EditOfficeVisitBaseAction {
 	 * @param bean bean
 	 * @throws ITrustException
 	 */
+	@UserInput
 	public void deleteLabProcedure(LabProcedureBean bean) throws ITrustException {
 		verifySaved();
 		labProcedureDAO.removeLabProcedure(bean.getProcedureID());

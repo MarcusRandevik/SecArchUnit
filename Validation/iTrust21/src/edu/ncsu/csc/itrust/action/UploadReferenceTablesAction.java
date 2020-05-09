@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
 
+import com.github.secarchunit.concepts.InputValidator;
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.beans.CDCStatsBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
 import edu.ncsu.csc.itrust.dao.mysql.CDCBmiStatsDAO;
@@ -101,6 +104,7 @@ public class UploadReferenceTablesAction {
 	 * 		   false if csv file is of the incorrect format and cannot be stored
 	 */
 	@SuppressWarnings("resource")
+	@UserInput
 	private boolean storeCDCStats(InputStream healthStatsCSV, CDCStatsDAO dao) {
 		BufferedInputStream csvFile = new BufferedInputStream(healthStatsCSV);
 		try {
@@ -177,6 +181,7 @@ public class UploadReferenceTablesAction {
 	 * @return true if the csv file is correctly formatted. false otherwise.
 	 */
 	@SuppressWarnings("resource")
+	@InputValidator
 	private boolean verifyCDCStatsCSV(InputStream healthStatsCSV) {
 		//Create scanner to read each line of data in the csv
 		Scanner csvScanner = new Scanner(healthStatsCSV, "UTF-8");

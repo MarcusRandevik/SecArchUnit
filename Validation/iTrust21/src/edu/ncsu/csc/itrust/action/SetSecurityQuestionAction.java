@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.action;
 
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.beans.SecurityQA;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
 import edu.ncsu.csc.itrust.dao.mysql.AuthDAO;
@@ -36,6 +38,7 @@ public class SetSecurityQuestionAction {
 	 *            SecurityQuestionBean that holds new information
 	 * @throws Exception
 	 */
+	@UserInput
 	public void updateInformation(SecurityQA a) throws Exception {
 		SecurityQAValidator sqav = new SecurityQAValidator();
 		sqav.validate(a);

@@ -3,6 +3,8 @@ package edu.ncsu.csc.itrust.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.beans.FlagsBean;
 import edu.ncsu.csc.itrust.beans.HealthRecord;
 import edu.ncsu.csc.itrust.beans.ObstetricsRecordBean;
@@ -39,6 +41,7 @@ public class EditObstetricsAction {
 		this.hDao = new HealthRecordsDAO(factory);
 	}
     
+	@UserInput
 	public void updateFhrFlag(ObstetricsRecordBean p) throws DBException {
 		List<ObstetricsRecordBean> lst = obstetricsDAO.getObstetricsRecordsByMID(loggedInMID);
 		
@@ -60,7 +63,8 @@ public class EditObstetricsAction {
 		flagsDAO.setFlag(f);
 	}
 	
-    public void editObstetricsRecord(long oid, ObstetricsRecordBean p, ArrayList<FlagsBean> flags)
+	@UserInput
+	public void editObstetricsRecord(long oid, ObstetricsRecordBean p, ArrayList<FlagsBean> flags)
     		throws FormValidationException, ITrustException {
     	if (p != null) {
     		List<ObstetricsRecordBean> initialBeans = obstetricsDAO.getObstetricsRecordsByMIDPregStatus(

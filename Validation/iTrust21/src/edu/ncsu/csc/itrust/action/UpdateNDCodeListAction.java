@@ -1,5 +1,8 @@
 package edu.ncsu.csc.itrust.action;
 
+import com.github.secarchunit.concepts.InputValidator;
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.beans.MedicationBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
 import edu.ncsu.csc.itrust.dao.mysql.NDCodesDAO;
@@ -38,6 +41,7 @@ public class UpdateNDCodeListAction {
 	 * @return Status message
 	 * @throws FormValidationException
 	 */
+	@UserInput
 	public String addNDCode(MedicationBean med) throws FormValidationException {
 		validator.validate(med);
 		try {
@@ -61,6 +65,7 @@ public class UpdateNDCodeListAction {
 	 * @return status message
 	 * @throws FormValidationException
 	 */
+	@UserInput
 	public String updateInformation(MedicationBean med) throws FormValidationException {
 		validator.validate(med);
 		try {
@@ -95,6 +100,7 @@ public class UpdateNDCodeListAction {
 	 * @return Status message
 	 * @throws DBException
 	 */
+	@UserInput @InputValidator
 	public String removeNDCode(MedicationBean med) throws DBException {
 		try {
 			if (ndDAO.getNDCode(med.getNDCode()) == null) {

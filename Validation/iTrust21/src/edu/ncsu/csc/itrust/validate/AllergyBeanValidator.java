@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.validate;
 
+import com.github.secarchunit.concepts.InputValidator;
+
 import edu.ncsu.csc.itrust.action.EditOfficeVisitAction;
 import edu.ncsu.csc.itrust.beans.AllergyBean;
 import edu.ncsu.csc.itrust.exception.ErrorList;
@@ -11,6 +13,7 @@ import edu.ncsu.csc.itrust.exception.FormValidationException;
  *  
  * 
  */
+@InputValidator
 public class AllergyBeanValidator extends BeanValidator<AllergyBean> {
 	/**
 	 * The default constructor.

@@ -1,6 +1,10 @@
 package edu.ncsu.csc.itrust.action;
 
 import java.util.List;
+
+import com.github.secarchunit.concepts.InputValidator;
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.action.base.PatientBaseAction;
 import edu.ncsu.csc.itrust.beans.PatientBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
@@ -69,6 +73,7 @@ public class EditRepresentativesAction extends PatientBaseAction {
 	 * @return a message
 	 * @throws ITrustException
 	 */
+	@UserInput @InputValidator
 	public String addRepresentee(String pidString) throws ITrustException {
 		try {
 			long representee = Long.valueOf(pidString);
@@ -96,6 +101,7 @@ public class EditRepresentativesAction extends PatientBaseAction {
 	 * @return a message
 	 * @throws ITrustException
 	 */
+	@UserInput @InputValidator
 	public String removeRepresentee(String input) throws ITrustException {
 		try {
 			long representee = Long.valueOf(input);

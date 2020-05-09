@@ -1,6 +1,9 @@
 package edu.ncsu.csc.itrust.action;
 
 import java.util.List;
+
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.beans.RemoteMonitoringDataBean;
 import edu.ncsu.csc.itrust.beans.TelemedicineBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
@@ -39,6 +42,7 @@ public class EditMonitoringListAction {
 	 * @return true if added successfully. False if already in list.
 	 * @throws DBException
 	 */
+	@UserInput
 	public boolean addToList(long patientMID, TelemedicineBean tBean) throws DBException {
 		return rmDAO.addPatientToList(patientMID, loggedInMID, tBean);
 	}
@@ -50,6 +54,7 @@ public class EditMonitoringListAction {
 	 * @return true if removed successfully. False if not in list.
 	 * @throws DBException
 	 */
+	@UserInput
 	public boolean removeFromList(long patientMID) throws DBException {
 		return rmDAO.removePatientFromList(patientMID, loggedInMID);
 	}

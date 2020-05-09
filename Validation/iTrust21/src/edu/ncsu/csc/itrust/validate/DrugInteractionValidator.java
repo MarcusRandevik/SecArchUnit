@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.validate;
 
+import com.github.secarchunit.concepts.InputValidator;
+
 import edu.ncsu.csc.itrust.beans.DrugInteractionBean;
 import edu.ncsu.csc.itrust.exception.ErrorList;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
@@ -7,6 +9,7 @@ import edu.ncsu.csc.itrust.exception.FormValidationException;
 /**
  * Validates a drug interaction bean, from {@link DrugInteractionAction}
  */
+@InputValidator
 public class DrugInteractionValidator extends BeanValidator<DrugInteractionBean> {
 	/**
 	 * The default constructor.

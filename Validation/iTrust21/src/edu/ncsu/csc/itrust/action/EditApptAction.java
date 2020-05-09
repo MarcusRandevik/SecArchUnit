@@ -3,6 +3,9 @@ package edu.ncsu.csc.itrust.action;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
+
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.beans.ApptBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
 import edu.ncsu.csc.itrust.exception.DBException;
@@ -56,6 +59,7 @@ public class EditApptAction extends ApptAction {
 	 * @throws SQLException 
 	 * @throws DBException 
 	 */
+	@UserInput
 	public String editAppt(ApptBean appt, boolean ignoreConflicts) throws FormValidationException, SQLException, DBException {
 		validator.validate(appt);
 		if(appt.getDate().before(new Timestamp(System.currentTimeMillis())))
@@ -85,6 +89,7 @@ public class EditApptAction extends ApptAction {
 	 * @return Message to be displayed
 	 * @throws DBException 
 	 */
+	@UserInput
 	public String removeAppt(ApptBean appt) throws DBException, SQLException {
 		try {
 			apptDAO.removeAppt(appt);

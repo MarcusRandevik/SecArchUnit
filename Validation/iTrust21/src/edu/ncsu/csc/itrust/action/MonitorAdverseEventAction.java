@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.EmailUtil;
 import edu.ncsu.csc.itrust.beans.AdverseEventBean;
 import edu.ncsu.csc.itrust.beans.Email;
@@ -82,6 +85,7 @@ public class MonitorAdverseEventAction {
 	 * @return string for testing purposes
 	 * @throws DBException
 	 */
+	@UserInput
 	public String sendEmail(long patientMID, String message) throws DBException{
 		String rValue;
 		List<String> toList = new ArrayList<String>();

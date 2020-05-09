@@ -1,5 +1,8 @@
 package edu.ncsu.csc.itrust.action;
 
+import com.github.secarchunit.concepts.InputValidator;
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.dao.DAOFactory;
 import edu.ncsu.csc.itrust.dao.mysql.AccessDAO;
 import edu.ncsu.csc.itrust.exception.DBException;
@@ -31,6 +34,7 @@ public class ChangeSessionTimeoutAction {
 	 * @throws FormValidationException
 	 * @throws DBException
 	 */
+	@UserInput @InputValidator
 	public void changeSessionTimeout(String minuteString) throws FormValidationException, DBException {
 		try {
 			Integer minutes = Integer.valueOf(minuteString);

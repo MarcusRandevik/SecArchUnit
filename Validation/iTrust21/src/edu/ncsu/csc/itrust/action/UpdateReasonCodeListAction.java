@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.action;
 
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.beans.OverrideReasonBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
 import edu.ncsu.csc.itrust.dao.mysql.DrugReactionOverrideCodesDAO;
@@ -38,6 +40,7 @@ public class UpdateReasonCodeListAction {
 	 * @return Status message
 	 * @throws FormValidationException
 	 */
+	@UserInput
 	public String addORCode(OverrideReasonBean orc) throws FormValidationException {
 		validator.validate(orc);
 		try {
@@ -61,6 +64,7 @@ public class UpdateReasonCodeListAction {
 	 * @return status message
 	 * @throws FormValidationException
 	 */
+	@UserInput
 	public String updateInformation(OverrideReasonBean orc) throws FormValidationException {
 		validator.validate(orc);
 		try {

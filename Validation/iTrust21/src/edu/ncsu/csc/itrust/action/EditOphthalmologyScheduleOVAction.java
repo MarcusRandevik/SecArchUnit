@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.action;
 
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.beans.OphthalmologyScheduleOVRecordBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
 import edu.ncsu.csc.itrust.dao.mysql.OphthalmologyScheduleOVDAO;
@@ -32,6 +34,7 @@ public class EditOphthalmologyScheduleOVAction {
 	 * @throws FormValidationException if the patient is not successfully validated.
 	 * @throws ITrustException thrown if the database encounters an issue.
 	 */
+	@UserInput
 	public void editOphthalmologyScheduleOV(long oid, OphthalmologyScheduleOVRecordBean p)
     		throws FormValidationException, ITrustException {
 		if(p != null){

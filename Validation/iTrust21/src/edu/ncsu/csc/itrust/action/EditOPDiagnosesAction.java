@@ -4,6 +4,9 @@
 package edu.ncsu.csc.itrust.action;
 
 import java.util.List;
+
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.beans.OphthalmologyDiagnosisBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
 import edu.ncsu.csc.itrust.dao.mysql.OphthalmologyDiagnosisDAO;
@@ -34,15 +37,18 @@ public class EditOPDiagnosesAction {
 			return diagnosesDAO.getList(Integer.parseInt(officeVisitID));
 	}
 	
+	@UserInput
 	public void addDiagnosis(OphthalmologyDiagnosisBean bean) throws ITrustException {
 		diagnosesDAO.add(bean);
 	}
 	
+	@UserInput
 	public void editDiagnosis(OphthalmologyDiagnosisBean bean) throws ITrustException {
 		diagnosesDAO.edit(bean);
 		
 	}
 	
+	@UserInput
 	public void deleteDiagnosis(OphthalmologyDiagnosisBean bean) throws ITrustException {
 		diagnosesDAO.remove(bean.getOpDiagnosisID());
 		

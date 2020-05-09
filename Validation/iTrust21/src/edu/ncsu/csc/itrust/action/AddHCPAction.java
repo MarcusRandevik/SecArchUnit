@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.action;
 
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.RandomPassword;
 import edu.ncsu.csc.itrust.beans.PersonnelBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
@@ -41,6 +43,7 @@ public class AddHCPAction {
 	 * @throws FormValidationException
 	 * @throws ITrustException
 	 */
+	@UserInput
 	public long add(PersonnelBean p) throws FormValidationException, ITrustException {
 		new AddPersonnelValidator().validate(p);
 		long newMID = personnelDAO.addEmptyPersonnel(Role.HCP);

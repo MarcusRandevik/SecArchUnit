@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.github.secarchunit.concepts.InputValidator;
+import com.github.secarchunit.concepts.UserInput;
 
 import edu.ncsu.csc.itrust.beans.LOINCbean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
@@ -49,6 +51,7 @@ public class UpdateLOINCListAction {
 	 * @return Status message
 	 * @throws FormValidationException
 	 */
+	@UserInput
 	public String add(LOINCbean diagn) throws FormValidationException, ITrustException {
 		validator.validate(diagn);
 
@@ -69,6 +72,7 @@ public class UpdateLOINCListAction {
 	 * @return Status message
 	 * @throws FormValidationException
 	 */
+	@UserInput
 	public String updateInformation(LOINCbean diagn) throws FormValidationException {
 		validator.validate(diagn);
 		try {
@@ -135,6 +139,7 @@ public class UpdateLOINCListAction {
 	 * @return a list of messages concerning the parsing of the file
 	 * @throws DBException 
 	 */
+	@UserInput @InputValidator
 	public List<String> parseLOINCFile(InputStream data, boolean ignoreDupData) throws DBException {
 		ArrayList<String> results = new ArrayList<String>();
 		BufferedReader buf;

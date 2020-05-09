@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.validate;
 
+import com.github.secarchunit.concepts.InputValidator;
+
 import edu.ncsu.csc.itrust.enums.Gender;
 import edu.ncsu.csc.itrust.exception.ErrorList;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
@@ -14,6 +16,7 @@ import edu.ncsu.csc.itrust.exception.FormValidationException;
  * @param <T>
  *            The bean type to be validated
  */
+@InputValidator
 abstract public class BeanValidator<T> {
 	abstract public void validate(T bean) throws FormValidationException;
 	

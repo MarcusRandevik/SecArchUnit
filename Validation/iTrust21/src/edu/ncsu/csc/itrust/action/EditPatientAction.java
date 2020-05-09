@@ -4,6 +4,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.action.base.PatientBaseAction;
 import edu.ncsu.csc.itrust.beans.Email;
 import edu.ncsu.csc.itrust.beans.PatientBean;
@@ -57,6 +60,7 @@ public class EditPatientAction extends PatientBaseAction {
 	 * @throws ITrustException
 	 * @throws FormValidationException
 	 */
+	@UserInput
 	public void updateInformation(PatientBean p) throws ITrustException, FormValidationException {
 		p.setMID(pid); // for security reasons
 		validator.validate(p);

@@ -3,6 +3,9 @@ package edu.ncsu.csc.itrust.action;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.EmailUtil;
 import edu.ncsu.csc.itrust.beans.Email;
 import edu.ncsu.csc.itrust.beans.MessageBean;
@@ -55,6 +58,7 @@ public class SendMessageAction {
 	 * @throws ITrustException
 	 * @throws SQLException
 	 */
+	@UserInput
 	public void sendMessage(MessageBean mBean) throws ITrustException, SQLException, FormValidationException {
 		messVal.validate(mBean);
 		emailVal.validate(mBean);

@@ -3,6 +3,10 @@ package edu.ncsu.csc.itrust.action;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import com.github.secarchunit.concepts.InputValidator;
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.CSVParser;
 import edu.ncsu.csc.itrust.RandomPassword;
 import edu.ncsu.csc.itrust.beans.PatientBean;
@@ -124,6 +128,7 @@ public class AddPatientFileAction {
 	 * @param CSVHeader
 	 * @throws AddPatientFileExceptionTest
 	 */
+	@UserInput @InputValidator
 	private void buildMappings(ArrayList<String> CSVHeader) throws AddPatientFileException{
 		boolean valid;
 		for(int i=0; i<CSVHeader.size(); i++){
@@ -165,6 +170,7 @@ public class AddPatientFileAction {
 	 * @throws DBException
 	 * @throws AddPatientFileExceptionTest
 	 */
+	@UserInput
 	private void createPatients() throws DBException, AddPatientFileException{
 		for(int i=0; i<CSVData.size(); i++){
 			PatientBean temp=new PatientBean();

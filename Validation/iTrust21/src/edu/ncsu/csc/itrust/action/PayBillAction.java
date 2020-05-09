@@ -7,6 +7,9 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.validator.CreditCardValidator;
 
+import com.github.secarchunit.concepts.InputValidator;
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.beans.BillingBean;
 import edu.ncsu.csc.itrust.beans.OfficeVisitBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
@@ -93,6 +96,7 @@ public class PayBillAction {
 	 * @param cvv The cvv.
 	 * @throws Exception It just throws an exception that contains the error message.
 	 */
+	@UserInput @InputValidator
 	public String payBillWithCC(String ccNum, String ccHolder, String ccType,
 			String billAddress, String cvv) throws Exception{
 		Pattern checkCvv = Pattern.compile("[0-9]{3,4}");
@@ -160,6 +164,7 @@ public class PayBillAction {
 	 * @param insPhone The insurance phone number.
 	 * @throws Exception The exception contains the error message.
 	 */
+	@UserInput @InputValidator
 	public String payBillWithIns(String insHolder, String insProvider, String insID,
 			String insAdd1, String insAdd2, String insCity,
 			String insState, String insZip, String insPhone) throws Exception{

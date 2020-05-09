@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.action;
 
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.beans.HospitalBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
 import edu.ncsu.csc.itrust.dao.mysql.HospitalsDAO;
@@ -33,6 +35,7 @@ public class UpdateHospitalListAction {
 	 * @return Status message
 	 * @throws FormValidationException
 	 */
+	@UserInput
 	public String addHospital(HospitalBean hosp) throws FormValidationException {
 		new HospitalBeanValidator().validate(hosp);
 		
@@ -57,6 +60,7 @@ public class UpdateHospitalListAction {
 	 * @return Status message
 	 * @throws FormValidationException
 	 */
+	@UserInput
 	public String updateInformation(HospitalBean hosp) throws FormValidationException {
 		new HospitalBeanValidator().validate(hosp);
 		

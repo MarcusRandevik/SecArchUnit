@@ -1,6 +1,10 @@
 package edu.ncsu.csc.itrust.action;
 
 import java.util.Arrays;
+
+import com.github.secarchunit.concepts.InputValidator;
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.EmailUtil;
 import edu.ncsu.csc.itrust.beans.Email;
 import edu.ncsu.csc.itrust.beans.PatientBean;
@@ -143,6 +147,7 @@ public class ResetPasswordAction {
 	 * @throws FormValidationException
 	 * @throws ITrustException
 	 */
+	@UserInput
 	public String resetPassword(long mid, String role, String answer, String password,
 			String confirmPassword, String ipAddr) throws FormValidationException, ITrustException {
 
@@ -220,6 +225,7 @@ public class ResetPasswordAction {
 	 * @throws FormValidationException
 	 */
 
+	@InputValidator
 	private void validatePassword(String password, String confirmPassword) throws FormValidationException {
 		ErrorList errorList = new ErrorList();
 		if (password == null || "".equals(password)) {

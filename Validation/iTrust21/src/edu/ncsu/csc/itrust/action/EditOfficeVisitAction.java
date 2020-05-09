@@ -2,6 +2,10 @@ package edu.ncsu.csc.itrust.action;
 
 import java.util.Arrays;
 import java.util.List;
+
+import com.github.secarchunit.concepts.InputValidator;
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.action.base.EditOfficeVisitBaseAction;
 import edu.ncsu.csc.itrust.beans.Email;
 import edu.ncsu.csc.itrust.beans.HospitalBean;
@@ -240,6 +244,7 @@ public class EditOfficeVisitAction extends EditOfficeVisitBaseAction {
 	 * @return "success" or exception's message
 	 * @throws FormValidationException
 	 */
+	@UserInput
 	public String updateInformation(EditOfficeVisitForm form, boolean isERIncident) throws FormValidationException {
 		String confirm = "";
 		try {
@@ -304,6 +309,7 @@ public class EditOfficeVisitAction extends EditOfficeVisitBaseAction {
 	 * @throws DBException
 	 * @throws FormValidationException
 	 */
+	@UserInput @InputValidator
 	private void updateOv(EditOfficeVisitForm form, boolean isERIncident) throws DBException, FormValidationException, ITrustException {
 		validator.validate(form);
 		OfficeVisitBean ov = getBean();

@@ -1,6 +1,10 @@
 package edu.ncsu.csc.itrust.action;
 
 import java.util.List;
+
+import com.github.secarchunit.concepts.InputValidator;
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.beans.PersonnelBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
 import edu.ncsu.csc.itrust.dao.mysql.AuthDAO;
@@ -49,6 +53,7 @@ public class DeclareHCPAction {
 	 * @return A status message,
 	 * @throws ITrustException
 	 */
+	@UserInput @InputValidator
 	public String declareHCP(String hcpStr) throws ITrustException {
 		try {
 			long hcpID = Long.valueOf(hcpStr);
@@ -74,6 +79,7 @@ public class DeclareHCPAction {
 	 * @return
 	 * @throws ITrustException
 	 */
+	@UserInput @InputValidator
 	public String undeclareHCP(String input) throws ITrustException {
 		try {
 			long hcpID = Long.valueOf(input);

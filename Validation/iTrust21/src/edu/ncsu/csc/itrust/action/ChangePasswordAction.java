@@ -1,5 +1,8 @@
 package edu.ncsu.csc.itrust.action;
 
+import com.github.secarchunit.concepts.InputValidator;
+import com.github.secarchunit.concepts.UserInput;
+
 import edu.ncsu.csc.itrust.dao.DAOFactory;
 import edu.ncsu.csc.itrust.dao.mysql.AuthDAO;
 import edu.ncsu.csc.itrust.exception.DBException;
@@ -36,6 +39,7 @@ public class ChangePasswordAction {
 	 * @throws DBException
 	 * @throws ITrustException
 	 */
+	@UserInput @InputValidator
 	public String changePassword(long mid, String oldPass, String newPass, String confirmPass) throws FormValidationException, DBException,
 	ITrustException {
 		String containsLetter = "[a-zA-Z0-9]*[a-zA-Z]+[a-zA-Z0-9]*";
