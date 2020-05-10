@@ -7,9 +7,9 @@ import java.util.Arrays;
 import java.util.Collection;
 
 public class CentralSendingRule extends AbstractJavaRule {
-    private static final String SENDING_POINT = "atm.transaction.Transaction";
+    private static final String SENDING_POINT = "edu.ncsu.csc.itrust.EmailUtil";
     private static final Collection<String> SENDERS = Arrays.asList(
-            "atm.physical.NetworkToBank"
+            "edu.ncsu.csc.itrust.dao.mysql.FakeEmailDAO"
     );
 
     public CentralSendingRule() {
