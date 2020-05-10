@@ -52,7 +52,12 @@ public class AnnotationHelper {
     }
 
     private static String getLocation(JavaNode node) {
-        String location = node.getFirstParentOfType(ASTClassOrInterfaceDeclaration.class).getBinaryName();
+        String location;
+        if (node instanceof ASTClassOrInterfaceDeclaration) {
+            location = ((ASTClassOrInterfaceDeclaration) node).getBinaryName();
+        } else {
+            location = node.getFirstParentOfType(ASTClassOrInterfaceDeclaration.class).getBinaryName();
+        }
 
         if (node instanceof ASTMethodDeclaration) {
             ASTMethodDeclaration method = (ASTMethodDeclaration) node;
