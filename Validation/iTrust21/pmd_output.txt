@@ -1,0 +1,309 @@
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21>pmd -d src/edu -R .\pmd-rules.xml -no-cache -auxclasspath lib
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ActivityFeedAction.java:48:  #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ActivityFeedAction.java:71:  #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ActivityFeedAction.java:91:  #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\AddApptAction.java:22:       #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\AddDrugListAction.java:33:   #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\AddERespAction.java:48:      #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\AddHCPAction.java:47:        #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\AddLTAction.java:45: #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\AddOphthalmologyScheduleOVAction.java:43:    #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\AddOphthalmologyScheduleOVAction.java:60:    #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\AddPHAAction.java:46:        #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\AddPatientAction.java:52:    #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\AddPatientAction.java:67:    #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\AddPatientFileAction.java:111:       #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\AddPatientFileAction.java:120:       #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\AddUAPAction.java:47:        #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ChangePasswordAction.java:43:        #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ChangeSessionTimeoutAction.java:38:  #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ChangeSessionTimeoutAction.java:55:  #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\DeclareHCPAction.java:44:    #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\DeclareHCPAction.java:57:    #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\DeclareHCPAction.java:83:    #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\DesignateNutritionistAction.java:33: #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\DesignateNutritionistAction.java:50: #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\DesignateNutritionistAction.java:90: #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditApptAction.java:93:      #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditDiagnosesAction.java:49: #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditDiagnosesAction.java:58: #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditDiagnosesAction.java:58: #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditDiagnosesAction.java:64: #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditDiagnosesAction.java:64: #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditDiagnosesAction.java:71: #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditDiagnosesAction.java:71: #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditDiagnosesAction.java:77: #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditHealthHistoryAction.java:92:     #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditHealthHistoryAction.java:101:    #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditHealthHistoryAction.java:239:    #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditHealthHistoryAction.java:264:    #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditImmunizationsAction.java:54:     #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditImmunizationsAction.java:60:     #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditImmunizationsAction.java:66:     #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditLabProceduresAction.java:95:     #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditLabProceduresAction.java:110:    #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditLabProceduresAction.java:121:    #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditMonitoringListAction.java:46:    #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditMonitoringListAction.java:58:    #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditOPDiagnosesAction.java:36:       #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditOPDiagnosesAction.java:41:       #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditOPDiagnosesAction.java:41:       #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditOPDiagnosesAction.java:46:       #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditOPDiagnosesAction.java:46:       #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditOPDiagnosesAction.java:52:       #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditOPDiagnosesAction.java:52:       #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditOPDiagnosesAction.java:57:       #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditObstetricsAction.java:45:        #4 User input must be validated directly or indirectly.
+Call to target with unknown owner (target=setToList) in (EditOfficeVisitAction.java:296)
+ + [email:296:class net.sourceforge.pmd.lang.java.ast.ASTName, setToList:296:class net.sourceforge.pmd.lang.java.ast.ASTName(method call)]
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPHRAction.java:149:      #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPHRAction.java:159:      #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPHRAction.java:169:      #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPHRAction.java:200:      #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPHRAction.java:211:      #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPHRAction.java:221:      #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPHRAction.java:232:      #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPHRAction.java:244:      #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPHRAction.java:262:      #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPHRAction.java:281:      #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPHRAction.java:300:      #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPHRAction.java:318:      #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPHRAction.java:336:      #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPHRAction.java:355:      #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPatientAction.java:64:   #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPatientAction.java:77:   #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPatientAction.java:111:  #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPatientAction.java:124:  #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPatientAction.java:131:  #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPatientAction.java:135:  #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPatientAction.java:139:  #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPatientAction.java:143:  #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPatientAction.java:155:  #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPatientInstructionsAction.java:72:       #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPatientInstructionsAction.java:83:       #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPatientInstructionsAction.java:94:       #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPersonnelAction.java:60: #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPrescriptionsAction.java:232:    #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPrescriptionsAction.java:242:    #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPrescriptionsAction.java:256:    #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPrescriptionsAction.java:273:    #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPrescriptionsAction.java:273:    #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPrescriptionsAction.java:284:    #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditPrescriptionsAction.java:297:    #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditProceduresAction.java:59:        #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditProceduresAction.java:65:        #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditProceduresAction.java:72:        #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditRepresentativesAction.java:45:   #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditRepresentativesAction.java:64:   #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditRepresentativesAction.java:77:   #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditRepresentativesAction.java:105:  #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditRepresentativesAction.java:118:  #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditSingleReferralAction.java:55:    #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditSingleReferralAction.java:70:    #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditSingleReferralAction.java:83:    #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EditSingleReferralAction.java:126:   #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EmergencyReportAction.java:58:       #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EmergencyReportAction.java:67:       #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EmergencyReportAction.java:76:       #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EmergencyReportAction.java:85:       #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EmergencyReportAction.java:94:       #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EmergencyReportAction.java:104:      #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EmergencyReportAction.java:114:      #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EmergencyReportAction.java:130:      #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\EmergencyReportAction.java:165:      #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\GroupReportAction.java:51:   #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\GroupReportAction.java:73:   #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\GroupReportAction.java:205:  #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\GroupReportAction.java:274:  #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\LabProcLTAction.java:55:     #4 User input must be validated directly or indirectly.
+Call to target with unknown owner (target=setToList) in (LabProcUAPAction.java:70)
+ + [email:70:class net.sourceforge.pmd.lang.java.ast.ASTName, setToList:70:class net.sourceforge.pmd.lang.java.ast.ASTName(method call)]
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\LabelAction.java:74: #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\LabelAction.java:99: #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\LabelAction.java:123:        #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\LoginFailureAction.java:46:  #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\LoginFailureAction.java:63:  #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\LoginFailureAction.java:71:  #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\LoginFailureAction.java:85:  #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\LoginFailureAction.java:96:  #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\LoginFailureAction.java:104: #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ManageHospitalAssignmentsAction.java:38:     #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ManageHospitalAssignmentsAction.java:60:     #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ManageHospitalAssignmentsAction.java:79:     #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ManageHospitalAssignmentsAction.java:105:    #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ManageHospitalAssignmentsAction.java:126:    #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ManageHospitalAssignmentsAction.java:145:    #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ManageHospitalAssignmentsAction.java:165:    #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\MonitorAdverseEventAction.java:57:   #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\MonitorAdverseEventAction.java:71:   #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\MonitorAdverseEventAction.java:89:   #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\MonitorAdverseEventAction.java:89:   #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\MonitorAdverseEventAction.java:110:  #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\MyDiagnosisAction.java:60:   #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\MyDiagnosisAction.java:71:   #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\MyDiagnosisAction.java:167:  #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\PayBillAction.java:57:       #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\PayBillAction.java:65:       #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\PayBillAction.java:80:       #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\PayBillAction.java:100:      #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\PayBillAction.java:168:      #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\PrescriptionReportAction.java:63:    #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\PrescriptionReportAction.java:84:    #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\PrescriptionReportAction.java:97:    #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\PrescriptionReportAction.java:123:   #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\PrescriptionReportAction.java:139:   #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ReportAdverseEventAction.java:74:    #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ReportAdverseEventAction.java:74:    #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ReportAdverseEventAction.java:126:   #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ReportAdverseEventAction.java:126:   #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ReportAdverseEventAction.java:160:   #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\RequestRecordsReleaseAction.java:60: #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\RequestRecordsReleaseAction.java:73: #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\RequestRecordsReleaseAction.java:91: #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\RequestRecordsReleaseAction.java:119:        #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\RequestRecordsReleaseAction.java:131:        #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\RequestRecordsReleaseAction.java:176:        #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\RequestRecordsReleaseAction.java:192:        #1 Security events must be logged.
+Call to target with unknown owner (target=setToList) in (ResetPasswordAction.java:202)
+ + [email:202:class net.sourceforge.pmd.lang.java.ast.ASTName, setToList:202:class net.sourceforge.pmd.lang.java.ast.ASTName(method call)]
+Call to target with unknown owner (target=setToList) in (ResetPasswordAction.java:202)
+ + [email:202:class net.sourceforge.pmd.lang.java.ast.ASTName, setToList:202:class net.sourceforge.pmd.lang.java.ast.ASTName(method call)]
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ResetPasswordAction.java:51: #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ResetPasswordAction.java:71: #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ResetPasswordAction.java:85: #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ResetPasswordAction.java:111:        #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ResetPasswordAction.java:125:        #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ResetPasswordAction.java:151:        #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ReviewsAction.java:35:       #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\SetSecurityQuestionAction.java:42:   #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\SetSecurityQuestionAction.java:54:   #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\SurveyAction.java:39:        #4 User input must be validated directly or indirectly.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\UpdateCPTCodeListAction.java:45:     #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\UpdateCPTCodeListAction.java:69:     #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\UpdateHospitalListAction.java:39:    #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\UpdateHospitalListAction.java:64:    #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\UpdateICDCodeListAction.java:47:     #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\UpdateICDCodeListAction.java:71:     #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\UpdateLOINCListAction.java:55:       #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\UpdateLOINCListAction.java:76:       #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\UpdateLOINCListAction.java:143:      #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\UpdateNDCodeListAction.java:45:      #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\UpdateNDCodeListAction.java:69:      #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\UpdateNDCodeListAction.java:104:     #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\UpdateReasonCodeListAction.java:44:  #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\UpdateReasonCodeListAction.java:68:  #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\VerifyClaimAction.java:44:   #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\VerifyClaimAction.java:52:   #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\VerifyClaimAction.java:59:   #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\VerifyClaimAction.java:71:   #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ViewHealthRecordsHistoryAction.java:107:     #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ViewHealthRecordsHistoryAction.java:116:     #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ViewHealthRecordsHistoryAction.java:172:     #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ViewHealthRecordsHistoryAction.java:248:     #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ViewHealthRecordsHistoryAction.java:278:     #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ViewHealthRecordsHistoryAction.java:308:     #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ViewHealthRecordsHistoryAction.java:338:     #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ViewHealthRecordsHistoryAction.java:437:     #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ViewHealthRecordsHistoryAction.java:449:     #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ViewMyRecordsAction.java:147:        #3 Messages must only be sent from sending point.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ViewObstetricsAction.java:50:        #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ViewObstetricsAction.java:61:        #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ViewObstetricsAction.java:87:        #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ViewOphthalmologyOVAction.java:50:   #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ViewOphthalmologyOVAction.java:99:   #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ViewOphthalmologySurgeryAction.java:43:      #1 Security events must be logged.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ViewPersonnelAction.java:63: #3 Messages must only be sent from sending point.
+Call to target with unknown owner (target=add) in (ApptBeanLoader.java:15)
+ + [list:15:class net.sourceforge.pmd.lang.java.ast.ASTName, add:15:class net.sourceforge.pmd.lang.java.ast.ASTName(method call)]
+Call to target with unknown owner (target=add) in (ApptTypeBeanLoader.java:15)
+ + [list:15:class net.sourceforge.pmd.lang.java.ast.ASTName, add:15:class net.sourceforge.pmd.lang.java.ast.ASTName(method call)]
+Call to target with unknown owner (target=add) in (CDCStatsBeanLoader.java:35)
+ + [list:35:class net.sourceforge.pmd.lang.java.ast.ASTName, add:35:class net.sourceforge.pmd.lang.java.ast.ASTName(method call)]
+Call to target with unknown owner (target=add) in (DiagnosisBeanLoader.java:31)
+ + [list:31:class net.sourceforge.pmd.lang.java.ast.ASTName, add:31:class net.sourceforge.pmd.lang.java.ast.ASTName(method call)]
+Call to target with unknown owner (target=add) in (EmailBeanLoader.java:22)
+ + [list:22:class net.sourceforge.pmd.lang.java.ast.ASTName, add:22:class net.sourceforge.pmd.lang.java.ast.ASTName(method call)]
+Call to target with unknown owner (target=setToList) in (EmailBeanLoader.java:37)
+ + [email:37:class net.sourceforge.pmd.lang.java.ast.ASTName, setToList:37:class net.sourceforge.pmd.lang.java.ast.ASTName(method call)]
+Call to target with unknown owner (target=add) in (FamilyBeanLoader.java:26)
+ + [list:26:class net.sourceforge.pmd.lang.java.ast.ASTName, add:26:class net.sourceforge.pmd.lang.java.ast.ASTName(method call)]
+Call to target with unknown owner (target=add) in (FlagsLoader.java:27)
+ + [list:27:class net.sourceforge.pmd.lang.java.ast.ASTName, add:27:class net.sourceforge.pmd.lang.java.ast.ASTName(method call)]
+Call to target with unknown owner (target=add) in (HealthRecordsBeanLoader.java:22)
+ + [list:22:class net.sourceforge.pmd.lang.java.ast.ASTName, add:22:class net.sourceforge.pmd.lang.java.ast.ASTName(method call)]
+Call to target with unknown owner (target=setInt) in (HealthRecordsBeanLoader.java:34)
+ + [ps:34:class net.sourceforge.pmd.lang.java.ast.ASTName, setInt:34:class net.sourceforge.pmd.lang.java.ast.ASTName(method call)]
+Call to target with unknown owner (target=add) in (MessageBeanLoader.java:21)
+ + [list:21:class net.sourceforge.pmd.lang.java.ast.ASTName, add:21:class net.sourceforge.pmd.lang.java.ast.ASTName(method call)]
+Call to target with unknown owner (target=add) in (ObstetricsRecordLoader.java:30)
+ + [list:30:class net.sourceforge.pmd.lang.java.ast.ASTName, add:30:class net.sourceforge.pmd.lang.java.ast.ASTName(method call)]
+Call to target with unknown owner (target=add) in (OphthalmologyDiagnosisBeanLoader.java:31)
+ + [list:31:class net.sourceforge.pmd.lang.java.ast.ASTName, add:31:class net.sourceforge.pmd.lang.java.ast.ASTName(method call)]
+Call to target with unknown owner (target=add) in (OphthalmologyOVRecordLoader.java:31)
+ + [list:31:class net.sourceforge.pmd.lang.java.ast.ASTName, add:31:class net.sourceforge.pmd.lang.java.ast.ASTName(method call)]
+Call to target with unknown owner (target=add) in (OphthalmologyScheduleOVRecordLoader.java:28)
+ + [list:28:class net.sourceforge.pmd.lang.java.ast.ASTName, add:28:class net.sourceforge.pmd.lang.java.ast.ASTName(method call)]
+Call to target with unknown owner (target=add) in (OphthalmologySurgeryRecordLoader.java:31)
+ + [list:31:class net.sourceforge.pmd.lang.java.ast.ASTName, add:31:class net.sourceforge.pmd.lang.java.ast.ASTName(method call)]
+Call to target with unknown owner (target=add) in (PatientLoader.java:31)
+ + [list:31:class net.sourceforge.pmd.lang.java.ast.ASTName, add:31:class net.sourceforge.pmd.lang.java.ast.ASTName(method call)]
+Call to target with unknown owner (target=add) in (RemoteMonitoringDataBeanLoader.java:21)
+ + [list:21:class net.sourceforge.pmd.lang.java.ast.ASTName, add:21:class net.sourceforge.pmd.lang.java.ast.ASTName(method call)]
+Call to target with unknown owner (target=add) in (RemoteMonitoringListsBeanLoader.java:21)
+ + [list:21:class net.sourceforge.pmd.lang.java.ast.ASTName, add:21:class net.sourceforge.pmd.lang.java.ast.ASTName(method call)]
+Call to target with unknown owner (target=add) in (SurveyResultBeanLoader.java:20)
+ + [list:20:class net.sourceforge.pmd.lang.java.ast.ASTName, add:20:class net.sourceforge.pmd.lang.java.ast.ASTName(method call)]
+Call to target with unknown owner (target=add) in (TransactionBeanLoader.java:22)
+ + [list:22:class net.sourceforge.pmd.lang.java.ast.ASTName, add:22:class net.sourceforge.pmd.lang.java.ast.ASTName(method call)]
+Call to target with unknown owner (target=getName) in (BloodType.java:29)
+ + [type:29:class net.sourceforge.pmd.lang.java.ast.ASTName, getName:29:class net.sourceforge.pmd.lang.java.ast.ASTName(method call), equals:29:class net.sourceforge.pmd.lang.java.ast.ASTPrimarySuffix(method call)]
+Call to target with unknown owner (target=equals) in (BloodType.java:29)
+ + [type:29:class net.sourceforge.pmd.lang.java.ast.ASTName, getName:29:class net.sourceforge.pmd.lang.java.ast.ASTName(method call), equals:29:class net.sourceforge.pmd.lang.java.ast.ASTPrimarySuffix(method call)]
+Call to target with unknown owner (target=getName) in (BloodType.java:29)
+ + [type:29:class net.sourceforge.pmd.lang.java.ast.ASTName, getName:29:class net.sourceforge.pmd.lang.java.ast.ASTName(method call), equals:29:class net.sourceforge.pmd.lang.java.ast.ASTPrimarySuffix(method call)]
+Call to target with unknown owner (target=equals) in (BloodType.java:29)
+ + [type:29:class net.sourceforge.pmd.lang.java.ast.ASTName, getName:29:class net.sourceforge.pmd.lang.java.ast.ASTName(method call), equals:29:class net.sourceforge.pmd.lang.java.ast.ASTPrimarySuffix(method call)]
+Call to target with unknown owner (target=getNDCode) in (PrescriptionAlerts.java:31)
+ + [thisone:31:class net.sourceforge.pmd.lang.java.ast.ASTName, getNDCode:31:class net.sourceforge.pmd.lang.java.ast.ASTName(method call), equals:31:class net.sourceforge.pmd.lang.java.ast.ASTPrimarySuffix(method call)]
+Call to target with unknown owner (target=equals) in (PrescriptionAlerts.java:31)
+ + [thisone:31:class net.sourceforge.pmd.lang.java.ast.ASTName, getNDCode:31:class net.sourceforge.pmd.lang.java.ast.ASTName(method call), equals:31:class net.sourceforge.pmd.lang.java.ast.ASTPrimarySuffix(method call)]
+Call to target with unknown owner (target=getNDCode) in (PrescriptionAlerts.java:31)
+ + [thisone:31:class net.sourceforge.pmd.lang.java.ast.ASTName, getNDCode:31:class net.sourceforge.pmd.lang.java.ast.ASTName(method call), equals:31:class net.sourceforge.pmd.lang.java.ast.ASTPrimarySuffix(method call)]
+Call to target with unknown owner (target=equals) in (PrescriptionAlerts.java:31)
+ + [thisone:31:class net.sourceforge.pmd.lang.java.ast.ASTName, getNDCode:31:class net.sourceforge.pmd.lang.java.ast.ASTName(method call), equals:31:class net.sourceforge.pmd.lang.java.ast.ASTPrimarySuffix(method call)]
+Call to target with unknown owner (target=toString) in (State.java:36)
+ + [super:36:class net.sourceforge.pmd.lang.java.ast.ASTPrimaryPrefix, toString:36:class net.sourceforge.pmd.lang.java.ast.ASTPrimarySuffix(method call)]
+Call to target with unknown owner (target=getAbbrev) in (State.java:42)
+ + [myState:42:class net.sourceforge.pmd.lang.java.ast.ASTName, getAbbrev:42:class net.sourceforge.pmd.lang.java.ast.ASTName(method call), equals:42:class net.sourceforge.pmd.lang.java.ast.ASTPrimarySuffix(method call)]
+Call to target with unknown owner (target=equals) in (State.java:42)
+ + [myState:42:class net.sourceforge.pmd.lang.java.ast.ASTName, getAbbrev:42:class net.sourceforge.pmd.lang.java.ast.ASTName(method call), equals:42:class net.sourceforge.pmd.lang.java.ast.ASTPrimarySuffix(method call)]
+Call to target with unknown owner (target=getName) in (State.java:42)
+ + [myState:42:class net.sourceforge.pmd.lang.java.ast.ASTName, getName:42:class net.sourceforge.pmd.lang.java.ast.ASTName(method call), equals:42:class net.sourceforge.pmd.lang.java.ast.ASTPrimarySuffix(method call)]
+Call to target with unknown owner (target=equals) in (State.java:42)
+ + [myState:42:class net.sourceforge.pmd.lang.java.ast.ASTName, getName:42:class net.sourceforge.pmd.lang.java.ast.ASTName(method call), equals:42:class net.sourceforge.pmd.lang.java.ast.ASTPrimarySuffix(method call)]
+Call to target with unknown owner (target=toString) in (State.java:36)
+ + [super:36:class net.sourceforge.pmd.lang.java.ast.ASTPrimaryPrefix, toString:36:class net.sourceforge.pmd.lang.java.ast.ASTPrimarySuffix(method call)]
+Call to target with unknown owner (target=getAbbrev) in (State.java:42)
+ + [myState:42:class net.sourceforge.pmd.lang.java.ast.ASTName, getAbbrev:42:class net.sourceforge.pmd.lang.java.ast.ASTName(method call), equals:42:class net.sourceforge.pmd.lang.java.ast.ASTPrimarySuffix(method call)]
+Call to target with unknown owner (target=equals) in (State.java:42)
+ + [myState:42:class net.sourceforge.pmd.lang.java.ast.ASTName, getAbbrev:42:class net.sourceforge.pmd.lang.java.ast.ASTName(method call), equals:42:class net.sourceforge.pmd.lang.java.ast.ASTPrimarySuffix(method call)]
+Call to target with unknown owner (target=getName) in (State.java:42)
+ + [myState:42:class net.sourceforge.pmd.lang.java.ast.ASTName, getName:42:class net.sourceforge.pmd.lang.java.ast.ASTName(method call), equals:42:class net.sourceforge.pmd.lang.java.ast.ASTPrimarySuffix(method call)]
+Call to target with unknown owner (target=equals) in (State.java:42)
+ + [myState:42:class net.sourceforge.pmd.lang.java.ast.ASTName, getName:42:class net.sourceforge.pmd.lang.java.ast.ASTName(method call), equals:42:class net.sourceforge.pmd.lang.java.ast.ASTPrimarySuffix(method call)]
+Call to target with unknown owner (target=isPatientViewable) in (TransactionType.java:511)
+ + [t:511:class net.sourceforge.pmd.lang.java.ast.ASTName, isPatientViewable:511:class net.sourceforge.pmd.lang.java.ast.ASTName(method call)]
+
+
+C3, case 2:
+
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ViewMyMessagesAction.java:53:        #3 Messages must only be sent from sending point.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ViewMyMessagesAction.java:65:        #3 Messages must only be sent from sending point.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ViewMyMessagesAction.java:77:        #3 Messages must only be sent from sending point.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ViewMyMessagesAction.java:89:        #3 Messages must only be sent from sending point.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ViewMyMessagesAction.java:100:       #3 Messages must only be sent from sending point.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ViewMyMessagesAction.java:111:       #3 Messages must only be sent from sending point.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ViewMyMessagesAction.java:122:       #3 Messages must only be sent from sending point.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ViewMyMessagesAction.java:133:       #3 Messages must only be sent from sending point.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ViewMyMessagesAction.java:257:       #3 Messages must only be sent from sending point.
+C:\Users\Patrik\Documents\BitBucket\SecArchUnit\Validation\iTrust21\src\edu\ncsu\csc\itrust\action\ViewMyMessagesAction.java:299:       #3 Messages must only be sent from sending point.
