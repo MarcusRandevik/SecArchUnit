@@ -16,9 +16,9 @@ import java.util.List;
         description = "Outbound messages must be sent from central point"
 )
 public class CentralMessageRule extends IssuableSubscriptionVisitor {
-    private static final String SENDING_POINT = "AbstractActionBean";
+    private static final String SENDING_POINT = "EmailUtil";
     private static final MethodMatchers SENDERS = MethodMatchers.create()
-            .ofTypes("net.sourceforge.stripes.action.ActionBeanContext")
+            .ofTypes("edu.ncsu.csc.itrust.dao.mysql.FakeEmailDAO")
             .anyName()
             .addParametersMatcher(parameters -> !parameters.isEmpty())
             .build();
