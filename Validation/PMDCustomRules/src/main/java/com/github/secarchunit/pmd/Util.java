@@ -67,9 +67,9 @@ public class Util {
                 } else {
                     // Should be local method, super method or static import
                     // TODO look for static imports?
-                    Class<?> enclosingClass = body.getFirstParentOfType(ASTClassOrInterfaceDeclaration.class).getType();
-                    if (enclosingClass != null) {
-                        MethodCall call = new MethodCall(enclosingClass, chain.get(0));
+                    ASTClassOrInterfaceDeclaration enclosingClass = body.getFirstParentOfType(ASTClassOrInterfaceDeclaration.class);
+                    if (enclosingClass != null && enclosingClass.getType() != null) {
+                        MethodCall call = new MethodCall(enclosingClass.getType(), chain.get(0));
                         methodCalls.add(call);
                     }
                 }

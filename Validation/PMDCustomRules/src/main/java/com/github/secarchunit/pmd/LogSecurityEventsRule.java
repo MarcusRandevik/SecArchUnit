@@ -70,6 +70,10 @@ public class LogSecurityEventsRule extends AbstractJavaRule {
     @Override
     public Object visit(ASTMethodDeclaration method, Object data) {
         ASTClassOrInterfaceDeclaration owningClass = method.getFirstParentOfType(ASTClassOrInterfaceDeclaration.class);
+        if (owningClass == null) {
+            return data;
+        }
+
         if (!SECURITY_SERVICES.contains(owningClass.getBinaryName()) || !method.isPublic()) {
             // Not a security event; skip method
             return data;
