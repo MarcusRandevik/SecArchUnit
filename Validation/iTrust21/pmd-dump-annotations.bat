@@ -1,0 +1,1 @@
+pmd -d src/edu -R pmd-dump-annotations.xml -no-cache -auxclasspath lib -threads 1
