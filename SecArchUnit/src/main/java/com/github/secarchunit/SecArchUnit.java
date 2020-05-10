@@ -76,6 +76,23 @@ public class SecArchUnit {
                 .should().callMethodWhere(targetOwner(loggerDescriptor).and(AccessPredicates.passSecretArgument));
     }
 
+    public static ArchRule dumpHints(Class<?>... classes) {
+        return classes()
+                .that().belongToAnyOf(classes)
+                .should(new ArchCondition<>("dump hints") {
+                    @Override
+                    public void check(JavaClass javaClass, ConditionEvents conditionEvents) {
+                        System.out.println(javaClass.getFullName());
+                        javaClass.getMethods().forEach(method -> {
+                            System.out.println(" + " + method.getName() + " : " + method.getDescriptor());
+                            method.getReturnValueHints().forEach(hint -> {
+                                System.out.println("   + " + hint);
+                            });
+                        });
+                    }
+                });
+    }
+
     private static class AccessPredicates {
         private static DescribedPredicate<JavaAccess<?>> passSecretArgument =
                 new DescribedPredicate<>("pass a secret as argument") {
