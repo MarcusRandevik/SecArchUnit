@@ -38,7 +38,8 @@ public class ValidateUserInputRule extends IssuableSubscriptionVisitor {
                 for (Tree blockTree : block.elements()) {
                     if (blockTree.is(Tree.Kind.METHOD_INVOCATION)) {
                         MethodInvocationTree mit = (MethodInvocationTree) blockTree;
-                        if (mit.symbol().metadata().isAnnotatedWith(INPUT_VALIDATOR)) {
+                        if (mit.symbol().metadata().isAnnotatedWith(INPUT_VALIDATOR)
+                                || mit.symbol().enclosingClass().metadata().isAnnotatedWith(INPUT_VALIDATOR)) {
                             return;
                         }
                     }

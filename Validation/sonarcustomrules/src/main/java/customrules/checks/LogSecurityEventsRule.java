@@ -41,6 +41,18 @@ public class LogSecurityEventsRule extends IssuableSubscriptionVisitor {
         String methodEnclosingClass = method.symbol().enclosingClass().name().toLowerCase();
         if (!SECURITY_CLASSES.contains(methodEnclosingClass)) return;
 
+        boolean publicMethod = false;
+        for (ModifierKeywordTree keywordTree : method.modifiers().modifiers()) {
+            if (keywordTree.modifier() == Modifier.PUBLIC) {
+                publicMethod = true;
+                break;
+            }
+        }
+
+        if (!publicMethod) {
+            return;
+        }
+
         boolean containsCallToLogger = false;
 
         ControlFlowGraph cfg = method.cfg();
