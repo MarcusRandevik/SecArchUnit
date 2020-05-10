@@ -25,9 +25,7 @@ public final class RulesList {
                 LogSecurityEventsRule.class,
                 ValidateUserInputRule.class,
                 LimitThreadSpawnRule.class,
-                CentralMessageRule.class,
-                AuthSingleComponentRule.class,
-                AuthSingleComponentEnforcerRule.class
+                CentralMessageRule.class
         ));
     }
 
