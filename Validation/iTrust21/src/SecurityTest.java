@@ -133,10 +133,4 @@ public class SecurityTest {
 	
 	@ArchTest
 	ArchRule c5 = SecArchUnit.limitResourceAllocation();
-	
-	@ArchTest
-	ArchRule c6 = SecArchUnit.doNotBleedAssetsBetweenComponents();
-	
-	@ArchTest
-	ArchRule c7 = SecArchUnit.doNotLogSecrets(JavaClass.Predicates.belongToAnyOf(EventLoggingAction.class));
 }
