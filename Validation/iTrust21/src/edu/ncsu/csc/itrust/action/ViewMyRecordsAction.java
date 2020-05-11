@@ -148,7 +148,7 @@ public class ViewMyRecordsAction {
 	 * @throws ITrustException
 	 */
 	public List<Email> getEmailHistory() throws ITrustException {
-		return emailDAO.getEmailsByPerson(getPatient().getEmail()); // C6 violation
+		return emailDAO.getEmailsByPerson(getPatient().getEmail());
 	}
 
 	/**
