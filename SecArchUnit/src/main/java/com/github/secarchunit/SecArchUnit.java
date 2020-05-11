@@ -248,7 +248,8 @@ public class SecArchUnit {
                         field.getAccessesToSelf().stream()
                                 .filter(access -> !access.getOriginOwner().isAnnotatedWith(AssetHandler.class))
                                 .forEach(offendingFieldAccess -> {
-                                    String message = offendingFieldAccess + ": access to asset " + field.getName();
+                                    String message = offendingFieldAccess.getSourceCodeLocation()
+                                            + ": access to asset " + field.getOwner().getSimpleName() + "." + field.getName();
                                     events.add(SimpleConditionEvent.violated(offendingFieldAccess, message));
                                 });
 
@@ -260,7 +261,9 @@ public class SecArchUnit {
                                 .flatMap(method -> method.getCallsOfSelf().stream())
                                 .filter(call -> !call.getOriginOwner().isAnnotatedWith(AssetHandler.class))
                                 .forEach(offendingMethodCall -> {
-                                    String message = offendingMethodCall + ": access to asset " + field.getName() + " (via getter method)";
+                                    String message = offendingMethodCall.getSourceCodeLocation()
+                                            + ": access to asset " + field.getOwner().getSimpleName() + "." + field.getName()
+                                            + " (via getter method)";
                                     events.add(SimpleConditionEvent.violated(offendingMethodCall, message));
                                 });
                     }
