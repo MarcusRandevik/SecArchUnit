@@ -91,7 +91,7 @@ public class SendMessageAction {
 					email.setBody(String.format("You have received a new message from %s in iTrust. To view it, go to \"http://localhost:8080/iTrust/auth/hcp/messageInbox.jsp\" and log in to iTrust using your username and password.", senderName));
 				} else { //when from is any personnel and to is patient
 					PatientBean receiver = patientDAO.getPatient(mBean.getTo());
-					toList.add(receiver.getEmail());
+					toList.add(receiver.getEmail()); // C6 violation
 					
 					senderName = sender.getFullName();
 					
@@ -111,13 +111,13 @@ public class SendMessageAction {
 					email.setBody(String.format("You have received a new message from %s in iTrust. To view it, go to \"http://localhost:8080/iTrust/auth/hcp/messageInbox.jsp\" and log in to iTrust using your username and password.", senderName));
 				} else { //when from is patient and to is patient
 					PatientBean receiver = patientDAO.getPatient(mBean.getTo());
-					toList.add(receiver.getEmail());
+					toList.add(receiver.getEmail()); 
 					
-					senderName = sender.getFullName();
+					senderName = sender.getFullName();// C6 violation
 					
 					email.setBody(String.format("You have received a new message from %s in iTrust. To view it, go to \"http://localhost:8080/iTrust/auth/patient/messageInbox.jsp\" and log in to iTrust using your username and password.", senderName));
 				}
-				fromEmail = sender.getEmail();
+				fromEmail = sender.getEmail();// C6 violation
 			}
 		}
 		email.setToList(toList);

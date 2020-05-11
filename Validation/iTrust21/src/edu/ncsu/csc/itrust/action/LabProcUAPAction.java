@@ -67,7 +67,7 @@ public class LabProcUAPAction {
 		
 		Email email = new Email();
 		email.setFrom("no-reply@itrust.com");
-		email.setToList(Arrays.asList(p.getEmail()));
+		email.setToList(Arrays.asList(p.getEmail())); // C6 violation
 		email.setSubject("A Lab Procedure Was Updated");
 		email.setBody(String.format("Dear %s, %n Your Lab Procedure (%s) has a new updated status of %s. Log on to iTrust to view.",  p.getFullName(), b.getLoinc(), b.getStatus()));
 		return email;

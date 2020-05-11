@@ -3,6 +3,7 @@ package edu.ncsu.csc.itrust.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.secarchunit.concepts.AssetHandler;
 import com.github.secarchunit.concepts.UserInput;
 
 import edu.ncsu.csc.itrust.EmailUtil;
@@ -41,6 +42,7 @@ import edu.ncsu.csc.itrust.validate.AllergyBeanValidator;
 /**
  * Edits the patient health record for a given patient Used by editPHR.jsp
  */
+@AssetHandler
 public class EditPHRAction extends PatientBaseAction {
 	private DAOFactory factory;
 	private PatientDAO patientDAO;

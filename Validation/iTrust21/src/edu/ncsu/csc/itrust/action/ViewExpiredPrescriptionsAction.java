@@ -82,14 +82,14 @@ public class ViewExpiredPrescriptionsAction {
 		}
 		
 		List<String> toList = new ArrayList<String>();
-		toList.add(patient.getEmail());
+		toList.add(patient.getEmail()); // C6 violation
 		
 		List<PatientBean> representatives = patientDAO.getRepresenting(patientID);
 		for(PatientBean representative : representatives) {
 			if (loggedInMID == representative.getMID()) {
 				return patientDAO.getExpiredPrescriptions(patientID);
 			}
-			toList.add(representative.getEmail());
+			toList.add(representative.getEmail()); // C6 violation
 		}
 		
 		List<PersonnelBean> dlhcps = patientDAO.getDeclaredHCPs(patientID);

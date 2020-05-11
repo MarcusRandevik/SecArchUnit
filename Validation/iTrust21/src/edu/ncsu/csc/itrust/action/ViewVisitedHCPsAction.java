@@ -3,6 +3,9 @@ package edu.ncsu.csc.itrust.action;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+
+import com.github.secarchunit.concepts.AssetHandler;
+
 import java.util.ArrayList;
 import edu.ncsu.csc.itrust.beans.PersonnelBean;
 import edu.ncsu.csc.itrust.beans.OfficeVisitBean;
@@ -17,6 +20,7 @@ import edu.ncsu.csc.itrust.exception.ITrustException;
 /**
  * Action class for ViewVisitedHCPs.jsp
  */
+@AssetHandler
 public class ViewVisitedHCPsAction {
 
 	private long patientMID;

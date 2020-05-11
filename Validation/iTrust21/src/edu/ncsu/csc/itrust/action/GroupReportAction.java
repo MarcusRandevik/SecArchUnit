@@ -1,6 +1,9 @@
 package edu.ncsu.csc.itrust.action;
 
 import java.util.List;
+
+import com.github.secarchunit.concepts.AssetHandler;
+
 import edu.ncsu.csc.itrust.beans.AllergyBean;
 import edu.ncsu.csc.itrust.beans.DiagnosisBean;
 import edu.ncsu.csc.itrust.beans.FamilyMemberBean;
@@ -25,6 +28,7 @@ import edu.ncsu.csc.itrust.report.ReportFilter;
  * 
  *
  */
+@AssetHandler
 public class GroupReportAction {
 
 	private PatientDAO pDAO;

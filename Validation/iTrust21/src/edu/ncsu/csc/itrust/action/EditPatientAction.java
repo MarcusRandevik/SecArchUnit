@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import com.github.secarchunit.concepts.AssetHandler;
 import com.github.secarchunit.concepts.UserInput;
 
 import edu.ncsu.csc.itrust.action.base.PatientBaseAction;
@@ -27,6 +28,7 @@ import edu.ncsu.csc.itrust.EmailUtil;
  * 
  * 
  */
+@AssetHandler
 public class EditPatientAction extends PatientBaseAction {
 	private PatientValidator validator = new PatientValidator();
 	private PatientDAO patientDAO;

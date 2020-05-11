@@ -21,6 +21,7 @@ public class PatientRoomAssignmentAction {
 		wardDAO.updateWardRoomOccupant(wardRoom);
 	}
 	
+	// C6 violation
 	public void assignPatientToRoom(WardRoomBean wardRoom, PatientBean patient) throws DBException{
 		assignPatientToRoom(wardRoom, patient.getMID());
 	}

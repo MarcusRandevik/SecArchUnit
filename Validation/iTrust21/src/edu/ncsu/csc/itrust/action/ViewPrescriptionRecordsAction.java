@@ -84,7 +84,7 @@ public class ViewPrescriptionRecordsAction {
 		}
 		
 		List<String> toList = new ArrayList<String>();
-		toList.add(patient.getEmail());
+		toList.add(patient.getEmail()); // C6 violation
 		
 		List<PatientBean> representatives = patientDAO.getRepresenting(patientID);
 		for(PatientBean representative : representatives) {

@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.action;
 
+import com.github.secarchunit.concepts.Secret;
+
 import edu.ncsu.csc.itrust.dao.DAOFactory;
 import edu.ncsu.csc.itrust.dao.mysql.TransactionDAO;
 import edu.ncsu.csc.itrust.enums.TransactionType;
@@ -10,6 +12,7 @@ import edu.ncsu.csc.itrust.exception.DBException;
  * 
  * 
  */
+@Secret
 public class EventLoggingAction {
 	private TransactionDAO transDAO;
 

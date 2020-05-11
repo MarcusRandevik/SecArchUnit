@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.github.secarchunit.concepts.AssetHandler;
+
 import edu.ncsu.csc.itrust.beans.OfficeVisitBean;
 import edu.ncsu.csc.itrust.beans.PatientBean;
 import edu.ncsu.csc.itrust.beans.PatientVisitBean;
@@ -20,6 +22,7 @@ import edu.ncsu.csc.itrust.exception.ITrustException;
  * Action class for ViewPatientOfficeVisitHistory.jsp
  *
  */
+@AssetHandler
 public class ViewPatientOfficeVisitHistoryAction {
 	private long loggedInMID;
 	private PatientDAO patientDAO;

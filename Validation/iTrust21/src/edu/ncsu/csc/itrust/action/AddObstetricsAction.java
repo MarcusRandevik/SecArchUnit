@@ -3,6 +3,7 @@ package edu.ncsu.csc.itrust.action;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.secarchunit.concepts.AssetHandler;
 import com.github.secarchunit.concepts.UserInput;
 
 import edu.ncsu.csc.itrust.beans.FlagsBean;
@@ -30,6 +31,7 @@ import edu.ncsu.csc.itrust.validate.ObstetricsRecordValidator;
  * 
  * 
  */
+@AssetHandler
 public class AddObstetricsAction {
 	private ObstetricsRecordDAO obstetricsDAO;
 	private FlagsDAO flagsDAO;
