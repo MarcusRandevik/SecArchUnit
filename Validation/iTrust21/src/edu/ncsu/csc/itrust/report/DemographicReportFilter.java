@@ -2,6 +2,9 @@ package edu.ncsu.csc.itrust.report;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.github.secarchunit.concepts.AssetHandler;
+
 import edu.ncsu.csc.itrust.beans.FamilyMemberBean;
 import edu.ncsu.csc.itrust.beans.PatientBean;
 import edu.ncsu.csc.itrust.dao.DAOFactory;
@@ -11,6 +14,7 @@ import edu.ncsu.csc.itrust.dao.mysql.FamilyDAO;
  * 
  *
  */
+@AssetHandler
 public class DemographicReportFilter extends ReportFilter {
 
 	/**

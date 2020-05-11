@@ -104,7 +104,7 @@ public class ReportAdverseEventAction {
 			PersonnelBean receiver = personnelDAO.getPersonnel(Long.parseLong(num));
 			List<String> toList = new ArrayList<String>();
 			toList.add(receiver.getEmail());
-			fromEmail = sender.getEmail();
+			fromEmail = sender.getEmail(); // C6 violation
 			
 			email.setToList(toList);
 			email.setFrom(fromEmail);
@@ -133,7 +133,7 @@ public class ReportAdverseEventAction {
 		PersonnelBean receiver = personnelDAO.getPersonnel(hcpID);
 		
 		toList.add(receiver.getEmail());
-		fromEmail = sender.getEmail();
+		fromEmail = sender.getEmail(); // C6 violation
 		
 		email.setToList(toList);
 		email.setFrom(fromEmail);

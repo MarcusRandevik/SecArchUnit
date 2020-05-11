@@ -3,6 +3,9 @@ package edu.ncsu.csc.itrust.action;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import com.github.secarchunit.concepts.AssetHandler;
+
 import edu.ncsu.csc.itrust.beans.AllergyBean;
 import edu.ncsu.csc.itrust.beans.DiagnosisBean;
 import edu.ncsu.csc.itrust.beans.Email;
@@ -37,6 +40,7 @@ import edu.ncsu.csc.itrust.exception.ITrustException;
  * 
  * 
  */
+@AssetHandler
 public class ViewMyRecordsAction {
 	/** The number of months in a year */
 	public static final int MONTHS_IN_YEAR = 12;
@@ -144,7 +148,7 @@ public class ViewMyRecordsAction {
 	 * @throws ITrustException
 	 */
 	public List<Email> getEmailHistory() throws ITrustException {
-		return emailDAO.getEmailsByPerson(getPatient().getEmail());
+		return emailDAO.getEmailsByPerson(getPatient().getEmail()); // C6 violation
 	}
 
 	/**

@@ -4,6 +4,11 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import com.github.secarchunit.concepts.Asset;
+import com.github.secarchunit.concepts.AssetHandler;
+import com.github.secarchunit.concepts.Secret;
+
 import edu.ncsu.csc.itrust.enums.BloodType;
 import edu.ncsu.csc.itrust.enums.Ethnicity;
 import edu.ncsu.csc.itrust.enums.Gender;
@@ -16,22 +21,30 @@ import edu.ncsu.csc.itrust.enums.Gender;
  * A bean must only have Getters and Setters (Eclipse Hint: Use Source > Generate Getters and Setters 
  * to create these easily)
  */
+@AssetHandler
 public class PatientBean implements Serializable, Comparable<PatientBean> {
 	private static final long serialVersionUID = -6474182977342257877L;
-	
+
 	private long MID = 0;
 	private String firstName = "";
 	private String lastName = "";
+	@Asset
 	private String email = "";
 	private String securityQuestion = "";
+	@Asset @Secret
 	private String securityAnswer = "";
+	@Asset @Secret
 	private String password = "";
+	@Asset @Secret
 	private String confirmPassword = "";
+	@Asset
 	private String streetAddress1 = "";
+	@Asset
 	private String streetAddress2 = "";
 	private String city = "";
 	private String state = "AK";
 	private String zip = "";
+	@Asset
 	private String phone = "";
 	private String emergencyName = "";
 	private String emergencyPhone = "";
@@ -44,6 +57,7 @@ public class PatientBean implements Serializable, Comparable<PatientBean> {
 	private String icPhone = "";
 	private String icID = "";
 	private String creditCardType = "";
+	@Asset @Secret
 	private String creditCardNumber = "";
 	// Topical Health Information
 	private String dateOfBirthStr = new SimpleDateFormat("MM/dd/yyyy").format(new Date());
@@ -56,8 +70,10 @@ public class PatientBean implements Serializable, Comparable<PatientBean> {
 	private Gender gender = Gender.NotSpecified;
 	private String topicalNotes = "";
 	private String directionsToHome = "";
+	@Asset
 	private String religion = "";
 	private String language = "";
+	@Asset
 	private String spiritualPractices = "";
 	private String alternateName = "";
 	private String dateOfDeactivationStr = "";

@@ -179,9 +179,9 @@ public class EmergencyReportAction extends PatientBaseAction {
 		List<PatientBean> reps = patientDAO.getRepresenting(pb.getMID());
 		
 		List<String> toAddrs = new ArrayList<String>();
-		toAddrs.add(pb.getEmail());
+		toAddrs.add(pb.getEmail()); // C6 violation
 		for (PatientBean r: reps) {
-			toAddrs.add(r.getEmail());
+			toAddrs.add(r.getEmail()); // C6 violation
 		}
 		
 		email.setFrom("no-reply@itrust.com");

@@ -199,7 +199,7 @@ public class ResetPasswordAction {
 			PatientBean p = new PatientDAO(factory).getPatient(mid);
 			Email email = new Email();
 			email.setFrom("no-reply@itrust.com");
-			email.setToList(Arrays.asList(p.getEmail()));
+			email.setToList(Arrays.asList(p.getEmail())); // C6 violation
 			email.setSubject("Your password has been changed in iTrust");
 			email.setBody(String.format("Dear %s, %n You have chosen to change your iTrust password for user %s", p.getFullName(), mid));
 

@@ -1,5 +1,6 @@
 package edu.ncsu.csc.itrust.validate;
 
+import com.github.secarchunit.concepts.AssetHandler;
 import com.github.secarchunit.concepts.InputValidator;
 
 import edu.ncsu.csc.itrust.action.AddPatientAction;
@@ -13,7 +14,7 @@ import edu.ncsu.csc.itrust.exception.FormValidationException;
  *  
  * 
  */
-@InputValidator
+@InputValidator @AssetHandler
 public class AddPatientValidator extends BeanValidator<PatientBean> {
 	/**
 	 * The default constructor.

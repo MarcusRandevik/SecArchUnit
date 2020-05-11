@@ -330,7 +330,7 @@ public class EditPrescriptionsAction extends EditOfficeVisitBaseAction {
 
 		
 		List<String> toAddrs = new ArrayList<String>();
-		toAddrs.add(patient.getEmail());
+		toAddrs.add(patient.getEmail()); // C6 violation
 		
 		StringBuffer buf = new StringBuffer();
 		for(String warning : warnings){
