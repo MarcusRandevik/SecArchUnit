@@ -52,7 +52,7 @@ public class EditOphthalmologyOVAction {
 			ophthalmologyOVDAO.editOphthalmologyOVRecordsRecord(oid, p);
 			
 			loggingAction.logEvent(TransactionType.parse(8302), loggedInMID, 
-					p.getMid(), "Ophthalmology Office Visit " +  p.getOid() + " edited by " + loggedInMID);
+					p.getMid(), "Ophthalmology Office Visit " +  p.getOid() + " edited by " + loggedInMID); // C7 violation x2
 		} else {
 			throw new ITrustException("Cannot edit a null Obstetrics Record.");
 		}

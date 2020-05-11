@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.beans;
 
+import com.github.secarchunit.concepts.Secret;
+
 /**
  * A bean for storing data about Family Members.
  * 
@@ -9,6 +11,7 @@ package edu.ncsu.csc.itrust.beans;
  * to create these easily)
  */
 public class FamilyMemberBean {
+	@Secret
 	private long mid = 0;
 	private String relation = "";
 	private String firstName = "";

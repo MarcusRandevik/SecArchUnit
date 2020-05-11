@@ -250,11 +250,11 @@ public class AddObstetricsAction {
 			
 			if (p.getPregnancyStatus().equals(PregnancyStatus.Initial)) {
 				loggingAction.logEvent(TransactionType.parse(6300), loggedInMID, 
-						p.getMid(), "Initial Obstetrics Record " +  p.getOid() + " added");
+						p.getMid(), "Initial Obstetrics Record " +  p.getOid() + " added"); // C7 violation x2
 			}
 			else if (p.getPregnancyStatus().equals(PregnancyStatus.Office)) {
 				loggingAction.logEvent(TransactionType.parse(6400), loggedInMID, 
-						p.getMid(), "Obstetrics Office Visit " +  p.getOid() + " added");
+						p.getMid(), "Obstetrics Office Visit " +  p.getOid() + " added"); // C7 violation x2
 			}
 		}
 		else {

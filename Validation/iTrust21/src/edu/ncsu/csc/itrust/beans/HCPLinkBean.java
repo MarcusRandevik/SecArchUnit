@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.beans;
 
+import com.github.secarchunit.concepts.Secret;
+
 /**
  * A mini-bean to pass data between viewPrescriptionRecords.jsp and reportAdverseEvent.jsp
  * 
@@ -9,6 +11,7 @@ package edu.ncsu.csc.itrust.beans;
  * to create these easily)
  */
 public class HCPLinkBean {
+	@Secret
 	long prescriberMID;
 	String drug;
 	boolean checked;

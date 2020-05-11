@@ -135,7 +135,7 @@ public class EditPHRAction extends PatientBaseAction {
 		
 		//log that this was added
 		loggingAction.logEvent(TransactionType.parse(6700), HCPUAP.getMID(), 
-				patient.getMID(), "An allergy record has been added: " +  bean.getId());
+				patient.getMID(), "An allergy record has been added: " +  bean.getId()); // C7 violation x3
 		
 		return "Allergy Added"; //If loop is successful, it will never reach here.
 	}

@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.github.secarchunit.concepts.Secret;
+
 /**
  * A bean for storing survey data associated with an office visit.
  * 
@@ -13,6 +15,7 @@ import java.util.Date;
  * to create these easily)
  */
 public class SurveyBean {
+	@Secret
 	private long visitID;
 	private Date surveyDate;
 	private int waitingRoomMinutes;

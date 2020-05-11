@@ -1,6 +1,9 @@
 package edu.ncsu.csc.itrust.beans;
 
 import java.sql.Timestamp;
+
+import com.github.secarchunit.concepts.Secret;
+
 import edu.ncsu.csc.itrust.enums.TransactionType;
 
 /**
@@ -12,8 +15,11 @@ import edu.ncsu.csc.itrust.enums.TransactionType;
  * to create these easily)
  */
 public class TransactionBean {
+	@Secret
 	private long transactionID;
+	@Secret
 	private long loggedInMID;
+	@Secret
 	private long secondaryMID;
 	private TransactionType transactionType;
 	private Timestamp timeLogged;

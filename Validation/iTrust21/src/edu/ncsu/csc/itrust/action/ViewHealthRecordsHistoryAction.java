@@ -127,11 +127,11 @@ public class ViewHealthRecordsHistoryAction {
 		
 		if(user.getUserRolesString().equals("patient")){
 			//Log for a patient
-			loggingAction.logEvent(TransactionType.PATIENT_VIEW_BASIC_HEALTH_METRICS, loggedInMID, patientID, "");
+			loggingAction.logEvent(TransactionType.PATIENT_VIEW_BASIC_HEALTH_METRICS, loggedInMID, patientID, ""); // No violation
 		}
 		if(user.getUserRolesString().equals("hcp")){
 			//Log for an HCP
-			loggingAction.logEvent(TransactionType.HCP_VIEW_BASIC_HEALTH_METRICS, loggedInMID, patientID, "");
+			loggingAction.logEvent(TransactionType.HCP_VIEW_BASIC_HEALTH_METRICS, loggedInMID, patientID, ""); // No violation
 			
 		}
 		//Get the patient's date of birth

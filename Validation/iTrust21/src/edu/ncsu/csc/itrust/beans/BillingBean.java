@@ -3,6 +3,8 @@ package edu.ncsu.csc.itrust.beans;
 import java.sql.Timestamp;
 import java.util.Date;
 
+import com.github.secarchunit.concepts.Secret;
+
 /**
  * Stores information about a bill
  */
@@ -14,9 +16,13 @@ public class BillingBean {
 	public static final String DENIED = "Denied";
 	public static final int MAX_SUBMISSIONS = 2;
 	
+	@Secret
 	private int billID;
+	@Secret
 	private int apptID;
+	@Secret
 	private long patient;
+	@Secret
 	private long hcp;
 	private int amt;
 	private String status;

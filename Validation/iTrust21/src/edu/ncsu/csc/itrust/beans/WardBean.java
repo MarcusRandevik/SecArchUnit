@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.beans;
 
+import com.github.secarchunit.concepts.Secret;
+
 /**
  * A bean for storing data about a Ward.
  * 
@@ -11,6 +13,7 @@ package edu.ncsu.csc.itrust.beans;
 public class WardBean {
 	
 
+	@Secret
 	long wardID = 0;
 	String requiredSpecialty = "";
 	long inHospital = 0;

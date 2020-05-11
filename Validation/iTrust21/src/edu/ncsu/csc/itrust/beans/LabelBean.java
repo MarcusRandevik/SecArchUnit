@@ -1,14 +1,18 @@
 package edu.ncsu.csc.itrust.beans;
 
+import com.github.secarchunit.concepts.Secret;
+
 public class LabelBean {
 	/**
 	 * Unique Primary key so entries can be edited and deleted
 	 */
+	@Secret
 	private long entryID;
 	
 	/**
 	 * The MID of the user this Food Entry belongs to
 	 */
+	@Secret
 	private long patientID;
 
 	private String labelName;

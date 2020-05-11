@@ -2,6 +2,9 @@ package edu.ncsu.csc.itrust.server;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
+
+import com.github.secarchunit.concepts.Secret;
+
 import edu.ncsu.csc.itrust.action.EventLoggingAction;
 import edu.ncsu.csc.itrust.action.RequestRecordsReleaseAction;
 import edu.ncsu.csc.itrust.beans.forms.RecordsReleaseForm;
@@ -110,10 +113,10 @@ public class RecordsReleaseServlet extends HttpServlet  {
 				
 		try {
 			if(isRepresentee.equals("false")){
-				loggingAction.logEvent(TransactionType.PATIENT_RELEASE_HEALTH_RECORDS, Long.parseLong(patMID), Long.parseLong(currentMID), "");
+				loggingAction.logEvent(TransactionType.PATIENT_RELEASE_HEALTH_RECORDS, Long.parseLong(patMID), Long.parseLong(currentMID), ""); // No violation
 			}
 			else if(isRepresentee.equals("true")){
-				loggingAction.logEvent(TransactionType.PATIENT_REQUEST_DEPEDENT_RECORDS, Long.parseLong(patMID), Long.parseLong(currentMID), "");
+				loggingAction.logEvent(TransactionType.PATIENT_REQUEST_DEPEDENT_RECORDS, Long.parseLong(patMID), Long.parseLong(currentMID), ""); // No violation
 			}
 		} catch (DBException e) {
 			e.printStackTrace();

@@ -182,7 +182,7 @@ public class EditObstetricsAction {
 			flagsDAO.setFlag(wFlag);
 			
 	    	loggingAction.logEvent(TransactionType.parse(6402), loggedInMID, 
-					p.getMid(), "Obstetrics Office Visit " +  p.getOid() + " edited by " + loggedInMID);
+					p.getMid(), "Obstetrics Office Visit " +  p.getOid() + " edited by " + loggedInMID); // C7 violation x2
     	}
     	else {
 			throw new ITrustException("Cannot edit a null Obstetrics Record.");

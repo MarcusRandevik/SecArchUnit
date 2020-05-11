@@ -2,6 +2,8 @@ package edu.ncsu.csc.itrust.beans;
 
 import java.util.Date;
 
+import com.github.secarchunit.concepts.Secret;
+
 
 /**
  * MacronutrientsBean.java
@@ -42,6 +44,7 @@ public class MacronutrientsBean {
 	/**
 	 * The MID of the user this Food Entry belongs to
 	 */
+	@Secret
 	private long patientID;
 
 	public float getWeight() {

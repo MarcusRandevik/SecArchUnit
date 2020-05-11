@@ -75,11 +75,11 @@ public class ViewObstetricsAction {
         ObstetricsRecordBean record = obstetricsDAO.getObstetricsRecord(oid);
         if (record != null && record.getPregnancyStatus().equals(PregnancyStatus.Initial)) {
         	loggingAction.logEvent(TransactionType.parse(6301), loggedInMID, 
-					record.getMid(), "Initial Obstetrics Record " +  oid + " viewed by " + loggedInMID);
+					record.getMid(), "Initial Obstetrics Record " +  oid + " viewed by " + loggedInMID); // C7 violation
         }
         else if (record != null && record.getPregnancyStatus().equals(PregnancyStatus.Office)) {
         	loggingAction.logEvent(TransactionType.parse(6401), loggedInMID, 
-					record.getMid(), "Obstetrics Office Visit " +  oid + " viewed by " + loggedInMID);
+					record.getMid(), "Obstetrics Office Visit " +  oid + " viewed by " + loggedInMID); // C7 violation
         }
         return record;
     }

@@ -25,6 +25,7 @@ import edu.ncsu.csc.itrust.enums.Gender;
 public class PatientBean implements Serializable, Comparable<PatientBean> {
 	private static final long serialVersionUID = -6474182977342257877L;
 
+	@Secret
 	private long MID = 0;
 	private String firstName = "";
 	private String lastName = "";

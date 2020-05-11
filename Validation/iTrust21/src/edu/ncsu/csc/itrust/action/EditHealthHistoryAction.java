@@ -139,9 +139,9 @@ public class EditHealthHistoryAction extends EditOfficeVisitBaseAction {
 		if (getHealthRecordByOfficeVisit(ovID) != null) {
 			//Remove the health record before adding a new one
 			hrDAO.remove(record);
-			loggingAction.logEvent(TransactionType.EDIT_BASIC_HEALTH_METRICS, super.getHcpid(), pid, "");
+			loggingAction.logEvent(TransactionType.EDIT_BASIC_HEALTH_METRICS, super.getHcpid(), pid, ""); // C7 violation
 		} else {
-			loggingAction.logEvent(TransactionType.CREATE_BASIC_HEALTH_METRICS, super.getHcpid(), pid, "");
+			loggingAction.logEvent(TransactionType.CREATE_BASIC_HEALTH_METRICS, super.getHcpid(), pid, ""); // C7 violation
 		}
 		hrDAO.add(record);
 		return "Information Recorded";
@@ -224,7 +224,7 @@ public class EditHealthHistoryAction extends EditOfficeVisitBaseAction {
 	 * @throws ITrustException
 	 */
 	public List<HealthRecord> getAllHealthRecords(long pid) throws ITrustException {
-		loggingAction.logEvent(TransactionType.VIEW_BASIC_HEALTH_METRICS, super.getHcpid(), pid, "");
+		loggingAction.logEvent(TransactionType.VIEW_BASIC_HEALTH_METRICS, super.getHcpid(), pid, ""); // C7 violation
 		return hrDAO.getAllHealthRecords(pid);
 	}
 	
@@ -249,7 +249,7 @@ public class EditHealthHistoryAction extends EditOfficeVisitBaseAction {
 	 * @throws DBException
 	 */
 	public boolean removeHealthRecord(HealthRecord hr) throws DBException {
-		loggingAction.logEvent(TransactionType.REMOVE_BASIC_HEALTH_METRICS, super.getHcpid(), pid, "");
+		loggingAction.logEvent(TransactionType.REMOVE_BASIC_HEALTH_METRICS, super.getHcpid(), pid, ""); // C7 violation x2
 		return hrDAO.remove(hr);
 	}
 	

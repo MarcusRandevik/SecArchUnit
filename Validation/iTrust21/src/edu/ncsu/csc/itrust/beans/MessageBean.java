@@ -2,6 +2,8 @@ package edu.ncsu.csc.itrust.beans;
 
 import java.sql.Timestamp;
 
+import com.github.secarchunit.concepts.Secret;
+
 /**
  * A bean for storing data about a message from one user to another.
  * 
@@ -11,14 +13,19 @@ import java.sql.Timestamp;
  * to create these easily)
  */
 public class MessageBean {
+	@Secret
 	private long to;
+	@Secret
 	private long from;
+	@Secret
 	private long id;
+	@Secret
 	private long parentMsgId;
 	private String subject;
 	private String body;
 	private Timestamp timestamp;
 	private int read;
+	@Secret
 	private long originalMsgId; //NEW
 	
 	/**

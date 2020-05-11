@@ -1,6 +1,9 @@
 package edu.ncsu.csc.itrust.beans;
 
 import java.util.Date;
+
+import com.github.secarchunit.concepts.Secret;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -11,8 +14,10 @@ import java.text.SimpleDateFormat;
 public class OphthalmologySurgeryRecordBean {
 	
 	/**The mid of the user.*/
+	@Secret
 	private long mid;
 	/**The Ophthalmology office visit id.*/
+	@Secret
 	private long oid;
 	/**The date of the Ophthalmology office visit.*/
 	private String visitDate;

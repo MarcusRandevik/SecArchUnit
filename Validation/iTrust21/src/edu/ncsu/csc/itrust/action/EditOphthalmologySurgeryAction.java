@@ -52,7 +52,7 @@ public class EditOphthalmologySurgeryAction {
 			ophthalmologySurgeryDAO.editOphthalmologySurgeryRecordsRecord(oid, p);
 			
 			loggingAction.logEvent(TransactionType.parse(8602), loggedInMID, 
-					p.getMid(), "Surgical Ophthalmology Office Visit " +  p.getOid() + " edited by " + loggedInMID);
+					p.getMid(), "Surgical Ophthalmology Office Visit " +  p.getOid() + " edited by " + loggedInMID); // C7 violation x2
 		} else {
 			throw new ITrustException("Cannot edit a null Surgical Ophthalmology Record.");
 		}

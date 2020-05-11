@@ -2,6 +2,8 @@ package edu.ncsu.csc.itrust.beans;
 
 import java.sql.Timestamp;
 
+import com.github.secarchunit.concepts.Secret;
+
 /**
  * A bean for storing remote monitoring data for patients.
  * 
@@ -11,6 +13,7 @@ import java.sql.Timestamp;
  * to create these easily)
  */
 public class RemoteMonitoringDataBean {
+	@Secret
 	private long patientMID;
 	private Timestamp time;
 	private int systolicBloodPressure;
@@ -20,6 +23,7 @@ public class RemoteMonitoringDataBean {
 	private float weight;
 	private int pedometerReading;
 	private String reporterRole;
+	@Secret
 	private long reporterMID;
 
 	/**
