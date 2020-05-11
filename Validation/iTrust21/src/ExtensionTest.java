@@ -4,10 +4,10 @@ import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.junit.ArchUnitRunner;
 import com.tngtech.archunit.lang.ArchRule;
-import edu.ncsu.csc.itrust.EmailUtil;
 import edu.ncsu.csc.itrust.action.*;
-import edu.ncsu.csc.itrust.dao.mysql.FakeEmailDAO;
-import edu.ncsu.csc.itrust.dao.mysql.MessageDAO;
+
+import java.io.PrintStream;
+
 import org.junit.runner.RunWith;
 
 @RunWith(ArchUnitRunner.class)
@@ -17,5 +17,8 @@ public class ExtensionTest {
 	ArchRule c6 = SecArchUnit.doNotBleedAssetsBetweenComponents();
 	
 	@ArchTest
-	ArchRule c7 = SecArchUnit.doNotLogSecrets(JavaClass.Predicates.belongToAnyOf(EventLoggingAction.class));
+	ArchRule c7 = SecArchUnit.doNotLogSecrets(JavaClass.Predicates.belongToAnyOf(
+			EventLoggingAction.class,
+			PrintStream.class
+	));
 }

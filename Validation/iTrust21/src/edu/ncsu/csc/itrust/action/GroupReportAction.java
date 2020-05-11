@@ -1,6 +1,9 @@
 package edu.ncsu.csc.itrust.action;
 
 import java.util.List;
+
+import com.github.secarchunit.concepts.AssetHandler;
+
 import edu.ncsu.csc.itrust.beans.AllergyBean;
 import edu.ncsu.csc.itrust.beans.DiagnosisBean;
 import edu.ncsu.csc.itrust.beans.FamilyMemberBean;
@@ -25,6 +28,7 @@ import edu.ncsu.csc.itrust.report.ReportFilter;
  * 
  *
  */
+@AssetHandler
 public class GroupReportAction {
 
 	private PatientDAO pDAO;
@@ -79,9 +83,9 @@ public class GroupReportAction {
 		case FIRST_NAME:
 			return patient.getFirstName();
 		case CONTACT_EMAIL:
-			return patient.getEmail();
+			return patient.getEmail(); // C6 violation
 		case STREET_ADDR:
-			return patient.getStreetAddress1() + " " + patient.getStreetAddress2();
+			return patient.getStreetAddress1() + " " + patient.getStreetAddress2(); // C6 violation x2
 		case CITY:
 			return patient.getCity();
 		case STATE:
@@ -89,7 +93,7 @@ public class GroupReportAction {
 		case ZIP:
 			return patient.getZip();
 		case PHONE:
-			return patient.getPhone();
+			return patient.getPhone(); // C6 violation
 		case EMER_CONTACT_NAME:
 			return patient.getEmergencyName();
 		case EMER_CONTACT_PHONE:

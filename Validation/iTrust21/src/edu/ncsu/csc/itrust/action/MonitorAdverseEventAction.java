@@ -90,7 +90,7 @@ public class MonitorAdverseEventAction {
 		String rValue;
 		List<String> toList = new ArrayList<String>();
 		PatientBean receiver = patientDAO.getPatient(patientMID);
-		toList.add(receiver.getEmail());
+		toList.add(receiver.getEmail()); // C6 violation
 		Email mail = new Email();
 		mail.setBody(message);
 		mail.setFrom(loggedInMID + "");

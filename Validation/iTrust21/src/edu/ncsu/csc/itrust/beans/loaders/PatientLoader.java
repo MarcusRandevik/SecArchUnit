@@ -8,6 +8,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.github.secarchunit.concepts.AssetHandler;
+
 import edu.ncsu.csc.itrust.beans.PatientBean;
 import edu.ncsu.csc.itrust.beans.PatientHistoryBean;
 
@@ -17,6 +20,7 @@ import edu.ncsu.csc.itrust.beans.PatientHistoryBean;
  * Loads in information to/from beans using ResultSets and PreparedStatements. Use the superclass to enforce consistency. 
  * For details on the paradigm for a loader (and what its methods do), see {@link BeanLoader}
  */
+@AssetHandler
 public class PatientLoader implements BeanLoader<PatientBean> {
 	private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy");
 
