@@ -293,7 +293,7 @@ public class EditOfficeVisitAction extends EditOfficeVisitBaseAction {
 		String hcpName = personnelDAO.getName(hcpID);
 		Email email = new Email();
 		email.setFrom("no-reply@itrust.com");
-		email.setToList(Arrays.asList(p.getEmail())); // C6 violation
+		email.setToList(Arrays.asList(p.getEmail()));// C6 violation
 		email.setSubject("HCP has prescribed you a potentially dangerous medication");
 		email.setBody(String
 				.format(

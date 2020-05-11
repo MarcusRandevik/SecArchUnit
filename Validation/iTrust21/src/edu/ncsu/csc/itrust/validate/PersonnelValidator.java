@@ -14,7 +14,8 @@ import edu.ncsu.csc.itrust.exception.FormValidationException;
  *  
  * 
  */
-@InputValidator @AssetHandler
+@InputValidator
+@AssetHandler
 public class PersonnelValidator extends BeanValidator<PersonnelBean> {
 	/**
 	 * The default constructor.

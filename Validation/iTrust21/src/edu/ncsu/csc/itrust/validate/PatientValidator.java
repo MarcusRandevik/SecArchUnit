@@ -17,7 +17,8 @@ import java.util.Date;
  *  
  * 
  */
-@InputValidator @AssetHandler
+@InputValidator
+@AssetHandler
 public class PatientValidator extends BeanValidator<PatientBean> {
 	/**
 	 * The default constructor.

@@ -1,6 +1,7 @@
 package edu.ncsu.csc.itrust.action;
 
 
+import com.github.secarchunit.concepts.AssetHandler;
 import com.github.secarchunit.concepts.UserInput;
 
 import edu.ncsu.csc.itrust.RandomPassword;
@@ -21,6 +22,7 @@ import edu.ncsu.csc.itrust.validate.AddPatientValidator;
  * 
  * 
  */
+@AssetHandler
 public class AddPatientAction {
 	private PatientDAO patientDAO;
 	private AuthDAO authDAO;
