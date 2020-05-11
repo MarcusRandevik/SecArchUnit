@@ -73,7 +73,7 @@ public class SecArchUnit {
 
     public static ArchRule doNotLogSecrets(DescribedPredicate<? super JavaClass> loggerDescriptor) {
         return noClasses()
-                .should().callMethodWhere(targetOwner(loggerDescriptor).and(AccessPredicates.passSecretArgument));
+                .should(ClassConditions.passSecretArgumentTo(targetOwner(loggerDescriptor)));
     }
 
     public static ArchRule dumpHints(Class<?>... classes) {
@@ -91,23 +91,6 @@ public class SecArchUnit {
                         });
                     }
                 });
-    }
-
-    private static class AccessPredicates {
-        private static DescribedPredicate<JavaAccess<?>> passSecretArgument =
-                new DescribedPredicate<>("pass a secret as argument") {
-                    @Override
-                    public boolean apply(JavaAccess<?> access) {
-                        boolean passesSecretArgument = InformationFlow.recurseOnHints(access.getArgumentHints())
-                                .anyMatch(hint -> hint.getType().isAnnotatedWith(Secret.class)
-                                        || hint.getMemberOrigin() != null && (
-                                                hint.getMemberOrigin().isAnnotatedWith(Secret.class)
-                                                || hint.getMemberOrigin().getOwner().isAnnotatedWith(Secret.class))
-                                );
-
-                        return passesSecretArgument;
-                    }
-                };
     }
 
     private static class MethodCallPredicates {
@@ -170,7 +153,7 @@ public class SecArchUnit {
     }
 
     private static class CodeUnitConditions {
-        private static ArchCondition<JavaCodeUnit> callMethod(DescribedPredicate<AccessTarget> targetDescriptor) {
+        private static ArchCondition<JavaCodeUnit> callMethod(DescribedPredicate<? super AccessTarget> targetDescriptor) {
             return new ArchCondition<>("contain method call to target " + targetDescriptor.getDescription()) {
                 @Override
                 public void check(JavaCodeUnit codeUnit, ConditionEvents events) {
@@ -234,6 +217,28 @@ public class SecArchUnit {
                         String message = codeUnit.getFullName() + " contains method call to target";
                         events.add(SimpleConditionEvent.satisfied(codeUnit, message));
                     }
+                }
+            };
+        }
+
+        private static final ArchCondition<JavaClass> passSecretArgumentTo(DescribedPredicate<JavaAccess<?>> target) {
+            return new ArchCondition<>("pass @Secret argument to " + target.getDescription()) {
+                @Override
+                public void check(JavaClass clazz, ConditionEvents events) {
+                    clazz.getMethodCallsFromSelf().stream()
+                            .filter(call -> target.apply(call))
+                            .forEach(callToTarget -> {
+                                InformationFlow.recurseOnHints(callToTarget.getArgumentHints())
+                                        .filter(hint -> hint.getMemberOrigin() != null)
+                                        .map(hint -> hint.getMemberOrigin())
+                                        .filter(member -> member.isAnnotatedWith(Secret.class) || member.getOwner().isAnnotatedWith(Secret.class))
+                                        .distinct()
+                                        .forEach(secretMember -> {
+                                            String message = callToTarget.getSourceCodeLocation() + " passes secret "
+                                                    + secretMember.getOwner().getSimpleName() + "." + secretMember.getName();
+                                            events.add(SimpleConditionEvent.satisfied(callToTarget, message));
+                                        });
+                            });
                 }
             };
         }
