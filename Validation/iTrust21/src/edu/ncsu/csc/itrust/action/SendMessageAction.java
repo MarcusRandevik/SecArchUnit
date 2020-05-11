@@ -113,7 +113,7 @@ public class SendMessageAction {
 					PatientBean receiver = patientDAO.getPatient(mBean.getTo());
 					toList.add(receiver.getEmail()); // C6 violation
 					
-					senderName = sender.getFullName();// C6 violation
+					senderName = sender.getFullName();
 					
 					email.setBody(String.format("You have received a new message from %s in iTrust. To view it, go to \"http://localhost:8080/iTrust/auth/patient/messageInbox.jsp\" and log in to iTrust using your username and password.", senderName));
 				}

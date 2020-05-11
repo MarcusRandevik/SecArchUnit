@@ -83,9 +83,9 @@ public class GroupReportAction {
 		case FIRST_NAME:
 			return patient.getFirstName();
 		case CONTACT_EMAIL:
-			return patient.getEmail(); // C6 violation
+			return patient.getEmail();
 		case STREET_ADDR:
-			return patient.getStreetAddress1() + " " + patient.getStreetAddress2(); // C6 violation x2
+			return patient.getStreetAddress1() + " " + patient.getStreetAddress2();
 		case CITY:
 			return patient.getCity();
 		case STATE:
@@ -93,7 +93,7 @@ public class GroupReportAction {
 		case ZIP:
 			return patient.getZip();
 		case PHONE:
-			return patient.getPhone(); // C6 violation
+			return patient.getPhone();
 		case EMER_CONTACT_NAME:
 			return patient.getEmergencyName();
 		case EMER_CONTACT_PHONE:
