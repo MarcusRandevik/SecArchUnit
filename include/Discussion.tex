@@ -1,3 +1,26 @@
 \chapter{Discussion}
 
 \todo{Tool comparison}
+\todo{Discuss examples of things that the tools won't catch}
+% different levels of assets, i.e some fields are more sensitive than others
+
+\section{Comparing Static Analysis Tools}
+ArchUnit, SonarQube and PMD are all static analysis tools with support for evaluation of custom rules. However, they differ quite a bit in how their rules are defined. ArchUnit first builds a representation of the entirety of the analyzed system, which is then available during the evaluation of the rules. As shown throughout Chapter~\ref{ch:enforcing_constraints}, rules have direct access to information about incoming and outgoing accesses to all fields, code units and classes, making it convenient to specify intricate architectural constraints.
+
+As for SonarQube and PMD, both of these tools evaluate rules against Abstract Syntax Trees (AST) where the root node is the Java class currently being analyzed.
+
+Rule definitions - Abstract Syntax Trees (SonarQube \& PMD) vs higher-level abstraction (ArchUnit)
+
+Analysis of references
+
+Semantic information
+
+\section{Threats to Validity}
+
+\subsection{Internal Validity}
+
+\subsection{External Validity}
+
+\section{Future Research}
+
+

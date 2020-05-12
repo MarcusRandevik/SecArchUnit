@@ -1,4 +1,5 @@
 \chapter{Enforcing Constraints}
+\label{ch:enforcing_constraints}
 
 This chapter explains how the constraints are expressed and validated using the tool using both the general definition of a rule as well as by providing a modeled example system. The constraints are divided into three distinct categories. The first category contains the constraints that are possible to express in ArchUnit as-is. The second category describes constraints that are enforceable with the help of additional information in source code. The third and final category details constraints that require an extension of ArchUnit to be possible to enforce.
 
@@ -312,19 +313,19 @@ In BlogWeb, the \texttt{password} field is considered an asset that must stay wi
 
 \subsection{Secrets must not be exposed in log messages}
 % Description
-The seventh and final constraint dictates that secrets must not be exposed in logs. There are a multitude of ways that a secret field or type can be exposed in a log message, e.g. through string concatenation, string formatting, or wrapping it in a different object and converting that object to its string representation. What these exposures have in common are that they issue method call to the logger where the secret has, in some way, flowed into the arguments.
+The seventh and final constraint dictates that secrets must not be exposed in logs. There are a multitude of ways that a secret field can be exposed in a log message, e.g. through string concatenation, string formatting, or wrapping it in a different object and converting that object to its string representation. What these exposures have in common are that they issue method call to the logger where the secret has, in some way, flowed into the arguments.
 
 % Rule definition
-The architectural rule is defined in Listing~\ref{lst:constraint_7_impl}. Rather than a single class representing the preferred logger, the constraint should prevent exposures in any loggers present in the system. As such, it accepts a predicate that should select all such logging facilities. The custom predicate \texttt{passSecretArgument} inspects the argument hints for any members marked with the \texttt{Secret} annotation. Additionally, for each originating member found in the hints, it recursively checks the hints that have flowed into that member, in an attempt to constrain information flow with intermediate steps in different code units.
+The architectural rule is defined in Listing~\ref{lst:constraint_7_impl}. Rather than a single class representing the preferred logger, the constraint should prevent exposures in any loggers present in the system. As such, it accepts a predicate that should select all such logging facilities. The custom condition \texttt{passSecretArgumentTo} inspects the argument hints of all outgoing method calls for any members marked with the \texttt{Secret} annotation. Additionally, for each originating member found in the hints, it recursively checks the hints that have flowed into that member, in an attempt to constrain information flow with intermediate steps in different code units.
 
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[caption={Rule definition for constraint 7.}, captionpos=b, label=lst:constraint_7_impl, numbers=left]
 ArchRule doNotLogSecrets(
         DescribedPredicate<? super JavaClass> loggerDescriptor) {
     return noClasses()
-        .should().callMethodWhere(
-            targetOwner(loggerDescriptor).and(passSecretArgument)
-        );
+        .should(passSecretArgumentTo(
+            targetOwner(loggerDescriptor)
+        ));
 \end{lstlisting}
 \end{minipage}
 

@@ -57,10 +57,25 @@ In contrast to constraints which may be implemented through already existing fun
 
 Integration with already existing testing frameworks is a prominent advantage of ArchUnit. As testing is generally performed overtime to ensure that a system does not degrade, the focus of the experiment is to determine whether ArchUnit can detect changes to security architectural constraints between two versions. 
 
+\subsubsection{Selection of Systems} \label{sct:selected-systems}
+\todo{describe projects, why they were selected}
+Three systems have been selected for the evaluation. These systems are as follows:
+
+\begin{itemize}
+    \item \textbf{ATM simulator}, 
+    \item \textbf{JPetStore}, 
+    \item \textbf{iTrust}, 
+\end{itemize}
+
 \subsubsection{Performance metrics}
 The imbalance between the designer, who needs to ensure that every single aspect of a system is secure, and the attacker, who needs to succeed only once, influences the metrics chosen to represent how well the extension to ArchUnit performs. Precision and recall were the metrics of choice, with the greater importance placed on the latter. 
 
 \todo{Define true positives, false positives, false negatives}
+
+\subsubsection{Tools used in comparison}\label{sec_tools_used_in_comparison} \todo{fix}
+In order to test how reliably SecArchUnit can validate the constraints, we perform a comparison with two static analysis tools widely adopted in industry: SonarQube and PMD.
+While these tools have a multitude of built-in rules, none of these rules can be used to enforce the architectural security constraints presented in this thesis. However, both tools are extensible, allowing a developer to define custom rules using their respective APIs.
+In an initial assessment of the tools, it was determined that constraints one through five are possible to implement and validate using SonarQube and PMD. Hence, the first five constraints in evaluated SecArchUnit, SonarQube and PMD, whereas the final two constraints are evaluated solely in SecArchUnit.
 
 \subsubsection{Projects used in evaluation}
 Systems to be included in the validation needed to fulfill two mandatory criteria. First and foremost was the fact that they need open source and written in Java as the static analysis of ArchUnit relies on the source-code. Secondly, there needed to be at minimum two different snapshots in order to fulfill the goal of comparing subsequent changes to a system.  

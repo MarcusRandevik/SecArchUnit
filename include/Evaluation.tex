@@ -1,38 +1,31 @@
 \chapter{Evaluation}
 
-This chapter presents an evaluation of the constraints when applied to a number of open source systems. The evaluation is done in two ways: first a comparison between SecArchUnit and prominent static analysis tools used in industry, and then a standalone evaluation of the tool extension.
-
-\section{Selection of Systems}
-...
-
-
+This chapter presents an evaluation of the constraints when applied to a number of open source systems. The evaluation was performed in two ways: first a comparison between SecArchUnit and static analysis tools used in industry, and then a standalone evaluation of the tool extension.
 
 \section{Comparison with Industry Tools}
-Constraints 1-5 on ATMsimulator, JPetStore, iTrust; compared using SecArchUnit, SonarQube and PMD
+As mentioned in Section~\ref{sec_tools_used_in_comparison}, constraints 1-5 can be validated in both SonarQube and PMD through the definitions of custom rules. The constraints are applied to the test systems presented in Section~\ref{sct:selected-systems} and validated using each of the three tools. Both the relative and absolute frequencies of violations of each constraint can be seen in Figure~\ref{bar:rel_frequency_violation_compraison} and Figure~\ref{bar:frequency_violation_compraison} respectively.
 
-Explain how we determine the ground truth
+\input{include/graphsAndTables/RelativeConstraintFrequency}
+\input{include/graphsAndTables/ConstraintFrequency}
 
-The results from this comparison can be seen in Table~\ref{tab:results_comparison}.
+As shown in the figures, the systems were evaluated using imbalanced data. Constraint 1 accounted for a majority of all violations found throughout all three systems, while no system violated constraint 5. Addtionally, iTrust where the only system to contain a violation of constraint 3. 
 
-\begin{table}
-\begin{center}
-\begin{tabular}{lccccc}
-\hline
-\textbf{Tool} & \textbf{TP} & \textbf{FP} & \textbf{FN} & \textbf{Precision} & \textbf{Recall}\\
-\hline
-SecArchUnit & 19 & 1 & 2 & 0.95 & 0.90\\
-\rowcolor{RowColor}
-SonarQube plugin & 17 & 1 & 4 & 0.94 & 0.81\\
-PMD plugin & 15 & 1 & 6 & 0.94 & 0.71\\
-\hline
-\end{tabular}
-\end{center}
-\caption{Results from validating constraints 1-5 using various static analysis tools.}
-\label{tab:results_comparison}
-\end{table}
+Each tool is evaluated according to the selected performance metrics, i.e. precision and recall. These results are presented in Table~\ref{tab:results_comparison}. Both in regards to precision, as well as recall, the tools performed equally. However, the causes of failure, in cases where the results of the tools varied, differed noticeably. The examples are described below:
 
+\begin{itemize}
+    \item In ATM simulator, the same false positive occurred in all three tools. This was related to constraint 3, where a subclass of the sending point contained a method call to the sender. Additionally, PMD had 4 false negatives which occurred because it was unable to determine the classes that these method calls targeted.
+    \item In JPetStore, PMD reported 4 false negatives, again because it was unable to determine the target class of these method calls.
+    \item In iTrust, a security service contained both an inner interface and inner class whose methods did not perform security events. Both PMD and SonarQube analyzes the AST with a single class as its root node, thus they consider the inner members to be separate objects of analysis. In comparison, ArchUnit uses the entire Java file in its analysis causing it to incorrectly apply the annotation of the outer class to the inner members. 
+\end{itemize}
 
+\input{include/graphsAndTables/ToolComparison}
 
-\section{Validation of Tool Extension}
-Constraints 6-7
+\section{Validation of ArchUnit Extension}
+Constraints 6-7, which rely on an extension of ArchUnit's analysis, are validated solely using SecArchUnit. The performance metrics from applying the final two constraints to iTrust are presented in Table~\ref{tab:tool_extension}.
 
+The system, iTrust, initially contained no violations of constraint 7. Therefore, violations were injected by systematically marking all identifier fields (e.g. \texttt{patientId}, \texttt{personnelId}) in the model and base-action packages as secrets. We chose to mark these identifiers because they were commonly sent to the logger as a way to describe the patient or personnel involved in a transaction. Hence, the 37 violations of constraint 7, as seen in Table~\ref{tab:tool_extension}, are artificially injected.
+
+Moreover, iTrust is built with a mix of Java and Java Server Pages (JSP) files whereas ArchUnit can only analyze Java bytecode. The classes in the action package, from which the logger is called, are all instantiated in the JSP files outside the view of our analysis. As such, the types of information flow that are analyzed and included in the ground truth are rather rudimentary. Out of the 37 violations of constraint 7, 1 was found without recursion (direct access to secret field) and the remaining 36 were found using a single recursion step (access to getter method of a secret field).
+% This is bad - we could just as well put the secret annotation on the getter and enforce the same cases in SonarQube/PMD
+
+\input{include/graphsAndTables/ExtensionConstraints}
