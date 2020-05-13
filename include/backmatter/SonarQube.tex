@@ -1,6 +1,7 @@
 \chapter{SonarQube Rule Definition}
+\label{apx:sonarqube}
 
-\begin{lstlisting}[label=lst:sonarqube_rule, numbers=left, showstringspaces=false]
+\begin{lstlisting}[caption={SonarQube custom rule that enforces constraint 3.}, captionpos=b, label=lst:sonarqube_rule, numbers=left, showstringspaces=false]
 class CentralMessageRule extends IssuableSubscriptionVisitor {
     private static final String SENDING_POINT = "Transaction";
     private static final MethodMatchers SENDERS = MethodMatchers
