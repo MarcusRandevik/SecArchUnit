@@ -3,23 +3,24 @@
 
 This chapter explains how the constraints are expressed and validated using the tool using both the general definition of a rule as well as by providing a modeled example system. The constraints are divided into three distinct categories. The first category contains the constraints that are possible to express in ArchUnit as-is. The second category describes constraints that are enforceable with the help of additional information in source code. The third and final category details constraints that require an extension of ArchUnit to be possible to enforce.
 
-\section{Example system}\todo{improve heading}
-The constraints used within the report are not system-specific but instead defined to by generally applicable. However, a toy system called \textit{BlogWeb} has been modeled to allow us to showcase a specific example for each constraint. BlogWeb is by no means intended to be a complex or complete system, but rather big enough to provide the functionality to support the constraints. A UML class diagram of BlogWeb is illustrated in Figure~\ref{fig:toy_application}.
+\section{Running Example}
+We modeled a toy system, BlogWeb, and use it as a running example for this chapter. By no means is this example meant to be a realistic application, but is instead used to showcase our constraints.
+A UML class diagram of BlogWeb is illustrated in Figure~\ref{fig:toy_application}.
+
+%However, a toy system called \textit{BlogWeb} has been modeled to allow us to showcase a specific example for each constraint. BlogWeb is by no means intended to be a complex or complete system, but rather big enough to provide the functionality to support the constraints.
 
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{figure/ToyApp.png}
-    \caption{An example of a system, for the purpose of illustrating how the constraints are applied.}
+    \caption{A UML class diagram of the toy system BlogWeb.}
     \label{fig:toy_application}
 \end{figure}
 
-BlogWeb is, as the name suggests, a blog website providing users with the ability to publish statuses to their blogs. Being a website means that the system receives actions to execute via HTTP requests. These requests are received by the RequestHandler to be later forwarded to the UserService, which provides public methods for sign in and publishing a status update. The UserService has a reference to both a UserAuthorizer and a UserAuthenticator implementing the logic for authorization and authentication. The UserService also uses the Logger to perform the necessary logging of user requests. StatusSanitizer is used to sanitize the status updates received by users before its stored while OutBoundMessageSanitizer is responsible for sanitizing requests responses. Finally, as the RequestHandler may serve several users at once, a thread is spawned for each request to make the execution concurrent. 
+BlogWeb is, as the name suggests, a blog website providing users with the ability to publish statuses to their blogs. Being a website means that the system receives actions to execute via HTTP requests. These requests are received by the RequestHandler and are forwarded to the UserService, which provides public methods for sign in and publishing a status update. The UserService depends on UserAuthorizer and UserAuthenticator which implement the logic for authorization and authentication. The UserService also uses the Logger to perform the necessary logging of user requests. StatusSanitizer is used to sanitize the status updates received by users before they are stored while OutBoundMessageSanitizer is responsible for sanitizing responses. Finally, as the RequestHandler may serve several users at once, a thread is spawned for each request to make the execution concurrent. 
+
 
 \section{Support in ArchUnit as-is}\label{sec:as-is}
-
-ArchUnit contains an extensive vocabulary for expressing typical architectural constraints. These constraints are generally composed of three parts: a construct, a predicate and a condition. The construct defines the type of Java construct that should be inspected, and includes classes, methods, fields and constructors. The predicate then selects a subset of these constructs, for which the condition must hold true.
-
-An example of a rule defined solely using this standard vocabulary can be seen in Listing~\ref{lst:standard_vocabulary}, where each of the three aforementioned parts of the constraint has been separated into their own line. The rule is a simple example of complete mediation, where some internal classes must only be accessed through a mediator.
+ArchUnit contains an extensive vocabulary for expressing architectural constraints in a sentence-like manner. Listing~\ref{lst:standard_vocabulary} shows an example of a rule that is defined using the standard vocabulary in ArchUnit. This rule is an example of complete mediation, where some internal classes must only be accessed through a mediator.
 
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[caption={Example of a rule that is expressed with the standard vocabulary.}, captionpos=b, label=lst:standard_vocabulary, numbers=left]
@@ -29,7 +30,11 @@ ArchRule rule = classes()
 \end{lstlisting}
 \end{minipage}
 
-In situations where this vocabulary is insufficient for expressing a constraint, there is a possibility to define custom predicates and conditions over any given construct. These can be supplied as arguments to the \texttt{that()} and \texttt{should()} methods. Custom predicates and conditions are used extensively in our implementation, as will be made apparent in the following sections.
+Rules in ArchUnit are composed of three parts. The first part (line 1 in Listing~\ref{lst:standard_vocabulary}) is the type of Java constructs that should be inspected; namely classes, fields or methods. The second part (line 2) is a predicate that is used to filter for constructs related to the constraint. The third part (line 3) describes the logical condition that must hold true for all of the selected constructs. To summarize, rules are expressed as sentences of the form \say{The \textbf{constructs} that match \textbf{predicate} should fulfill \textbf{condition}.}
+
+%These constraints are generally composed of three parts: a construct, a predicate and a condition. The construct defines the type of Java construct that should be inspected, and includes classes, methods, fields and constructors. The predicate then selects a subset of these constructs, for which the condition must hold true.
+
+In situations where the standard vocabulary is insufficient for expressing a constraint, there is a possibility to define custom predicates and conditions over any given construct. These can be supplied as arguments to the \texttt{that()} and \texttt{should()} methods. Custom predicates and conditions are used extensively in our implementation, as will be made apparent in the following sections.
 
 \subsection{Log all security events}
 % Description
@@ -67,7 +72,7 @@ ArchRule logSecurityEvents = SecArchUnit
 The second constraint is defined in terms of two concepts: an authentication point and an authentication enforcer. Authentication is performed through a method call to the authentication enforcer, which is a class whose sole responsibility is to authenticate an actor. This call should only occur at the authentication point for the sake of ensuring a uniform authentication mechanism throughout the system. Authorization is enforced in the same manner, with the concepts of an authorization point and an authorization enforcer.
 
 % Rule definition
-The definition of the second constraint is detailed in Listing~\ref{lst:constraint_2_impl}. The constraint is defined as two separate rules, for the sake of clarity, but their implementations are identical.
+The definition of the second constraint is detailed in Listing~\ref{lst:constraint_2_impl}. The constraint is defined as two separate rules, for the sake of clarity; however, their implementations are identical.
 
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[caption={Rule definition for constraint 2.}, captionpos=b, label=lst:constraint_2_impl, numbers=left]
@@ -149,14 +154,14 @@ ArchRule centralSendingPoint = SecArchUnit
 
 \section{Injecting Information into Source Code}
 
-Some of the architectural constraints require that the developer injects additional information into the source code. In some cases, this information is simply an indicator that says something about an entire class. Naming the class with a specific suffix is one approach to accomplish this. Another approach is to implement an empty interface, which is the technique used with Java's \texttt{Serializable}\footnote{https://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html} interface. 
+Some of our constraints require that the developer injects additional information into the source code. In some cases, this information is simply an indicator that says something about an entire class. Naming the class with a specific suffix is one approach to accomplish this. Another approach is to implement an empty interface, which is the technique used with Java's \texttt{Serializable}\footnote{https://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html} interface. 
 
-In other cases, however, the information may be required for methods of arbitrary signatures and even specific fields. For the purposes of flexibility and minimizing the obtrusiveness of our approach, any extra information is expressed in the form of annotations. These can be applied to classes, fields, methods and parameters without changing the underlying architecture of the system.
+In other cases, however, the information may be required for specific fields or methods of arbitrary signatures. For the purposes of flexibility and minimizing the obtrusiveness of our approach, any extra information is expressed in the form of annotations. These can be applied to classes, fields, methods and parameters without changing the underlying architecture of the system.
 
-The need for additional information within the source code becomes apparent in the case where a class contains public methods with varying degrees of security requirements. A typical example is found in constraint 4, where a class is responsible for handling user input. Some methods might receive predefined values, such as in the case of checkboxes, whereas others treat strings entered by the user.  The former type of input is guaranteed to be safe, whereas the latter entirely under the control of the attacker, thus introducing the need for sanitation. Using the broader predicate of entire classes (described in section \ref{sec:as-is}) would not allow the constraint to be limited to specific methods within a class (those receiving potentially malicious input), and later trace a call to a method providing sanitation. Thus, annotations provide the granularity needed to limit the scope of a constraint to only the applicable code units.
+The need for additional information within the source code becomes apparent in the case where a class contains public methods with varying degrees of security requirements. A typical example is found in constraint 4, where a class is responsible for handling user input. Some methods might receive predefined values, such as in the case of checkboxes, whereas others take strings entered by the user. The former type of input is guaranteed to be safe, whereas the latter is entirely under the control of the user, thus introducing the need for sanitation. Using the broader predicate of entire classes (described in Section~\ref{sec:as-is}) would not allow the constraint to be limited to specific methods within a class (those receiving potentially malicious input), and later trace a call to a method providing sanitation. Thus, annotations provide the granularity needed to limit the scope of a constraint to the applicable code units only.
 
 \subsection{Validate user input}
-User input comes in many forms, and as such, it is impossible to define a single algorithm to validate properly every single type. The problem grows further as queries (such as SQL) or other types of processed data (such as XML), each with its own set of grammar, are often formed using strings. As a consequence, the implemented constraint is more abstract as it checks whether a class that receives user input is said to either perform validation on its own or delegate the task another method. In total, four distinct cases conforming to the constraint where considered: 
+User input comes in many forms, and therefore, it is impossible to define a single algorithm to properly validate every single type. The problem grows further as queries (such as SQL) or other types of processed data (such as XML), each with its own set of grammar, are often formed using strings. As a consequence, the implemented constraint is more abstract as it checks whether a class that receives user input is said to either perform validation on its own or delegate the task another method. In total, four distinct cases conforming to the constraint where considered: 
 
 \begin{itemize}
     \item \textit{Method A} is annotated with both \textbf{UserInput} and \textbf{InputValidator}.
@@ -206,7 +211,7 @@ ArchRule limitResourceAllocation() {
 \end{lstlisting}
 \end{minipage}
 
-In BlogWeb, the RequestHandler class spawns new threads in order to handle several user requests concurrently. For the system to conform to the constraint, the ResourceRestriction annotation either has to be added to the entire class, or to the specific method that spawns the thread as shown in Figure~\ref{fig:toy_resource_restriction}. If not, the rule will fail, and the developer will have to ensure that the class cannot excessively spawn new threads.
+In BlogWeb, the RequestHandler class spawns new threads in order to handle several user requests concurrently. For the system to conform to the constraint, the ResourceRestriction annotation either has to be added to the entire class, or to the specific method that spawns the thread as shown in Figure~\ref{fig:toy_resource_restriction}. If not, the rule will report a violation, and the developer will have to ensure that the class cannot excessively spawn new threads.
 
 \begin{figure}
     \centering
@@ -220,7 +225,7 @@ In BlogWeb, the RequestHandler class spawns new threads in order to handle sever
 
 \section{Extending ArchUnit Analysis}
 
-In the current ArchUnit API, a rule that aims to constrain method calls can only be defined in terms of the signatures of the method and its parameters. This is a non-issue when the arguments passed to a method are of the same type as the parameters. However, the argument might also be a descendant of the parameter type. There is currently no support in ArchUnit to constrain the types of the objects that are actually being passed as arguments.
+In the current ArchUnit API, a rule that aims to constrain method calls can only be defined in terms of the signatures of the method and its parameters. This is not an issue when the arguments passed to a method are of the same type as the parameters. However, the argument might also be a descendant of the parameter type. There is currently no support in ArchUnit to constrain the types of the objects that are actually being passed as arguments.
 
 Consider constraint 7, which aims to ensure that no secrets are passed to the logger. Say there is a \texttt{Secret} annotation that marks all the classes whose instances must not be passed to the logger. An attempt can be made to enforce the constraint with the current ArchUnit API using a custom predicate, as seen in Listing~\ref{lst:constraint_6_attempt}. Given that a typical logger will accept either a plain string, or a format string along with an array of objects to be formatted, this architectural rule does little in the way of preventing secrets from being passed to such a logger.
 
@@ -313,7 +318,7 @@ In BlogWeb, the \texttt{password} field is considered an asset that must stay wi
 
 \subsection{Secrets must not be exposed in log messages}
 % Description
-The seventh and final constraint dictates that secrets must not be exposed in logs. There are a multitude of ways that a secret field can be exposed in a log message, e.g. through string concatenation, string formatting, or wrapping it in a different object and converting that object to its string representation. What these exposures have in common are that they issue method call to the logger where the secret has, in some way, flowed into the arguments.
+The seventh and final constraint dictates that secrets must not be exposed in logs. There are a multitude of ways that a secret field can be exposed in a log message, e.g. through string concatenation, string formatting, or wrapping it in a different object and converting that object to its string representation. What these exposures have in common is that they issue a method call to the logger where the secret has flowed into the arguments.
 
 % Rule definition
 The architectural rule is defined in Listing~\ref{lst:constraint_7_impl}. Rather than a single class representing the preferred logger, the constraint should prevent exposures in any loggers present in the system. As such, it accepts a predicate that should select all such logging facilities. The custom condition \texttt{passSecretArgumentTo} inspects the argument hints of all outgoing method calls for any members marked with the \texttt{Secret} annotation. Additionally, for each originating member found in the hints, it recursively checks the hints that have flowed into that member, in an attempt to constrain information flow with intermediate steps in different code units.

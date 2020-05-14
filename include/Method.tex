@@ -30,7 +30,7 @@ Starting from each of the three sources of architectural constraints described i
     \item Although somewhat included in the first criterion as it is a local issue, an entry must not relate to the correctness or best practice of the implementation of an algorithm. Examples include the practice of using session tokens with time-limited validity. \label{criterion_3}
     \item The entry must only relate to the system under design, thus ignoring the correctness and security of any external dependencies. An example can be found in SonarQube where the usage of a version of a library with known vulnerabilities is reported as a weakness. \label{criterion_4}
     \item The entry must not be dependent on externally defined data. A common example is that of user permissions where the mapping between a regulated functions and a users rights is performed using an access control list. \label{criterion_5}
-    \item Additionally, we deemed measures defined as the absence of certain functionality as less valuable due to the increased difficulty of enforcement \cite{haley_security_2008}.
+    \item Additionally, we deemed measures defined as the absence of certain functionality as less valuable due to the increased difficulty of enforcing them \cite{haley_security_2008}.
 \end{enumerate}
 
 \begin{figure}
@@ -62,12 +62,11 @@ As mentioned in Section~\ref{sec:evaluation}, an initial assessment of the tools
 Hence, the first five constraints are evaluated in SecArchUnit, SonarQube and PMD, whereas the final two constraints are evaluated solely in SecArchUnit.
 
 \subsection{Subjects of Analysis} \label{sct:selected-systems}
-\todo{describe projects, why they were selected}
 
 Several requirements were formed to guide the selection of projects to be included in the evaluation of our study. While some were necessary due to the languages supported by ArchUnit, others served to decrease the threats to validity. Detailed below is the final list of requirements for inclusion:
 
 \begin{enumerate}
-    \item \textbf{The project must be open source}. While ArchUnit can perform its static analysis directly on bytecode, the source code is an important [something] in order to establish an accurate ground truth about the system.
+    \item \textbf{The project must be open source}. The constraints defined in SecArchUnit cannot be applied to a system without access to the source code.
     \item \textbf{The source code must be written in Java}. As ArchUnit currently does not support any other language, a strict requirement had to be made regarding the langugage. 
     \item \textbf{The project must be previously used in literature concerning security}. Using projects already analyzed in previous literature would reduce the bias of the ground truth. 
     \item \textbf{The project must include some form of architectural description}. Architectural description would allow the constraints to be appropriately placed on a system in regards to the security requirements which it has been developed for.
@@ -79,7 +78,7 @@ Based on the presented criterion, three systems were selected for the evaluation
 
 \textbf{ATM Simulation} is, as the name suggests, a simulation of an atm machine. It features all the expected functions of an atm, such as money withdrawal, money deposit and balance checking. 
 
-\textbf{iTrust} is a web based electronic health records system. Originally designed as a part of a software evolution course at NSCU \cite{heckman_10_2018}, the project has been used in the domain of software traceability \cite{cleland-huang_software_2012}, requirements enginnering \cite{massey_aligning_2008} and security \cite{burger_framework_2018}.
+\textbf{iTrust} is a web based electronic health records system. Originally designed as a part of a software evolution course at NSCU \cite{heckman_10_2018}, the project has been used in the domain of software traceability \cite{cleland-huang_software_2012}, requirements engineering \cite{massey_aligning_2008} and security \cite{burger_framework_2018}.
 
 \begin{table}
     \centering
@@ -95,15 +94,20 @@ Based on the presented criterion, three systems were selected for the evaluation
     \label{tab:sample_systems}
 \end{table}
 
-\subsection{Ground Truth}
-\todo{procedure of analsysis}
-\todo{what constitutes as a security service}
-In the absence of any previous established ground truth, in large due to the fact that we defined the constraints, 
+\subsubsection{Qualitative Performance Metrics}\todo{improve heading}
 
-\subsection{Performance Metrics}
+
+\subsubsection{Performance Metrics}
 The imbalance between the designer, who needs to ensure that every single aspect of a system is secure, and the attacker, who needs to succeed only once, influences the metrics chosen to represent how well the extension to ArchUnit performs. Precision and recall were the metrics of choice, with the greater importance placed on the latter. 
 
 \todo{Define true positives, false positives, false negatives}
+
+\subsection{Ground Truth}
+A ground truth had to be set to validate the results of applying the tools to the included projects. The ground truth consisted of: a set of classes applicable to the concepts defined in the final list of constraints, annotations to the source code, and a record of each violation found. 
+
+In the absence of any previously established ground truth, in large because we defined the constraints, a structural analysis was performed for each of the systems. Our analysis was guided by the architectural descriptions supplied with the projects and the extraction of SecDFDs by Peldszus et al. \cite{peldszus_secure_2019}. Each constraint was applied to the system by analyzing every file in the project in a separate pass. Although time-consuming, performing a complete scan of the entire system for each constraint reduced the change of wrongfully dismissing a class and ensured that violations were detected.
+
+In order to reduce the bias of the ground truth, the analysis was performed individually, later comparing the results. In cases were the classification differed, a careful review of the reasoning behind each author choice was performed, resulting in a combined decision. 
 
 
 
