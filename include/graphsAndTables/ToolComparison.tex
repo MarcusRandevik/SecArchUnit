@@ -1,28 +1,31 @@
 \newcolumntype{g}{>{\columncolor{RowColor}}c}
 \newcolumntype{x}{>{\columncolor{RowColor}}l}
-\begin{table}[h]
+\begin{table}[ht]
 \begin{center}
 \begin{tabular}{lxggggg}
 \rowcolor{white}
-\textbf{Project}           & \textbf{Tool}    & \textbf{TP} & \textbf{FP} & \textbf{FN} & \textbf{Precision} & \textbf{Recall} \\
+\textbf{Project} & \textbf{Tool} & \textbf{TP} & \textbf{FP} & \textbf{FN} & \textbf{Precision} & \textbf{Recall} \\
 \hline
 \rowcolor{white}
-\multirow[t]{3}{*}{ATMsim}    & SecArchUnit      & 19          & 1           & 0           & 1               & 0.95            \\
-                           & SonarQube Plugin & 19          & 1           & 0           & 1               & 0.95            \\
-                           \rowcolor{white}
-                           & PMD Plugin       & 15          & 1           & 4           & 0.94               & 0.79            \\
+\multirow[t]{3}{*}{ATMSim}
+        & SecArchUnit & 19 & 1 & 0 & 0.95 & 1 \\
+        & SonarQube Plugin & 19 & 1 & 0 & 0.95 & 1 \\
+        \rowcolor{white}
+        & PMD Plugin & 15 & 1 & 4 & 0.94 & 0.79 \\
 \hline
 \rowcolor{white}
-\multirow[t]{3}{*}{JPetStore} & SecArchUnit      & 51          & 0           & 0           & 1                  & 1               \\
-                           & SonarQube Plugin & 51          & 0           & 0           & 1                  & 1               \\
-                           \rowcolor{white}
-                           & PMD Plugin       & 47          & 0           & 4           & 1                  & 0.92            \\
+\multirow[t]{3}{*}{JPetStore}
+        & SecArchUnit & 51 & 0 & 0 & 1 & 1 \\
+        & SonarQube Plugin & 51 & 0 & 0 & 1 & 1 \\
+        \rowcolor{white}
+        & PMD Plugin & 47 & 0 & 4 & 1 & 0.92 \\
 \hline
 \rowcolor{white}
-\multirow[t]{3}{*}{ITrust}    & SecArchUnit      & 216         & 3           & 0           & 0.97               & 1               \\
-                           & SonarQube Plugin & 216         & 0           & 0           & 1                  & 1               \\
-                           \rowcolor{white}
-                           & PMD Plugin       & 216         & 0           & 0           & 1                  & 1 \\
+\multirow[t]{3}{*}{ITrust}
+        & SecArchUnit & 216 & 3 & 0 & 0.99 & 1 \\
+        & SonarQube Plugin & 216 & 0 & 0 & 1 & 1 \\
+        \rowcolor{white}
+        & PMD Plugin & 216 & 0 & 0 & 1 & 1 \\
 \hline
 \end{tabular}
 \end{center}

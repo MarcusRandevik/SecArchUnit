@@ -1,8 +1,8 @@
 \chapter{Methodology}
 
-This chapter describes the adopted method for collecting relevant constraints, relating these to the common security-goals of CIAA, and later mapping them to functionality within ArchUnit. Second, this chapter presents the validation plan for expressing security constraints with ArchUnit (as is) by means of an illustration and for expressing additional constraints by means of a controlled experiment.
+This chapter describes the adopted method for collecting relevant constraints, relating these to the common security-goals of CIAA, and later mapping them to functionality within ArchUnit. Second, this chapter presents the validation plan for expressing security constraints with ArchUnit, both by comparing it to industry used static analysis tools and a separate analysis focusing on constraints that could only be expressed in ArchUnit.
 
-\section{Data collection}\label{sec:data_collection}
+\section{Data Collection}\label{sec:data_collection}
 
 The relevance of the security architectural constraints included in the study was ensured by performing a review of security measures and common weaknesses and compiling the result to a list of constraints. Completeness was not the primary goal of the review, but rather to provide a set of constraints derived from previous knowledge. Presented below are the three sources used to form the final list. 
 
@@ -46,42 +46,42 @@ The last part of compiling a list of security architectural constraints involved
 
 \section{Evaluation}\label{sec:evaluation}
 
-The study followed the research design described in \cite{stol_abc_2018} as a "solution-seeking + sample study."  The first part, solution-seeking, covers the overall idea of prosing a solution to an identified problem, namely integrating security architectural constraints within already established testing infrastructure.  The second part, a sample study, aimed to achieve generalizability by composing security architectural constraints that were not tied to a specific domain and later evaluating the performance of the tool when applied to several systems
+The study followed the research design described in \cite{stol_abc_2018} as a \say{solution-seeking + sample study.}  The first part, solution-seeking, covers the overall idea of proposing a solution to an identified problem, namely integrating security architectural constraints within already established testing infrastructure.  The second part, a sample study, aimed to achieve generalizability by composing security architectural constraints that were not tied to a specific domain and later evaluating the performance of the tool when applied to several systems.
 
 We evaluated ArchUnit in two ways, comparing it to the two industry used and open-source static analysis tools SonarQube and PMD, as well as a separate analysis focusing solely on ArchUnit. The separation had to be made as an initial assessment of both SonarQube and PMD showed that they could not track information flow. 
 
 In the section to follow, the design of the experiment is described in detail. 
 
-\subsection{Tools used in comparison}\label{sec_tools_used_in_comparison} \todo{fix}
+\subsection{Tools Used in Comparison}\label{sec_tools_used_in_comparison} \todo{fix}
 In order to test how reliably SecArchUnit can validate the constraints, we perform a comparison with two static analysis tools widely adopted in industry: SonarQube and PMD.
 While these tools have a multitude of built-in rules, none of these rules can be used to enforce the architectural security constraints presented in this thesis. However, both tools are extensible, allowing a developer to define custom rules using their respective APIs.
 
 \todo{describe limitations}
-As mentioned in \ref{sec:evaluation}, an initial assessment of the tools determined that constraints one through five are possible to implement and validate using SonarQube and PMD. %describe limitations
+As mentioned in Section~\ref{sec:evaluation}, an initial assessment of the tools determined that constraints one through five are possible to implement and validate using SonarQube and PMD. Constraints six and seven, however, track the flow of information in the system, which neither of these tools inherently support. While it should be possible to extend these tools with such analysis, doing so is outside the scope of this thesis.
+%In addition, these tools evaluate a rule on a single class at a time which further hinders any attempts to track information flow between multiple classes.
+Hence, the first five constraints are evaluated in SecArchUnit, SonarQube and PMD, whereas the final two constraints are evaluated solely in SecArchUnit.
 
-Hence, the first five constraints in evaluated SecArchUnit, SonarQube and PMD, whereas the final two constraints are evaluated solely in SecArchUnit.
-
-\subsection{Subjects of analysis} \label{sct:selected-systems}
+\subsection{Subjects of Analysis} \label{sct:selected-systems}
 \todo{describe projects, why they were selected}
 
 Several requirements were formed to guide the selection of projects to be included in the evaluation of our study. While some were necessary due to the languages supported by ArchUnit, others served to decrease the threats to validity. Detailed below is the final list of requirements for inclusion:
 
 \begin{enumerate}
-    \item \textbf{The project must be open source}. The static analysis of ArchUnit inherently can not be performed system where the source code is not available.
+    \item \textbf{The project must be open source}. While ArchUnit can perform its static analysis directly on bytecode, the source code is an important [something] in order to establish an accurate ground truth about the system.
     \item \textbf{The source code must be written in Java}. As ArchUnit currently does not support any other language, a strict requirement had to be made regarding the langugage. 
-    \item \textbf{The project must be previously used in literature concerning security}. Using projects already analyzed in previous litterateur would reduce the bias of the ground truth. 
+    \item \textbf{The project must be previously used in literature concerning security}. Using projects already analyzed in previous literature would reduce the bias of the ground truth. 
     \item \textbf{The project must include some form of architectural description}. Architectural description would allow the constraints to be appropriately placed on a system in regards to the security requirements which it has been developed for.
 \end{enumerate}
 
-Based on the presented criterion, three systems were selected for the evaluation, JPetStore, ATM Simulation and iTrust. A summary of the characteristics for each system can be sen in table \ref{tab:sample_systems}.
+Based on the presented criterion, three systems were selected for the evaluation: JPetStore, ATM Simulation and iTrust. All projects had previously been included in a study on secure data flow by Peldszus et al \cite{peldszus_secure_2019}. A summary of the characteristics for each system can be seen in Table~\ref{tab:sample_systems}. A more detailed description of each system is seen below: \todo{improve transition}
 
-\textbf{JPetStore}, originally designed as an example of how to use the J2EE framework, is built on top of MyBatis 3, Spring and the Stripes framework. The application is a minimal implementation of an online pet store. It has been used both as an industry benchmark application \cite{luo_forepost_2017} and in the context of security analysis \cite{peldszus_secure_2019}
+\textbf{JPetStore}, originally designed as an example of how to use the J2EE framework, is built on top of MyBatis 3, Spring and the Stripes framework. The application is a minimal implementation of an online pet store. In addition to the inclusion of JPetStore in security litterateur, It has been used both as an industry benchmark application as well in studies on application performance \cite{luo_forepost_2017}.
 
-\textbf{ATM Simulator}
+\textbf{ATM Simulation} is, as the name suggests, a simulation of an atm machine. It features all the expected functions of an atm, such as money withdrawal, money deposit and balance checking. 
 
-\textbf{iTrust}
+\textbf{iTrust} is a web based electronic health records system. Originally designed as a part of a software evolution course at NSCU \cite{heckman_10_2018}, the project has been used in the domain of software traceability \cite{cleland-huang_software_2012}, requirements enginnering \cite{massey_aligning_2008} and security \cite{burger_framework_2018}.
 
-\begin{table}[]
+\begin{table}
     \centering
     \begin{tabular}{lccc}
          Project & lloc & classes & methods \\
@@ -91,15 +91,16 @@ Based on the presented criterion, three systems were selected for the evaluation
          iTrust & \numprint{28133} & 423 & \numprint{3691}\\
          \hline
     \end{tabular}
-    \caption{Characteristics of the project use in the evaluation, adapted from \cite{peldszus_secure_2019}. \textbf{lloc} = logical lines of code.}
+    \caption{Characteristics of the projects used in the evaluation, adapted from \cite{peldszus_secure_2019}. \textbf{lloc} = logical lines of code.}
     \label{tab:sample_systems}
 \end{table}
 
 \subsection{Ground Truth}
 \todo{procedure of analsysis}
 \todo{what constitutes as a security service}
+In the absence of any previous established ground truth, in large due to the fact that we defined the constraints, 
 
-\subsection{Performance metrics}
+\subsection{Performance Metrics}
 The imbalance between the designer, who needs to ensure that every single aspect of a system is secure, and the attacker, who needs to succeed only once, influences the metrics chosen to represent how well the extension to ArchUnit performs. Precision and recall were the metrics of choice, with the greater importance placed on the latter. 
 
 \todo{Define true positives, false positives, false negatives}

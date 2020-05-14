@@ -5,12 +5,14 @@ This chapter presents an evaluation of the constraints when applied to a number 
 \section{Comparison with Industry Tools}
 As mentioned in Section~\ref{sec_tools_used_in_comparison}, constraints 1-5 can be validated in both SonarQube and PMD through the definitions of custom rules. The constraints are applied to the test systems presented in Section~\ref{sct:selected-systems} and validated using each of the three tools. Both the relative and absolute frequencies of violations of each constraint can be seen in Figure~\ref{bar:rel_frequency_violation_compraison} and Figure~\ref{bar:frequency_violation_compraison} respectively.
 
+True positives (TP) refer to violations of constraints that are reported by the tool and coincide with the ground truth. False positives (FP) are violations reported by the tool that are not included in the ground truth. False negatives (FN) are violations that exist in the ground truth but do not get reported by the tool.
+
 \input{include/graphsAndTables/RelativeConstraintFrequency}
 \input{include/graphsAndTables/ConstraintFrequency}
 
 As shown in the figures, the tools were evaluated using imbalanced data. Constraint 1 accounted for a majority of all violations found throughout all three systems, while no system violated constraint 5. Addtionally, iTrust was the only system to contain a violation of constraint 3. 
 
-Each tool is evaluated according to the performance metrics, i.e. precision and recall. These results are presented in Table~\ref{tab:results_comparison}. Both in regards to precision, as well as recall, the tools performed equally. However, the causes of failure, in cases where the results of the tools varied, differed noticeably. The examples are described below:
+Each tool is evaluated according to the performance metrics, i.e. precision and recall. These results are presented in Table~\ref{tab:results_comparison}. Both in regards to precision, as well as recall, the tools performed equally. However, the causes of failure differed noticeably in cases where the results of the tools varied. The examples are described below:
 
 \begin{itemize}
     \item In ATM simulator, the same false positive occurred in all three tools. This was in relation to constraint 3, where a subclass of the sending point contained a method call to the sender. Additionally, PMD had 4 false negatives which occurred because it was unable to determine the classes that these method calls targeted.
