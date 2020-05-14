@@ -29,14 +29,14 @@ class UserAuthenticator {
 
 UserAuthenticator ..> User
 UserAuthenticator ..> UserLoginRequest
-UserService --> UserAuthenticator
+UserService ..> UserAuthenticator
 
 class UserAuthorizer {
     + boolean canPublishStatus()
 }
 
-UserAuthorizer --> User
-UserService --> UserAuthorizer
+UserAuthorizer ..> User
+UserService ..> UserAuthorizer
 
 class HttpResponse {
     + void write(Object response)
@@ -47,7 +47,7 @@ class OutboundMessageSanitizer {
     - void sanitizeMessage(Object message)
 }
 
-OutboundMessageSanitizer --> HttpResponse
+OutboundMessageSanitizer ..> HttpResponse
 
 class StatusSanitizer {
     + String sanitizeStatusMessage(String statusMessage)
