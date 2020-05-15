@@ -11,8 +11,9 @@
     enlarge x limits=0.25,
     xbar legend,
     legend pos=outer north east,
-    ylabel={Frequency},
+    ylabel={Violations},
     symbolic x coords={ATMSim,JPetStore,ITrust},
+    %xlabel={System},
     xtick=data,
     nodes near coords,
     nodes near coords align={vertical},
@@ -31,6 +32,6 @@
 \end{axis}
 \end{tikzpicture}
 
-\caption{The frequency of constraint violations found in the three projects.}
-\label{bar:frequency_violation_compraison}
+\caption{The constraint violations found in the ground truth of each system.}
+\label{bar:frequency_violation_comparison}
 \end{figure}

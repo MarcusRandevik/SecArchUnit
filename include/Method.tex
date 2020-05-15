@@ -10,7 +10,7 @@ The relevance of the security architectural constraints included in the study wa
 The Common Architectural Weakness Enumeration catalog \cite{santos_catalog_2017} details 224 common weaknesses in security architectures. Each entry has a description of the weakness and exemplifications of how it could manifest itself in the source code, when applicable. In some entries, there are recommendations on what techniques can be used to detect the weakness, along with mitigation strategies.
 
 \textbf{Security patterns:}
-Similar to the usage of general design patterns made famous in \cite{gamma_design_1995}, security patterns provide a reusable and domain-independent solution to a known problem. More specifically, this study focused on security patterns for the design phase, as defined in \cite{yoshioka_survey_2008}. While the security pattern repository\footnote{http://sefm.cs.utsa.edu/repository/} lists over 170 security patterns, not all are provided with sufficient detail or at the appropriate level of abstraction. As a result, the report by Scandariato et al. \cite{scandariato_system_2006}  which provides a filtered list of patterns.
+Similar to the usage of general design patterns made famous in \cite{gamma_design_1995}, security patterns provide a reusable and domain-independent solution to a known problem. More specifically, this study focused on security patterns for the design phase, as defined in \cite{yoshioka_survey_2008}. While the security pattern repository\footnote{\url{http://sefm.cs.utsa.edu/repository/}} lists over 170 security patterns, not all are provided with sufficient detail or at the appropriate level of abstraction. As a result, the report by Scandariato et al. \cite{scandariato_system_2006}  which provides a filtered list of patterns.
 
 
 \textbf{Security rules:} \label{subsec:security_rules}
@@ -52,7 +52,7 @@ We evaluated ArchUnit in two ways, comparing it to the two industry used and ope
 
 In the section to follow, the design of the experiment is described in detail. 
 
-\subsection{Tools Used in Comparison}\label{sec_tools_used_in_comparison} \todo{fix}
+\subsection{Tools Used in Comparison}\label{sec_tools_used_in_comparison}
 In order to test how reliably SecArchUnit can validate the constraints, we perform a comparison with two static analysis tools widely adopted in industry: SonarQube and PMD.
 While these tools have a multitude of built-in rules, none of these rules can be used to enforce the architectural security constraints presented in this thesis. However, both tools are extensible, allowing a developer to define custom rules using their respective APIs.
 
@@ -60,6 +60,26 @@ While these tools have a multitude of built-in rules, none of these rules can be
 As mentioned in Section~\ref{sec:evaluation}, an initial assessment of the tools determined that constraints one through five are possible to implement and validate using SonarQube and PMD. Constraints six and seven, however, track the flow of information in the system, which neither of these tools inherently support. While it should be possible to extend these tools with such analysis, doing so is outside the scope of this thesis.
 %In addition, these tools evaluate a rule on a single class at a time which further hinders any attempts to track information flow between multiple classes.
 Hence, the first five constraints are evaluated in SecArchUnit, SonarQube and PMD, whereas the final two constraints are evaluated solely in SecArchUnit.
+
+
+
+\subsection{Evaluation Metrics}
+The included tools will be evaluated in two aspects, performance and usability. Performance relates to the ability to detect violations of a constraint reliably, whereas usability relates to time needed to implement constraint and how well the tool captures the concepts used in architectural descriptions. The following sections provide further detail for each aspect.
+
+\subsubsection{Performance}
+The performance metrics that were chosen to represent how reliably the tools detect violations of security constraints are precision $P$ and recall $R$. They are defined as follows:
+
+\[ P = TP / (TP + FP) \]
+\[ R = TP / (TP + FN) \]
+
+A true positive (TP) is a report of a line containing a security constraint violation corresponding to an equal in the ground truth. A false positive (FP) refers to the report of a violation not listed in the ground truth. Finally, a false negative (FN) is the failure to report a violation listed in the ground truth. As the mechanism of reporting a violation differed among the included tools, some tolerance was employed regarding the line at which a violation was reported. For example, a function that receives user input could either be reported inside the method body or at the declaration.
+
+The imbalance between the designer, who needs to ensure that every single aspect of a system is secure, and the attacker, who needs to succeed only once, influences the relative importance of the two metrics. Precision, which represents the probability of a reported violation, indeed being a violation, is relevant as the time allocated for fixes is limited. However, recall, which represents the probability of a violation being detected, is paramount as a single missed security constraint violation could be exploited. Consequently, recall was given greater weight when evaluating the results of the tools.
+
+\subsubsection{Usability}
+A significant aspect of applying new tools to a project is the time needed for training. Although SecArchUnit can integrate into existing testing infrastructure and CI/CD pipelines, the implementation of appropriate security architectural constraints is a non-trivial issue. Logging the time needed to implement the constraint included in the study was used as an estimate of the effort needed to construct new constraints. The first constraints were considered as learning examples to reduce the bias introduced by us having more experience of using SecArchUnit.
+
+\textbf{Architectural appropriateness of concepts}
 
 \subsection{Subjects of Analysis} \label{sct:selected-systems}
 
@@ -72,13 +92,13 @@ Several requirements were formed to guide the selection of projects to be includ
     \item \textbf{The project must include some form of architectural description}. Architectural description would allow the constraints to be appropriately placed on a system in regards to the security requirements which it has been developed for.
 \end{enumerate}
 
-Based on the presented criterion, three systems were selected for the evaluation: JPetStore, ATM Simulation and iTrust. All projects had previously been included in a study on secure data flow by Peldszus et al \cite{peldszus_secure_2019}. A summary of the characteristics for each system can be seen in Table~\ref{tab:sample_systems}. A more detailed description of each system is seen below: \todo{improve transition}
+Based on the presented criterion, three systems were selected for the evaluation: JPetStore, ATM Simulation and iTrust. All projects had previously been included in a study on secure data flow by Peldszus et al \cite{peldszus_secure_2019}. A summary of the characteristics for each system can be seen in Table~\ref{tab:sample_systems}. A more detailed description of each system is seen below:
 
 \textbf{JPetStore}, originally designed as an example of how to use the J2EE framework, is built on top of MyBatis 3, Spring and the Stripes framework. The application is a minimal implementation of an online pet store. In addition to the inclusion of JPetStore in security litterateur, It has been used both as an industry benchmark application as well in studies on application performance \cite{luo_forepost_2017}.
 
 \textbf{ATM Simulation} is, as the name suggests, a simulation of an atm machine. It features all the expected functions of an atm, such as money withdrawal, money deposit and balance checking. 
 
-\textbf{iTrust} is a web based electronic health records system. Originally designed as a part of a software evolution course at NSCU \cite{heckman_10_2018}, the project has been used in the domain of software traceability \cite{cleland-huang_software_2012}, requirements engineering \cite{massey_aligning_2008} and security \cite{burger_framework_2018}.
+\textbf{iTrust} is a web based electronic health records system. Originally designed as a part of a software evolution course at NSCU \cite{heckman_10_2018}, the project has been used in the domain of software traceability \cite{cleland-huang_software_2012}, requirements engineering \cite{massey_aligning_2008} and security \cite{burger_framework_2018, xiao_automated_2012}.
 
 \begin{table}
     \centering
@@ -94,20 +114,12 @@ Based on the presented criterion, three systems were selected for the evaluation
     \label{tab:sample_systems}
 \end{table}
 
-\subsubsection{Qualitative Performance Metrics}\todo{improve heading}
-
-
-\subsubsection{Performance Metrics}
-The imbalance between the designer, who needs to ensure that every single aspect of a system is secure, and the attacker, who needs to succeed only once, influences the metrics chosen to represent how well the extension to ArchUnit performs. Precision and recall were the metrics of choice, with the greater importance placed on the latter. 
-
-\todo{Define true positives, false positives, false negatives}
-
 \subsection{Ground Truth}
 A ground truth had to be set to validate the results of applying the tools to the included projects. The ground truth consisted of: a set of classes applicable to the concepts defined in the final list of constraints, annotations to the source code, and a record of each violation found. 
 
 In the absence of any previously established ground truth, in large because we defined the constraints, a structural analysis was performed for each of the systems. Our analysis was guided by the architectural descriptions supplied with the projects and the extraction of SecDFDs by Peldszus et al. \cite{peldszus_secure_2019}. Each constraint was applied to the system by analyzing every file in the project in a separate pass. Although time-consuming, performing a complete scan of the entire system for each constraint reduced the change of wrongfully dismissing a class and ensured that violations were detected.
 
-In order to reduce the bias of the ground truth, the analysis was performed individually, later comparing the results. In cases were the classification differed, a careful review of the reasoning behind each author choice was performed, resulting in a combined decision. 
+In order to reduce the bias of the ground truth, the analysis was performed individually, later comparing the results. In cases were the classification differed, a careful review of the reasoning behind each author's choice was performed, resulting in a combined decision. 
 
 
 
