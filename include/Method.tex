@@ -2,7 +2,9 @@
 
 This chapter describes the adopted method for collecting relevant constraints, relating these to the common security-goals of CIAA, and later mapping them to functionality within ArchUnit. Second, this chapter presents the validation plan for expressing security constraints with ArchUnit, both by comparing it to industry used static analysis tools and a separate analysis focusing on constraints that could only be expressed in ArchUnit.
 
-\section{Data Collection}\label{sec:data_collection}
+\section{Identification of design constraints}
+
+\subsection{Data collection} \label{sec:data_collection}
 
 The relevance of the security architectural constraints included in the study was ensured by performing a review of security measures and common weaknesses and compiling the result to a list of constraints. Completeness was not the primary goal of the review, but rather to provide a set of constraints derived from previous knowledge. Presented below are the three sources used to form the final list. 
 
@@ -16,7 +18,7 @@ Similar to the usage of general design patterns made famous in \cite{gamma_desig
 \textbf{Security rules:} \label{subsec:security_rules}
 Architectural security rules constrain the implementation of a system while being less solution-oriented compared to security patterns. Eden and Kazman differentiate architectural security rules from those defined on a level of source code based on two criteria, locality and intension/extension \cite{eden_architecture_2003}. Architectural rules are both non-local and intensional, meaning that they affect all or several parts of the system while having \say{infinitely-many possible instances}. In \cite{franch_constraining_2019}, Jasser presents a catalog of architectural security rules. Although the entire catalog of 150 security rules is not yet available, the initial list of 22 included in the paper was used in our study.
 
-\section{Filtering}\label{sec:processing}
+\subsection{Filtering}\label{sec:processing}
 
 %Elaborate. Perhaps explaining how the sources were analyzed. Did you analyse one right after the other, were there iterations, did you meet after each iteration to discuss your findings and synchronize individually derived subset, or did you work together? How many constraints were taken from individual sources, which of those were grouped? What is the proportion of CIAA coverage in the final list (Show CIAA in table 4.2 and show #ID linking the chosen ones from 4.1)? What was the rational for grouping? Perhaps explicitly enumerating  the "rules" you followed for inclusion would be nice (if there are more than two :) ...), e.g.:
 %1) only security related architectural constraints were considered
@@ -25,11 +27,11 @@ Architectural security rules constrain the implementation of a system while bein
 Starting from each of the three sources of architectural constraints described in Section~\ref{sec:data_collection}, the first step of the process, shown in Figure~\ref{fig:mapping_process}, was to select the entries that could be formulated as enforceable constraint in the context of our project. The criteria for inclusion were the following: 
 
 \begin{enumerate}
-    \item The entry must be related to the architectural design of a system, i.e., non-local and intensional (as described in section \ref{subsec:security_rules}. \label{criterion_1}
+    \item The entry must be related to the architectural design of a system, i.e., non-local and intensional (as described in Section~\ref{subsec:security_rules}). \label{criterion_1}
     \item It must be possible to enforce the entry through static analysis. An example on a non enforceable constraint is "No two instances of a microservice are deployed on the same machine", as the number of machines deployed is a dynamic property. \label{criterion_2}
     \item Although somewhat included in the first criterion as it is a local issue, an entry must not relate to the correctness or best practice of the implementation of an algorithm. Examples include the practice of using session tokens with time-limited validity. \label{criterion_3}
     \item The entry must only relate to the system under design, thus ignoring the correctness and security of any external dependencies. An example can be found in SonarQube where the usage of a version of a library with known vulnerabilities is reported as a weakness. \label{criterion_4}
-    \item The entry must not be dependent on externally defined data. A common example is that of user permissions where the mapping between a regulated functions and a users rights is performed using an access control list. \label{criterion_5}
+    \item The entry must not be dependent on externally defined data. A common example is that of user permissions where the mapping between a regulated function and a users rights is performed using an access control list, external to the source code. \label{criterion_5}
     \item Additionally, we deemed measures defined as the absence of certain functionality as less valuable due to the increased difficulty of enforcing them \cite{haley_security_2008}.
 \end{enumerate}
 
@@ -44,20 +46,22 @@ Previous research on design notations of secure systems have shown a skew toward
 
 The last part of compiling a list of security architectural constraints involved combining the selected entries to remove duplicates and group similar concepts. Duplication involved both a single source having several entries, such as CAWE having input validation weakness for multiple tools and technologies (e.g., SQL, LDAP) and different sources having entries for the same concept, such as the security pattern input guard and the previously mentioned input validation weaknesses. Grouping similar concepts also allowed for the constraints to be more general, thus making them applicable for a broader set of systems. 
 
-\section{Evaluation}\label{sec:evaluation}
 
-The study followed the research design described in \cite{stol_abc_2018} as a \say{solution-seeking + sample study.}  The first part, solution-seeking, covers the overall idea of proposing a solution to an identified problem, namely integrating security architectural constraints within already established testing infrastructure.  The second part, a sample study, aimed to achieve generalizability by composing security architectural constraints that were not tied to a specific domain and later evaluating the performance of the tool when applied to several systems.
 
-We evaluated ArchUnit in two ways, comparing it to the two industry used and open-source static analysis tools SonarQube and PMD, as well as a separate analysis focusing solely on ArchUnit. The separation had to be made as an initial assessment of both SonarQube and PMD showed that they could not track information flow. 
+\section{Evaluation of the proposed approach}\label{sec:evaluation}
 
-In the section to follow, the design of the experiment is described in detail. 
+This work followed the research design described in \cite{stol_abc_2018} as a \say{solution-seeking + sample study.}  The first part, solution-seeking, covers the overall idea of proposing a solution to an identified problem, namely integrating security architectural constraints within already established testing infrastructure.  The second part, a sample study, aimed to achieve generalizability by composing security architectural constraints that were not tied to a specific domain and later evaluating the performance of the tool when applied to several systems.
 
-\subsection{Tools Used in Comparison}\label{sec_tools_used_in_comparison}
+%We evaluated ArchUnit in two ways, comparing it to the two industry used and open-source static analysis tools SonarQube and PMD, as well as a separate analysis focusing solely on ArchUnit. The separation had to be made as an initial assessment of both SonarQube and PMD showed that they could not track information flow. 
+
+%In the section to follow, the design of the experiment is described in detail. 
+
+\subsection{Comparison to reference tools}\label{sec_tools_used_in_comparison}
 In order to test how reliably SecArchUnit can validate the constraints, we perform a comparison with two static analysis tools widely adopted in industry: SonarQube and PMD.
 While these tools have a multitude of built-in rules, none of these rules can be used to enforce the architectural security constraints presented in this thesis. However, both tools are extensible, allowing a developer to define custom rules using their respective APIs.
 
 \todo{describe limitations}
-As mentioned in Section~\ref{sec:evaluation}, an initial assessment of the tools determined that constraints one through five are possible to implement and validate using SonarQube and PMD. Constraints six and seven, however, track the flow of information in the system, which neither of these tools inherently support. While it should be possible to extend these tools with such analysis, doing so is outside the scope of this thesis.
+An initial assessment of the tools determined that constraints 1-5 are possible to implement and validate using SonarQube and PMD. Constraints 6-7, however, track the flow of information in the system, which neither of these tools inherently support. While it should be possible to extend these tools with such analysis, doing so is outside the scope of this thesis.
 %In addition, these tools evaluate a rule on a single class at a time which further hinders any attempts to track information flow between multiple classes.
 Hence, the first five constraints are evaluated in SecArchUnit, SonarQube and PMD, whereas the final two constraints are evaluated solely in SecArchUnit.
 
@@ -87,7 +91,7 @@ Several requirements were formed to guide the selection of projects to be includ
 
 \begin{enumerate}
     \item \textbf{The project must be open source}. The constraints defined in SecArchUnit cannot be applied to a system without access to the source code.
-    \item \textbf{The source code must be written in Java}. As ArchUnit currently does not support any other language, a strict requirement had to be made regarding the langugage. 
+    \item \textbf{The source code must be written in Java}. As SecArchUnit does not support any other language, a strict requirement had to be made regarding the language. 
     \item \textbf{The project must be previously used in literature concerning security}. Using projects already analyzed in previous literature would reduce the bias of the ground truth. 
     \item \textbf{The project must include some form of architectural description}. Architectural description would allow the constraints to be appropriately placed on a system in regards to the security requirements which it has been developed for.
 \end{enumerate}
