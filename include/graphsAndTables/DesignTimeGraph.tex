@@ -1,0 +1,38 @@
+\definecolor{lightblue}{RGB}{102, 178, 255}
+
+\begin{figure}
+    \centering
+    \captionsetup{justification=centering}
+    \begin{tikzpicture}
+    \begin{axis}[
+        width = 11cm,
+        ybar,
+        ymin=0,
+        ymajorgrids=true,
+        enlarge x limits=0.20,
+        xbar legend,
+        legend pos=outer north east,
+        ylabel={Time to implement (hours)},
+        symbolic x coords={SecArchUnit,SonarQube,PMD},
+        xtick=data,
+        nodes near coords,
+        ]
+    % C1
+    \addplot[black, postaction={pattern=north east lines}] coordinates {(SecArchUnit,6) (SonarQube,8) (PMD,10)};
+    % C2
+    \addplot[black, postaction={pattern=north east lines}] coordinates {(SecArchUnit,5) (SonarQube,9) (PMD,9)};
+    % C3
+    \addplot[blue, fill=blue!30!white] coordinates {(SecArchUnit,3) (SonarQube,5) (PMD,6)};
+    % C4
+    \addplot[red, fill=red!30!white] coordinates {(SecArchUnit,5) (SonarQube,7) (PMD,8)};
+    % C5
+    \addplot[brown!60!black, fill=brown!30!white] coordinates {(SecArchUnit,2) (SonarQube,4) (PMD,7)};
+    \legend{Constraint 1,Constraint 2,Constraint 3, Constraint 4, Constraint 5}
+    \end{axis}
+    \end{tikzpicture}
+    \caption
+        [Time to implement each constraint]
+        {Time to implement each constraint.}
+    \label{fig:Design_time}
+\end{figure}
+

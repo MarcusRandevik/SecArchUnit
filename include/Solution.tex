@@ -12,7 +12,9 @@ A UML class diagram of BlogWeb is illustrated in Figure~\ref{fig:toy_application
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{figure/ToyApp.png}
-    \caption{A UML class diagram of the toy system BlogWeb.}
+    \caption
+        [UML class diagram of the toy system BlogWeb]
+        {A UML class diagram of the toy system BlogWeb.}
     \label{fig:toy_application}
 \end{figure}
 
@@ -22,13 +24,23 @@ BlogWeb is, as the name suggests, a blog website providing users with the abilit
 \section{Support in ArchUnit as-is}\label{sec:as-is}
 ArchUnit contains an extensive vocabulary for expressing architectural constraints in a sentence-like manner, as shown through an example in Listing~\ref{lst:standard_vocabulary}. This rule is defined entirely using the standard vocabulary and enforces complete mediation, a security pattern which dictates that some internal classes must only be accessed through a mediator.
 
-\begin{minipage}{\linewidth}
+%\newenvironment{customenv}
+%    {
+%    \renewcommand{\ttdefault}{pcr}
+%    \lstset{emph={rule},emphstyle=\bfseries}
+%    }
+
+%\begin{customenv}
+\begin{center}
+\begin{minipage}{0.90\linewidth}
 \begin{lstlisting}[caption={Example of a rule that is expressed with the standard vocabulary.}, captionpos=b, label=lst:standard_vocabulary, numbers=left]
 ArchRule rule = classes()
     .that().resideInAPackage("..internal..")
     .should().onlyBeAccessed().byAnyPackage("..mediator..");
 \end{lstlisting}
 \end{minipage}
+\end{center}
+%\end{customenv}
 
 Rules in ArchUnit are composed of three parts. The first part (line 1 in Listing~\ref{lst:standard_vocabulary}) is the type of Java constructs that should be inspected; namely classes, fields or methods. The second part (line 2) is a predicate that is used to filter for constructs related to the constraint. The third part (line 3) describes the logical condition that must hold true for all of the selected constructs. In short, rules are generally expressed as sentences of the form \say{The \textbf{constructs} that match \textbf{predicate} should fulfill \textbf{condition}.}
 
@@ -192,7 +204,9 @@ In BlogWeb, a user publishes a status update in the form of a string that the Us
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{figure/toyexamples/validate_input_toy_system.png}
-    \caption{Applying constraint 4 to the model of BlogWeb using added annotations on the UserService and StatusSanitizer class.}
+    \caption
+        [Applying constraint 4 to BlogWeb]
+        {Applying constraint 4 to the model of BlogWeb using added annotations on the UserService and StatusSanitizer class.}
     \label{fig:validate_input_toy_system}
 \end{figure}
 
@@ -221,7 +235,9 @@ In BlogWeb, the \texttt{RequestHandler} class spawns new threads in order to han
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{figure/toyexamples/resource_restriction.png}
-    \caption{Applying constraint 5 to the model of BlogWeb using the added annotation on the RequestHandler class.}
+    \caption
+        [Applying constraint 5 to BlogWeb]
+        {Applying constraint 5 to the model of BlogWeb using the added annotation on the RequestHandler class.}
     \label{fig:toy_resource_restriction}
 \end{figure}
 
@@ -257,7 +273,9 @@ The visitor of most interest to us is \texttt{MethodVisitor}\footnote{\url{https
 \begin{figure}
     \centering
     \includegraphics[width=0.6\textwidth]{figure/extension/MethodProcessor1.png}
-    \caption{The immediate context of the \texttt{MethodProcessor} class in ArchUnit, responsible for analyzing code units.}
+    \caption
+        [The context of the \texttt{MethodProcessor} class in ArchUnit]
+        {The immediate context of the \texttt{MethodProcessor} class in ArchUnit, responsible for analyzing code units.}
     \label{fig:method_processor_1}
 \end{figure}
 
@@ -269,7 +287,9 @@ Conveniently, ASM provides an extension of its \texttt{MethodVisitor} class, cal
 \begin{figure}
     \centering
     \includegraphics[width=0.7\textwidth]{figure/extension/MethodProcessor2.png}
-    \caption{Changes made to the analysis of code units.}
+    \caption
+        [Changes made to the analysis of code units]
+        {Changes made to the analysis of code units.}
     \label{fig:method_processor_2}
 \end{figure}
 
@@ -291,7 +311,9 @@ Once the analysis of all classes has been completed and SecArchUnit has built it
 \begin{figure}
     \centering
     \includegraphics[width=0.7\textwidth]{figure/extension/DomainChanges1.png}
-    \caption{Changes made to the domain surrounding code units.}
+    \caption
+        [Changes made to the domain surrounding code units]
+        {Changes made to the domain surrounding code units.}
     \label{fig:domain_changes_1}
 \end{figure}
 
@@ -318,7 +340,9 @@ In BlogWeb, the \texttt{password} field is considered an asset that must stay wi
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.6\textwidth]{figure/toyexamples/Assets.png}
-    \caption{Application of constraint 6 to BlogWeb.}
+    \caption
+        [Application of constraint 6 to BlogWeb]
+        {Application of constraint 6 to BlogWeb.}
     \label{fig:assets_toy_system}
 \end{figure}
 
@@ -355,6 +379,8 @@ ArchRule doNotLogSecrets = SecArchUnit
 \begin{figure}
     \centering
     \includegraphics[width=0.2\textwidth]{figure/toyexamples/Secrets.png}
-    \caption{Annotation added to BlogWeb for constraint 7.}
+    \caption
+        [Annotation added to BlogWeb for constraint 7]
+        {Annotation added to BlogWeb for constraint 7.}
     \label{fig:secrets_toy_system}
 \end{figure}

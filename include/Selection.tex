@@ -16,6 +16,10 @@ Although both the architectural rules found in Jasser \cite{franch_constraining_
 % (2020-04-10) Previous entry 16 and 17 were merged in table 4.1 instead of 4.2 as they were previously not grouped due to sub-goal differences
 
 \begin{table}
+\captionsetup{justification=centering}
+\caption
+    [Security constraints and their related CIAA goals]
+    {Security constraints and their related CIAA goals.}
 \begin{center}
 \begin{tabular}{lp{10.4cm}ll}
 \hline
@@ -49,7 +53,6 @@ Although both the architectural rules found in Jasser \cite{franch_constraining_
 \hline
 \end{tabular}
 \end{center}
-\caption{Security constraints and their related CIAA goals.}
 \label{tab:all_measures}
 \end{table}
 
@@ -58,6 +61,10 @@ Although both the architectural rules found in Jasser \cite{franch_constraining_
 As explained in Section~\ref{sec:limitations}, the aim is not to demonstrate the enforceability of as many constraints as possible, but rather to investigate the feasibility of using the tool in this manner. To that end, a subset of the full list of security constraints is selected for enforcement. The final list contains 7 architectural security constraints, as this allows us to cover at least one constraint from each goal in the CIAA model. The selected constraints can be seen in Table~\ref{tab:selected_measures}. The remainder of this section presents each selected constraint in further detail.
 
 \begin{table}
+\captionsetup{justification=centering}
+\caption
+    [Constraints that have been selected for enforcement]
+    {Constraints that have been selected for enforcement.\\Column \#\textsubscript{4.1} refers to the ID of the constraint in Table~\ref{tab:all_measures}.}
 \begin{center}
 \begin{tabular}{ccp{12.4cm}}
 \hline
@@ -76,7 +83,6 @@ As explained in Section~\ref{sec:limitations}, the aim is not to demonstrate the
 \hline
 \end{tabular}
 \end{center}
-\caption{Constraints that have been selected for enforcement. Column \#\textsubscript{4.1} refers to the ID of the constraint in Table~\ref{tab:all_measures}.}
 \label{tab:selected_measures}
 \end{table}
 
@@ -142,7 +148,7 @@ The ability to receive and process user input is fundamental to every computer s
  
  \begin{center}
 \begin{minipage}{0.65\textwidth}
-\begin{lstlisting}[caption={Example of a vulnerable SQL query}, captionpos=b, label=lst:SQL_vul, numbers=left, showstringspaces=false]
+\begin{lstlisting}[caption={Example of a vulnerable SQL query.}, captionpos=b, label=lst:SQL_vul, numbers=left, showstringspaces=false]
 String query = "SELECT * FROM accounts WHERE 
     custID='" + userInput + "'";
 \end{lstlisting}

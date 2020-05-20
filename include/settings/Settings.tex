@@ -112,6 +112,8 @@
 
 % Tables with colors
 \definecolor{RowColor}{gray}{0.9}
+\newcolumntype{g}{>{\columncolor{RowColor}}c}
+\newcolumntype{x}{>{\columncolor{RowColor}}l}
 
 % Checkmark
 \usepackage{pifont}% http://ctan.org/pkg/pifont
@@ -120,9 +122,12 @@
 \usepackage{footmisc}
 
 \usepackage{pgfplots}
-\pgfplotsset{compat=1.9}
-\usepackage{pgfplotstable}
+\pgfplotsset{compat=1.16}
+\usepgfplotslibrary{statistics}
+%\usepackage{pgfplotstable}
 %\renewcommand*{\familydefault}{\sfdefault}
 \usepackage{sfmath}
 \usepackage{multirow}
 \usepackage{numprint}
+\usetikzlibrary{patterns}
+

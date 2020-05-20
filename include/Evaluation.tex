@@ -1,34 +1,54 @@
 \chapter{Evaluation}
 
-This chapter presents an evaluation of the constraints when applied to a number of open source systems. The evaluation was performed in two ways: first a comparison between SecArchUnit and static analysis tools used in industry, and then a standalone evaluation of the tool extension.
+This chapter presents an evaluation of SecArchUnit in terms of performance and usability when compared to static analysis tools used in industry. Furthermore, we discuss the results of the evaluation and its validity threats.
+\todo{fine tune}
+%The evaluation was performed in two ways: first a performance and usability comparison between SecArchUnit and static analysis tools used in industry, and then a performance evaluation of the constraints based on the SecArchUnit extension.
 
-\section{Quantitative Results}
-The quantitative evaluation aims to evaluate how well SecArchUnit can validate the 7 constraints and compare this to the performance of industrial-grade tools SonarQube and PMD. Due to the fact that not all constraints could be expressed in each of the three tools, the evaluation was divided into two stages.
+\section{Results}\todo{add text}
+This section presents the results of the evaluation in two steps: first the evaluation relating to how effectively SecArchUnit and similar tools validate the constraints, and then an evaluation of differences between the tools in terms of their usability.
 
-In the first stage, constraints 1-5 were applied to each of the three test systems described in Section~\ref{sct:selected-systems}. These constraints were subsequently validated, not only in SecArchUnit, but also in SonarQube and PMD through definitions of custom rules. The results of this evaluation are presented in Table~\ref{tab:results_comparison}.
+\subsection{Performance}
+The peformance evaluation aims to evaluate how well SecArchUnit can validate the 7 constraints and compare this to the performance of industrial-grade tools SonarQube and PMD. Due to the fact that not all constraints could be expressed in the tools used for comparison, the evaluation was divided into two stages: a comparison of all tools using the first 5 constraints, and a review of the performance of SecArchUnit regarding constraints 6 and 7.
+
+For both stages, the tools were evaluated according to the performance metrics. The true positives (TP) refer to violations of constraints that are reported by the tool and coincide with the ground truth. False positives (FP) are violations reported by the tool that are not included in the ground truth. False negatives (FN) are violations that exist in the ground truth but do not get reported by the tool. 
 
 \input{include/graphsAndTables/ToolComparison}
 
-In the second stage, constraints 6-7 were applied to iTrust and validated solely using SecArchUnit. The performance metrics resulting from this evaluation are presented in Table~\ref{tab:tool_extension}.
+As seen from Table~\ref{tab:results_comparison}, all three tools performed well in regards to both precision and recall. Since each tool's rules were evaluated against the same collection of classes, the set of detected violations is the same for all tools. Overall, very few false positives and false negatives were found, making up for less than 5\% of the total amount of reported violations when counting unique cases across all tools and systems. 
 
-\input{include/graphsAndTables/ExtensionConstraints}
-
-In both stages, the tools were evaluated according to the performance metrics. The true positives (TP) refer to violations of constraints that are reported by the tool and coincide with the ground truth. False positives (FP) are violations reported by the tool that are not included in the ground truth. False negatives (FN) are violations that exist in the ground truth but do not get reported by the tool. 
-
-The number of violations of each constraint, according to our ground truth, can be seen in Figure~\ref{bar:frequency_violation_comparison}.
+As depicted in Figure~\ref{bar:frequency_violation_comparison}, constraint 1 accounts for the majority of all violations found in the three projects. Violations of constraint 5, on the other hand, were not found in any project; thus, we can not draw any conclusions regarding the tools' reliability of detecting that particular violation. Additionally, violations of constraints 2 and 3 were sparse and not consequently found in all systems.
 
 \input{include/graphsAndTables/ConstraintFrequency}
 
+In the second stage, constraints 6-7 were applied to iTrust and validated solely using SecArchUnit. The performance metrics resulting from this evaluation are presented in Table~\ref{tab:tool_extension}. Similarly to the results of the first stage, SecArchUnit reliably detects violations of both constraints without reporting any false negatives, resulting in a high recall.  Additionally, no false positives were found, leading to a high degree of precision.
+
+\input{include/graphsAndTables/ExtensionConstraints}
+
+Looking at the distribution of constraint violations for constraint 6 and 7 in iTrust, found in Figure~\ref{bar:frequency_violation_extension}, we can see that both constraints had enough violation to allow for an evaluation. 
+
+\input{include/graphsAndTables/ConstraintFrequencyExtension}
+
+Finally, the performance of SecArchUnit for each constraint across all systems can be seen in Table~\ref{tab:secarchUnit_constraint}. We can infer from data that SecArchUnit reliably detects violations of all constraints except for constraint 5 as it was not present in any of the systems. 
+
+\input{include/graphsAndTables/SecArchUnit_constraint_table}
+
+\subsection{Usability}
+The usability evaluation \todo{describe figure and table}
+
+\input{include/graphsAndTables/DesignTimeGraph}
+
+%\input{include/graphsAndTables/RuntimeGraph}
+\input{include/graphsAndTables/ToolBenchmarks}
 
 
-
-\section{Discussion of Quantitative Results}
+\clearpage
+\section{Discussion of Performance Results}
 Both in regards to precision, as well as recall, the tools performed equally. However, the causes of failure differed noticeably in cases where the results of the tools varied. The examples are described below:
 
 \begin{itemize}
     \item In ATM simulator, the same false positive occurred in all three tools. This was in relation to constraint 3, where a subclass of the sending point contained a method call to the sender. Additionally, PMD had 4 false negatives which occurred because it was unable to determine the classes that these method calls targeted.
     \item In JPetStore, PMD reported 4 false negatives, again because it was unable to determine the target class of these method calls.
-    \item In iTrust, a security service contained both an inner interface and an inner static class whose methods did not perform any security events. In both PMD and SonarQube, these methods were determined to be declared in the inner class by traversing the AST from the method to its first parent class or interface declaration. In comparison, ArchUnit considers the members of the inner class to be declared in both the inner and outer class. This improperly marks the inner methods as violating the constraint, resulting in 3 false positives.
+    \item In iTrust, a security service contained both an inner interface and an inner static class whose methods did not perform any security events. In both PMD and SonarQube, these methods were determined to be declared in the inner class by traversing the AST from the method to its first parent class or interface declaration. In comparison, SecArchUnit considers the members of the inner class to be declared in both the inner and outer class. This improperly marks the inner methods as violating the constraint, resulting in 3 false positives in SecArchUnit.
 \end{itemize}
 
 As shown in Figure~\ref{bar:frequency_violation_comparison}, the tools were evaluated using imbalanced data. Constraint 1 accounted for a majority of all violations found throughout all three systems, while no system violated constraint 5. Additionally, iTrust was the only system to contain a violation of constraint 3. 
@@ -44,26 +64,53 @@ Moreover, iTrust is built with a mix of Java and Java Server Pages (JSP) files w
 
 
 \section{Discussion of Qualitative Differences}
-ArchUnit, SonarQube and PMD are all static analysis tools with support for evaluation of custom rules. However, they differ quite a bit in how their rules are defined and evaluated.
+While SecArchUnit, SonarQube and PMD are all static analysis tools that support evaluation of custom rules, they differ considerably in how their rules are defined and evaluated.
 
-ArchUnit first builds a representation of the entirety of the analyzed system, which is then available during the evaluation of the rules. As shown throughout Chapter~\ref{ch:enforcing_constraints}, rules have direct access to information about incoming and outgoing accesses to all members, both within and between classes, making it convenient to specify intricate architectural constraints.
+SecArchUnit builds a representation of the entirety of the analyzed system, which is available during the evaluation of the rules. As shown throughout Chapter~\ref{ch:enforcing_constraints}, rules have access to information about both incoming and outgoing accesses to all members, within and between classes, making it convenient to specify architectural constraints at an appropriate level of abstraction.
 
-Regarding SonarQube and PMD, both of these tools evaluate rules against an Abstract Syntax Tree (AST) where the root node is the Java class currently being analyzed (see examples in Appendix~\ref{apx:sonarqube} and Appendix~\ref{apx:pmd}). As a consequence, a rule can only inspect one class at a time; it can audit outgoing accesses to other classes, but it does not know anything about incoming accesses to the current class and its members.
-In a constraint where incoming accesses to a certain class need to be constrained, the rule can inspect all classes one by one and look for outgoing accesses to the concerned class. However, constraints that define more intricate control flows, such as allowing a given combination of incoming and outgoing accesses, are not enforceable in these tools.
-% C4, third case, as example
+Regarding SonarQube and PMD, both of these tools evaluate rules by traversing an Abstract Syntax Tree (AST) where the root node is the Java class currently being analyzed. As a consequence, a rule can only inspect one class at a time; it can audit outgoing accesses from the current class, but it does not know anything about incoming accesses from other classes. In a constraint where incoming accesses to a specific class need to be restricted, these tools instead inspect all classes one by one and look for outgoing accesses to the concerned class, as exemplified in Listing~\ref{lst:sonarqube_excerpt}. 
 
-Rule definitions - Abstract Syntax Trees (SonarQube \& PMD) vs higher-level abstraction (ArchUnit)
+\begin{lstlisting}[caption={Excerpt of constraint 3 in SonarQube, simplified using pseudo code. See full rule definition in Appendix~\ref{apx:sonarqube} and the related PMD rule in Appendix~\ref{apx:pmd}.}, captionpos=b, label=lst:sonarqube_excerpt, numbers=left, showstringspaces=false]
+public void visitNode(MethodInvocation node) {
+    if (target method is declared in a sender) {
+        // Get class in which method invocation takes place
+        ClassTree classTree = node.parent() until type is ClassTree
 
-Analysis of accesses - expression chains, SonarQube vs PMD, PMD failures
+        if (classTree is not the sending point) {
+            reportIssue(...);
+        }
+    }
+}
+\end{lstlisting}
 
-Semantic information
+As a consequence, these tools cannot enforce constraints where both incoming and outgoing accesses need to be inspected in unison. An example of this is constraint 4, where the constraint allows user input to be validated either by calling a validator or by only being called by validators. The rules in SonarQube and PMD can only look for outgoing calls to validators, not taking incoming accesses into account, and therefore risk reporting false positives. However, no such case was found in the evaluation.
 
+When inspecting a method invocation node in the AST, SonarQube exposes information about the target method, including its signature, annotations, and information about the class in which it is declared. In PMD, however, the node that corresponds to method invocations only contains information about the return type of the method. In order to resolve the target class of a method invocation, we examined the immediately preceding expression. If the expression had a return type, this was assumed to be the target owner. Otherwise, the expression was further examined for references to local variables and fields, the declarations of which contained the necessary type information. This lack of type information not only made the constraints complicated to express, but it also resulted in an unreliable resolution of method targets, as reflected in the number of false negatives reported by the tool.
 
+Moreover, PMD contains no information about the annotations that are present on the target method. As a workaround, a separate rule was created which visited all class and method declarations, dumping their annotations into a text file. This text file was then fed into the rules related to constraints 4 and 5.
+
+To summarize, while it is possible for SonarQube and PMD to enforce some security architectural constraints, these rules are not expressed at the proper level of abstraction. This was made especially apparent in PMD, where several workarounds had to be devised in order to express our constraints.
+
+\todo{benchmarks}
 
 \section{Threats to Validity}
+This section presents the validity threats of the thesis. 
 
 \subsection{Construct Validity}
+The primary threat to construct validity is whether the constraints considered in the study increases the security of a system. While we do not consider the enforcement of our constraints to provide a holistic approach to security, the relevance of providing a more secure system has been asserted by gathering established security measures.
 
 \subsection{Internal Validity}
+In the absence of any preexisting ground truth, the threat of misinterpreting the architectural design of a system, and consequently, establishing an invalid ground truth is inherent. We reduced the threat of misinterpretation by each author independently establishing a ground truth, later comparing the results and carefully discussing the differences
+
+%Extension constraints, how violations were injected <- sucram
+For our seventh constraint, "secrets must not be sent to a logger", no violations were found as the developers of iTrust had ensured that the logger only received the appropriate information. 
+
+As the constraints were implemented sequentially, the time required to implement each constraint in a tool is affected by a carry-over effect as we learn how to use the tool. The ramifications of this are minimized by excluding the first two constraints as a learning experience, and then considering the total time required to implement the remaining constraints.
+% researcher bias?
 
 \subsection{External Validity}
+
+\textbf{Choice of constraints.} 
+
+\textbf{Choice of subject systems.} 
+

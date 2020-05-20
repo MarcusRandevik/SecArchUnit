@@ -38,7 +38,9 @@ Starting from each of the three sources of architectural constraints described i
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{figure/Half-time presentation.png}
-    \caption{Overview of the process of mapping the three sources to constraints}
+    \caption
+        [Overview of the process of mapping the three sources to constraints]
+        {Overview of the process of mapping the three sources to constraints.}
     \label{fig:mapping_process}
 \end{figure}
 
@@ -76,14 +78,15 @@ The performance metrics that were chosen to represent how reliably the tools det
 \[ P = TP / (TP + FP) \]
 \[ R = TP / (TP + FN) \]
 
-A true positive (TP) is a report of a line containing a security constraint violation corresponding to an equal in the ground truth. A false positive (FP) refers to the report of a violation not listed in the ground truth. Finally, a false negative (FN) is the failure to report a violation listed in the ground truth. As the mechanism of reporting a violation differed among the included tools, some tolerance was employed regarding the line at which a violation was reported. For example, a function that receives user input could either be reported inside the method body or at the declaration.
+A true positive (TP) is a report of a line containing a security constraint violation corresponding to an equal in the ground truth. A false positive (FP) refers to the report of a violation not listed in the ground truth. Finally, a false negative (FN) is the failure to report a violation listed in the ground truth. As the mechanism of reporting a violation differed among the included tools, some tolerance was employed regarding the line at which a violation was reported. For example, a method that receives user input could either be reported inside the method body or at its declaration.
 
 The imbalance between the designer, who needs to ensure that every single aspect of a system is secure, and the attacker, who needs to succeed only once, influences the relative importance of the two metrics. Precision, which represents the probability of a reported violation, indeed being a violation, is relevant as the time allocated for fixes is limited. However, recall, which represents the probability of a violation being detected, is paramount as a single missed security constraint violation could be exploited. Consequently, recall was given greater weight when evaluating the results of the tools.
 
 \subsubsection{Usability}
-A significant aspect of applying new tools to a project is the time needed for training. Although SecArchUnit can integrate into existing testing infrastructure and CI/CD pipelines, the implementation of appropriate security architectural constraints is a non-trivial issue. Logging the time needed to implement the constraint included in the study was used as an estimate of the effort needed to construct new constraints. The first constraints were considered as learning examples to reduce the bias introduced by us having more experience of using SecArchUnit.
+A significant aspect of applying new tools to a project is the time needed for training. Although SecArchUnit can integrate into existing testing infrastructure and CI/CD pipelines, the implementation of appropriate security architectural constraints is a non-trivial issue. Logging the time needed to implement the constraints included in the study was used as an estimate of the effort needed to construct new constraints. The first two constraints were considered as learning examples to reduce the bias introduced by us having more experience of using SecArchUnit.
 
 \textbf{Architectural appropriateness of concepts}
+Additional usability aspects concern how custom rules are defined in the different tools; whether the rules are specified at a proper level of abstraction for expressing security architectural constraints, and how conveniently the rules can be applied to a system.
 
 \subsection{Subjects of Analysis} \label{sct:selected-systems}
 
@@ -105,6 +108,10 @@ Based on the presented criterion, three systems were selected for the evaluation
 \textbf{iTrust} is a web based electronic health records system. Originally designed as a part of a software evolution course at NSCU \cite{heckman_10_2018}, the project has been used in the domain of software traceability \cite{cleland-huang_software_2012}, requirements engineering \cite{massey_aligning_2008} and security \cite{burger_framework_2018, xiao_automated_2012}.
 
 \begin{table}
+\captionsetup{justification=centering}
+\caption
+    [Characteristics of projects used in the evaluation]
+    {Characteristics of the projects used in the evaluation, adapted from \cite{peldszus_secure_2019}. \textbf{lloc} = logical lines of code.}
     \centering
     \begin{tabular}{lccc}
          Project & lloc & classes & methods \\
@@ -114,7 +121,7 @@ Based on the presented criterion, three systems were selected for the evaluation
          iTrust & \numprint{28133} & 423 & \numprint{3691}\\
          \hline
     \end{tabular}
-    \caption{Characteristics of the projects used in the evaluation, adapted from \cite{peldszus_secure_2019}. \textbf{lloc} = logical lines of code.}
+    
     \label{tab:sample_systems}
 \end{table}
 
