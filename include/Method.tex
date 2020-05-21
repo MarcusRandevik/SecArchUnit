@@ -69,7 +69,7 @@ Hence, the first five constraints are evaluated in SecArchUnit, SonarQube and PM
 
 
 
-\subsection{Evaluation Metrics}
+\subsection{Evaluation metrics}
 The included tools will be evaluated in two aspects, performance and usability. Performance relates to the ability to detect violations of a constraint reliably, whereas usability relates to time needed to implement constraint and how well the tool captures the concepts used in architectural descriptions. The following sections provide further detail for each aspect.
 
 \subsubsection{Performance}
@@ -88,7 +88,7 @@ A significant aspect of applying new tools to a project is the time needed for t
 \textbf{Architectural appropriateness of concepts}
 Additional usability aspects concern how custom rules are defined in the different tools; whether the rules are specified at a proper level of abstraction for expressing security architectural constraints, and how conveniently the rules can be applied to a system.
 
-\subsection{Subjects of Analysis} \label{sct:selected-systems}
+\subsection{Subjects of analysis} \label{sct:selected-systems}
 
 Several requirements were formed to guide the selection of projects to be included in the evaluation of our study. While some were necessary due to the languages supported by ArchUnit, others served to decrease the threats to validity. Detailed below is the final list of requirements for inclusion:
 
@@ -125,7 +125,7 @@ Based on the presented criterion, three systems were selected for the evaluation
     \label{tab:sample_systems}
 \end{table}
 
-\subsection{Ground Truth}
+\subsection{Ground truth}
 A ground truth had to be set to validate the results of applying the tools to the included projects. The ground truth consisted of: a set of classes applicable to the concepts defined in the final list of constraints, annotations to the source code, and a record of each violation found. 
 
 In the absence of any previously established ground truth, in large because we defined the constraints, a structural analysis was performed for each of the systems. Our analysis was guided by the architectural descriptions supplied with the projects and the extraction of SecDFDs by Peldszus et al. \cite{peldszus_secure_2019}. Each constraint was applied to the system by analyzing every file in the project in a separate pass. Although time-consuming, performing a complete scan of the entire system for each constraint reduced the change of wrongfully dismissing a class and ensured that violations were detected.

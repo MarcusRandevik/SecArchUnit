@@ -8,7 +8,7 @@ This chapter presents an evaluation of SecArchUnit in terms of performance and u
 This section presents the results of the evaluation in two steps: first the evaluation relating to how effectively SecArchUnit and similar tools validate the constraints, and then an evaluation of differences between the tools in terms of their usability.
 
 \subsection{Performance}
-The peformance evaluation aims to evaluate how well SecArchUnit can validate the 7 constraints and compare this to the performance of industrial-grade tools SonarQube and PMD. Due to the fact that not all constraints could be expressed in the tools used for comparison, the evaluation was divided into two stages: a comparison of all tools using the first 5 constraints, and a review of the performance of SecArchUnit regarding constraints 6 and 7.
+The performance evaluation aims to evaluate how well SecArchUnit can validate the 7 constraints and compare this to the performance of industrial-grade tools SonarQube and PMD. Due to the fact that not all constraints could be expressed in the tools used for comparison, the evaluation was divided into two stages: a comparison of all tools using the first 5 constraints, and a review of the performance of SecArchUnit regarding constraints 6 and 7.
 
 For both stages, the tools were evaluated according to the performance metrics. The true positives (TP) refer to violations of constraints that are reported by the tool and coincide with the ground truth. False positives (FP) are violations reported by the tool that are not included in the ground truth. False negatives (FN) are violations that exist in the ground truth but do not get reported by the tool. 
 
@@ -42,7 +42,7 @@ The usability evaluation \todo{describe figure and table}
 
 
 \clearpage
-\section{Discussion of Performance Results}
+\section{Discussion of performance results}
 Both in regards to precision, as well as recall, the tools performed equally. However, the causes of failure differed noticeably in cases where the results of the tools varied. The examples are described below:
 
 \begin{itemize}
@@ -63,7 +63,7 @@ Moreover, iTrust is built with a mix of Java and Java Server Pages (JSP) files w
 
 
 
-\section{Discussion of Qualitative Differences}
+\section{Discussion of qualitative differences}
 While SecArchUnit, SonarQube and PMD are all static analysis tools that support evaluation of custom rules, they differ considerably in how their rules are defined and evaluated.
 
 SecArchUnit builds a representation of the entirety of the analyzed system, which is available during the evaluation of the rules. As shown throughout Chapter~\ref{ch:enforcing_constraints}, rules have access to information about both incoming and outgoing accesses to all members, within and between classes, making it convenient to specify architectural constraints at an appropriate level of abstraction.
@@ -93,13 +93,13 @@ To summarize, while it is possible for SonarQube and PMD to enforce some securit
 
 \todo{benchmarks}
 
-\section{Threats to Validity}
+\section{Threats to validity}
 This section presents the validity threats of the thesis. 
 
-\subsection{Construct Validity}
+\subsection{Construct validity}
 The primary threat to construct validity is whether the constraints considered in the study increases the security of a system. While we do not consider the enforcement of our constraints to provide a holistic approach to security, the relevance of providing a more secure system has been asserted by gathering established security measures.
 
-\subsection{Internal Validity}
+\subsection{Internal validity}
 In the absence of any preexisting ground truth, the threat of misinterpreting the architectural design of a system, and consequently, establishing an invalid ground truth is inherent. We reduced the threat of misinterpretation by each author independently establishing a ground truth, later comparing the results and carefully discussing the differences
 
 %Extension constraints, how violations were injected <- sucram
@@ -108,7 +108,7 @@ For our seventh constraint, "secrets must not be sent to a logger", no violation
 As the constraints were implemented sequentially, the time required to implement each constraint in a tool is affected by a carry-over effect as we learn how to use the tool. The ramifications of this are minimized by excluding the first two constraints as a learning experience, and then considering the total time required to implement the remaining constraints.
 % researcher bias?
 
-\subsection{External Validity}
+\subsection{External validity}
 
 \textbf{Choice of constraints.} 
 

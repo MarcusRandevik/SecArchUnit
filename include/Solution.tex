@@ -3,7 +3,7 @@
 
 This chapter explains how the constraints are expressed and validated using the tool using both the general definition of a rule as well as by providing a modeled example system. The constraints are divided into three distinct categories. The first category contains the constraints that are possible to express in ArchUnit as-is. The second category describes constraints that are enforceable with the help of additional information in source code. The third and final category details constraints that require an extension of ArchUnit to be possible to enforce.
 
-\section{Running Example}
+\section{Running example}
 We modeled a toy system, BlogWeb, and use it as a running example for this chapter. By no means is this example meant to be a realistic application, but is instead used to showcase our constraints.
 A UML class diagram of BlogWeb is illustrated in Figure~\ref{fig:toy_application}.
 
@@ -167,7 +167,7 @@ ArchRule centralSendingPoint = SecArchUnit
 
 
 
-\section{Injecting Information into Source Code}
+\section{Injecting information into source code}
 
 Some of our constraints require that the developer injects additional information into the source code. In some cases, this information is simply an indicator that says something about an entire class. Naming the class with a specific prefix or suffix is one approach to accomplish this. Another approach is to implement an empty interface, which is the technique used with Java's \texttt{Serializable}\footnote{https://docs.oracle.com/javase/7/docs/api/java/io/Serializable.html} interface. 
 
@@ -244,7 +244,7 @@ In BlogWeb, the \texttt{RequestHandler} class spawns new threads in order to han
 
 
 
-\section{Extending ArchUnit Analysis}
+\section{Extending ArchUnit analysis}
 
 In the current ArchUnit API, a rule that aims to constrain method calls can only be defined in terms of the signatures of the method and its parameters. This is not an issue when the arguments passed to a method are of the same type as the parameters. However, the argument might also be a descendant of the parameter type. There is currently no support in ArchUnit to constrain the types of the objects that are actually being passed as arguments.
 
