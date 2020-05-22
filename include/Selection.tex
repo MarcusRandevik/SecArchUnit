@@ -1,10 +1,10 @@
 \chapter{Selection of Architectural Security Constraints}
 
-This chapter describes the result of compiling a list of security constraints, as described in the previous chapter, and the final selection of constraints used in the validation of the tool.  
+This chapter describes the result of compiling a list of security constraints, as described in the methodology chapter, and the selection of seven constraints that have been implemented in SecArchUnit.  
 
 \section{Compiled list of security constraints}
 
-The filtered collection of security constraints can be seen in Table~\ref{tab:all_measures}. There are in total 18 constraints. As mentioned in Section~\ref{sec:processing}, each constraint was categorized according to the goals of CIAA to ensure full coverage. 
+The compiled collection of security constraints can be seen in Table~\ref{tab:all_measures}. There are in total 18 constraints. As mentioned in Section~\ref{sec:processing}, each constraint was categorized according to the goals of CIAA to ensure coverage of a diverse set of security goals. 
 
 Although both the architectural rules found in Jasser \cite{franch_constraining_2019} and the security patterns presented in Scandariato et al. \cite{scandariato_system_2006} were at the appropriate level of design, many of the weaknesses presented in CAWE were not. Common examples include; CAWE-259 "Use of hard-coded password" where the weakness is reliant on a local change of behavior rather than the architectural structure; and CAWE-263 "Password aging with long expiration" where the weakness is introduced by a single variable most likely defined outside of the source code. As a result, a far lower percentage of entries were included from the CAWE-catalog compared to the other sources.
 
@@ -56,15 +56,15 @@ Although both the architectural rules found in Jasser \cite{franch_constraining_
 \label{tab:all_measures}
 \end{table}
 
-\section{Final selection}
+\section{Selection of constraints to be implemented in SecArchUnit}
 
-As explained in Section~\ref{sec:limitations}, the aim is not to demonstrate the enforceability of as many constraints as possible, but rather to investigate the feasibility of using the tool in this manner. To that end, a subset of the full list of security constraints is selected for enforcement. The final list contains 7 architectural security constraints, as this allows us to cover at least one constraint from each goal in the CIAA model. The selected constraints can be seen in Table~\ref{tab:selected_measures}. The remainder of this section presents each selected constraint in further detail.
+As explained in Section~\ref{sec:limitations}, the aim is not to demonstrate the enforceability of as many constraints as possible, but rather to investigate the feasibility of using the tool in this manner. To that end, a subset of the full list of security constraints is selected to be implemented in SecArchUnit. In total, seven constraints have been selected, as this allows us to cover at least one constraint from each goal in the CIAA model. The selected constraints can be seen in Table~\ref{tab:selected_measures}. The remainder of this section presents each selected constraint in further detail.
 
 \begin{table}
 \captionsetup{justification=centering}
 \caption
-    [Constraints that have been selected for enforcement]
-    {Constraints that have been selected for enforcement.\\Column \#\textsubscript{4.1} refers to the ID of the constraint in Table~\ref{tab:all_measures}.}
+    [Constraints to be implemented in SecArchUnit]
+    {Constraints to be implemented in SecArchUnit.\\Column \#\textsubscript{4.1} refers to the ID of the constraint in Table~\ref{tab:all_measures}.}
 \begin{center}
 \begin{tabular}{ccp{12.4cm}}
 \hline

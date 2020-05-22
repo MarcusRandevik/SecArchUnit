@@ -3,6 +3,7 @@
 This chapter describes the adopted method for collecting relevant constraints, relating these to the common security-goals of CIAA, and later mapping them to functionality within ArchUnit. Second, this chapter presents the validation plan for expressing security constraints with ArchUnit, both by comparing it to industry used static analysis tools and a separate analysis focusing on constraints that could only be expressed in ArchUnit.
 
 \section{Identification of design constraints}
+\todo{Add text}
 
 \subsection{Data collection} \label{sec:data_collection}
 
@@ -28,11 +29,11 @@ Starting from each of the three sources of architectural constraints described i
 
 \begin{enumerate}
     \item The entry must be related to the architectural design of a system, i.e., non-local and intensional (as described in Section~\ref{subsec:security_rules}). \label{criterion_1}
-    \item It must be possible to enforce the entry through static analysis. An example on a non enforceable constraint is "No two instances of a microservice are deployed on the same machine", as the number of machines deployed is a dynamic property. \label{criterion_2}
+    \item It must be possible to enforce the entry through static analysis. An example on a non enforceable constraint is \say{No two instances of a microservice are deployed on the same machine} \cite{franch_constraining_2019}, as the number of machines deployed is a dynamic property. \label{criterion_2}
     \item Although somewhat included in the first criterion as it is a local issue, an entry must not relate to the correctness or best practice of the implementation of an algorithm. Examples include the practice of using session tokens with time-limited validity. \label{criterion_3}
     \item The entry must only relate to the system under design, thus ignoring the correctness and security of any external dependencies. An example can be found in SonarQube where the usage of a version of a library with known vulnerabilities is reported as a weakness. \label{criterion_4}
     \item The entry must not be dependent on externally defined data. A common example is that of user permissions where the mapping between a regulated function and a users rights is performed using an access control list, external to the source code. \label{criterion_5}
-    \item Additionally, we deemed measures defined as the absence of certain functionality as less valuable due to the increased difficulty of enforcing them \cite{haley_security_2008}.
+    \item Additionally, we deemed entries defined as the absence of certain functionality as less valuable due to the increased difficulty of enforcing them \cite{haley_security_2008}. An example of such an entry is \say{The system must not provide functionality to decrypt secured log messages}, as defined in \cite{franch_constraining_2019}.
 \end{enumerate}
 
 \begin{figure}
@@ -70,7 +71,7 @@ Hence, the first five constraints are evaluated in SecArchUnit, SonarQube and PM
 
 
 \subsection{Evaluation metrics}
-The included tools will be evaluated in two aspects, performance and usability. Performance relates to the ability to detect violations of a constraint reliably, whereas usability relates to time needed to implement constraint and how well the tool captures the concepts used in architectural descriptions. The following sections provide further detail for each aspect.
+The included tools will be evaluated in two aspects: performance and usability. Performance relates to the ability to detect violations of a constraint reliably, whereas usability relates to time required to implement the constraints and how well the tool captures the concepts used in architectural descriptions. The following sections provide further detail for each aspect.
 
 \subsubsection{Performance}
 The performance metrics that were chosen to represent how reliably the tools detect violations of security constraints are precision $P$ and recall $R$. They are defined as follows:
@@ -85,7 +86,6 @@ The imbalance between the designer, who needs to ensure that every single aspect
 \subsubsection{Usability}
 A significant aspect of applying new tools to a project is the time needed for training. Although SecArchUnit can integrate into existing testing infrastructure and CI/CD pipelines, the implementation of appropriate security architectural constraints is a non-trivial issue. Logging the time needed to implement the constraints included in the study was used as an estimate of the effort needed to construct new constraints. The first two constraints were considered as learning examples to reduce the bias introduced by us having more experience of using SecArchUnit.
 
-\textbf{Architectural appropriateness of concepts}
 Additional usability aspects concern how custom rules are defined in the different tools; whether the rules are specified at a proper level of abstraction for expressing security architectural constraints, and how conveniently the rules can be applied to a system.
 
 \subsection{Subjects of analysis} \label{sct:selected-systems}

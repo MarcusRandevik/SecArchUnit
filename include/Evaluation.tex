@@ -1,13 +1,12 @@
 \chapter{Evaluation}
 
-This chapter presents an evaluation of SecArchUnit in terms of performance and usability when compared to static analysis tools used in industry. Furthermore, we discuss the results of the evaluation and its validity threats.
+This chapter presents an evaluation of SecArchUnit in terms of performance and usability when compared to static analysis tools used in industry. The results are discussed and related to the research questions. Finally, a discussion is held regarding the validity threats of the evaluation.
 \todo{fine tune}
-%The evaluation was performed in two ways: first a performance and usability comparison between SecArchUnit and static analysis tools used in industry, and then a performance evaluation of the constraints based on the SecArchUnit extension.
 
-\section{Results}\todo{add text}
+\section{Results}
 This section presents the results of the evaluation in two steps: first the evaluation relating to how effectively SecArchUnit and similar tools validate the constraints, and then an evaluation of differences between the tools in terms of their usability.
 
-\subsection{Performance}
+\subsection{Performance}\label{sec:performance_results}
 The performance evaluation aims to evaluate how well SecArchUnit can validate the 7 constraints and compare this to the performance of industrial-grade tools SonarQube and PMD. Due to the fact that not all constraints could be expressed in the tools used for comparison, the evaluation was divided into two stages: a comparison of all tools using the first 5 constraints, and a review of the performance of SecArchUnit regarding constraints 6 and 7.
 
 For both stages, the tools were evaluated according to the performance metrics. The true positives (TP) refer to violations of constraints that are reported by the tool and coincide with the ground truth. False positives (FP) are violations reported by the tool that are not included in the ground truth. False negatives (FN) are violations that exist in the ground truth but do not get reported by the tool. 
@@ -32,17 +31,20 @@ Finally, the performance of SecArchUnit for each constraint across all systems c
 
 \input{include/graphsAndTables/SecArchUnit_constraint_table}
 
-\subsection{Usability}
-The usability evaluation \todo{describe figure and table}
+\subsection{Usability} \todo{describe figure and table}
+The tools were additionally evaluated in terms of their usability. Firstly, the effort required to express the constraints in the different tools was considered. This effort was quantified as the amount of time spent implementing the rule pertaining to each constraint. These results can be seen in Figure~\ref{fig:Design_time}.
 
 \input{include/graphsAndTables/DesignTimeGraph}
 
-%\input{include/graphsAndTables/RuntimeGraph}
+Secondly, the time required to validate the constraints, i.e. the running time of each tool, was considered. The tools were executed 3 times on each system in an attempt to improve the accuracy of the measurement. These results are presented in Table~\ref{tab:benchmark}.
+
 \input{include/graphsAndTables/ToolBenchmarks}
+
 
 
 \clearpage
 \section{Discussion of performance results}
+
 Both in regards to precision, as well as recall, the tools performed equally. However, the causes of failure differed noticeably in cases where the results of the tools varied. The examples are described below:
 
 \begin{itemize}
@@ -53,10 +55,17 @@ Both in regards to precision, as well as recall, the tools performed equally. Ho
 
 As shown in Figure~\ref{bar:frequency_violation_comparison}, the tools were evaluated using imbalanced data. Constraint 1 accounted for a majority of all violations found throughout all three systems, while no system violated constraint 5. Additionally, iTrust was the only system to contain a violation of constraint 3. 
 
+% RQ1: What architectural security constraints can be validated using the tool?
+To answer the research question regarding which architectural security constraints can be validated using ArchUnit (\textbf{RQ1}), the evaluation has shown that ArchUnit can validate constraints 1-4, which relate to the security goals of confidentiality, integrity and accountability. Its performance, in terms of precision and recall, is comparable to tools used in the industry. As the evaluation found no violation of constraint 5, it remains unclear whether the tool can validate constraints related to the security goal of availability.
+
+\todo{transition to RQ2}
 The system, iTrust, initially contained no violations of constraint 7. Therefore, violations were injected by systematically marking all identifier fields (e.g. \texttt{patientId}, \texttt{personnelId}) in the model and base-action packages as secrets. We chose to mark these identifiers because they were commonly sent to the logger as a way to describe the patient or personnel involved in a transaction. Hence, the 37 violations of constraint 7, as seen in Table~\ref{tab:tool_extension}, are artificially injected.
 
 Moreover, iTrust is built with a mix of Java and Java Server Pages (JSP) files whereas ArchUnit can only analyze plain Java. The classes in the action package, from which the logger is called, are all instantiated in the JSP files outside the view of our analysis. As such, the types of information flow that are analyzed and included in the ground truth are rather rudimentary. Out of the 37 violations of constraint 7, 1 was found without recursion (direct access to secret field) and the remaining 36 were found using a single recursion step (access to getter method of a secret field).
 % This is bad - we could just as well put the secret annotation on the getter and enforce the same constraint in SonarQube/PMD
+
+% RQ2: What modifications can be made to the tool in order to facilitate the validation of additional constraints?
+To answer the research question regarding what modifications can be made to ArchUnit (\textbf{RQ2}), the evaluation suggests that the tool can be extended with an analysis of information flow, and that this can be leveraged to validate additional constraints relating to the security goal of confidentiality.
 
 \todo{Discuss examples of things that the tools won't catch}
 % different levels of assets, i.e some fields are more sensitive than others
@@ -89,7 +98,7 @@ When inspecting a method invocation node in the AST, SonarQube exposes informati
 
 Moreover, PMD contains no information about the annotations that are present on the target method. As a workaround, a separate rule was created which visited all class and method declarations, dumping their annotations into a text file. This text file was then fed into the rules related to constraints 4 and 5.
 
-To summarize, while it is possible for SonarQube and PMD to enforce some security architectural constraints, these rules are not expressed at the proper level of abstraction. This was made especially apparent in PMD, where several workarounds had to be devised in order to express our constraints.
+To summarize, while it is possible for SonarQube and PMD to enforce some security architectural constraints, these rules are not expressed at the proper level of abstraction. This was made especially apparent in PMD, where several workarounds had to be devised in order to express the constraints.
 
 \todo{benchmarks}
 
@@ -100,10 +109,10 @@ This section presents the validity threats of the thesis.
 The primary threat to construct validity is whether the constraints considered in the study increases the security of a system. While we do not consider the enforcement of our constraints to provide a holistic approach to security, the relevance of providing a more secure system has been asserted by gathering established security measures.
 
 \subsection{Internal validity}
-In the absence of any preexisting ground truth, the threat of misinterpreting the architectural design of a system, and consequently, establishing an invalid ground truth is inherent. We reduced the threat of misinterpretation by each author independently establishing a ground truth, later comparing the results and carefully discussing the differences
+In the absence of any preexisting ground truth, the threat of misinterpreting the architectural design of a system, and consequently, establishing an invalid ground truth is inherent. We reduced the threat of misinterpretation by having each author independently establish a ground truth, later comparing the results and carefully discussing the differences.
 
 %Extension constraints, how violations were injected <- sucram
-For our seventh constraint, "secrets must not be sent to a logger", no violations were found as the developers of iTrust had ensured that the logger only received the appropriate information. 
+For our seventh constraint, \say{secrets must not be sent to a logger}, no violations were found as the developers of iTrust had ensured that the logger only received the appropriate information. 
 
 As the constraints were implemented sequentially, the time required to implement each constraint in a tool is affected by a carry-over effect as we learn how to use the tool. The ramifications of this are minimized by excluding the first two constraints as a learning experience, and then considering the total time required to implement the remaining constraints.
 % researcher bias?
