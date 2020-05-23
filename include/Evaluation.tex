@@ -31,18 +31,17 @@ Finally, the performance of SecArchUnit for each constraint across all systems c
 
 \input{include/graphsAndTables/SecArchUnit_constraint_table}
 
-\subsection{Usability} \todo{describe figure and table}
-The tools were additionally evaluated in terms of their usability. Firstly, the effort required to express the constraints in the different tools was considered. This effort was quantified as the amount of time spent implementing the rule pertaining to each constraint. These results can be seen in Figure~\ref{fig:Design_time}.
+\subsection{Usability}
+The tools were additionally evaluated in terms of their usability. Firstly, the effort required to express the constraints in the different tools was considered. This effort was quantified as the amount of time spent implementing the rule pertaining to each constraint. These results can be seen in Figure~\ref{fig:Design_time}. From the figure, and the fact that the constraints were implemented sequentially, we can infer that the time required to implement new constraints decreases following increased knowledge of the tools. As constraint 4 included additional functionality, in the form of inspecting annotations, an increase in time can be seen between constraint 3 and 4. For both SecArchUnit and SonarQube, the time to implement is significantly reduced when later implementing constraint 5. PMD, on the other hand, does not see the same decrease. The absence of decreased time was attributed to the fact that there was additional work involved with extracting and checking annotations in PMD, which we distributed equally between the two constraints.
 
 \input{include/graphsAndTables/DesignTimeGraph}
 
-Secondly, the time required to validate the constraints, i.e. the running time of each tool, was considered. The tools were executed 3 times on each system in an attempt to improve the accuracy of the measurement. These results are presented in Table~\ref{tab:benchmark}.
+Secondly, the time required to validate the constraints, i.e. the running time of each tool, was considered. The tools were executed three times on each system to improve the accuracy of the measurement. These results are presented in Table~\ref{tab:benchmark}. SecArchUnit and PMD perform similarly on the two smaller systems, with both finishing in approximately 1 second. In contrast, the time required for SonarQube to finish is increased by a factor of ten. When validating iTrust, there is an apparent disparity between SecArchUnit, which completes its validation in 2 seconds, whereas PMD and SonarQube complete their validation in 7 and 39 seconds, respectively.
 
 \input{include/graphsAndTables/ToolBenchmarks}
 
 
 
-\clearpage
 \section{Discussion of performance results}
 
 Both in regards to precision, as well as recall, the tools performed equally. However, the causes of failure differed noticeably in cases where the results of the tools varied. The examples are described below:
@@ -100,7 +99,7 @@ Moreover, PMD contains no information about the annotations that are present on 
 
 To summarize, while it is possible for SonarQube and PMD to enforce some security architectural constraints, these rules are not expressed at the proper level of abstraction. This was made especially apparent in PMD, where several workarounds had to be devised in order to express the constraints.
 
-\todo{benchmarks}
+
 
 \section{Threats to validity}
 This section presents the validity threats of the thesis. 
@@ -109,17 +108,17 @@ This section presents the validity threats of the thesis.
 The primary threat to construct validity is whether the constraints considered in the study increases the security of a system. While we do not consider the enforcement of our constraints to provide a holistic approach to security, the relevance of providing a more secure system has been asserted by gathering established security measures.
 
 \subsection{Internal validity}
-In the absence of any preexisting ground truth, the threat of misinterpreting the architectural design of a system, and consequently, establishing an invalid ground truth is inherent. We reduced the threat of misinterpretation by having each author independently establish a ground truth, later comparing the results and carefully discussing the differences.
+In the absence of any preexisting ground truth, the threat of misinterpreting the architectural design of a system, and consequently, establishing an invalid ground truth is inherent. We reduced the threat of misinterpretation by having each author independently establish a ground truth, later comparing the results and carefully discussing the differences. Additionally, in cases where both of us were uncertain, our supervisors were consulted for further knowledge.
 
-%Extension constraints, how violations were injected <- sucram
-For our seventh constraint, \say{secrets must not be sent to a logger}, no violations were found as the developers of iTrust had ensured that the logger only received the appropriate information. 
 
-As the constraints were implemented sequentially, the time required to implement each constraint in a tool is affected by a carry-over effect as we learn how to use the tool. The ramifications of this are minimized by excluding the first two constraints as a learning experience, and then considering the total time required to implement the remaining constraints.
+For our seventh constraint, \say{secrets must not be sent to a logger}, we found no violations as the developers of iTrust had ensured that the logger only received the appropriate information. To still be able to test the reliability of the extensions made to ArchUnit, we used data that was seen to be sent to the logger, although the data was non-sensitive. However, the functionality of SecArchUnit to support information flow constraints was still tested. 
+
+As the constraints were implemented sequentially, the time required to implement each constraint in a tool is affected by a carry-over effect as we learn how to use the tool. Similarly, our knowledge of SecArchUnit, compared to the tools used for comparison, was greater, resulting in a biased result. The ramifications of both are minimized by excluding the first two constraints as a learning experience, and then considering the total time required to implement the remaining constraints.
 % researcher bias?
 
 \subsection{External validity}
 
-\textbf{Choice of constraints.} 
+We formed the constraints used in the study to be generally applicable and not dependent on any specific domain or framework. Additionally, the reference to previously established security patterns, weaknesses, or constraints should provide some assurance of the validity of the constraint to projects other than those included in the study. However, as no previous study has applied them to a broad set of projects, we cannot draw any conclusion on the general validity. 
 
-\textbf{Choice of subject systems.} 
+Our choice of sample systems used in the evaluation represents another threat to external validity. We weighted several factors when deciding on which projects to use, such as the availability of architectural documentation, the size of the system, and whether they had been used in previous literature. Many open-source projects were discarded based on the fact that they did not provide any documentation for which we could establish the ground truth. Naturally, the size of a system profoundly affected the time needed for the architectural analysis, further reducing the set of systems that we could include. Thus, we tried to strike a balance between including project large enough to provide a realistic context, while at the same time being sufficiently small to allow for a rigorous analysis. We believe that while all three sample systems had initially been developed in the context of teaching, their implementation represents a realistic system. Additionally, the size of iTrust is large enough to warrant further validity.
 
