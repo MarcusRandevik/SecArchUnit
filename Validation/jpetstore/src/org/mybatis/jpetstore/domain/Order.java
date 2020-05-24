@@ -22,6 +22,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import com.github.secarchunit.concepts.Asset;
+import com.github.secarchunit.concepts.AssetHandler;
 import com.github.secarchunit.concepts.UserInput;
 
 /**
@@ -29,6 +31,7 @@ import com.github.secarchunit.concepts.UserInput;
  *
  * @author Eduardo Macarron
  */
+@AssetHandler
 public class Order implements Serializable {
 
   private static final long serialVersionUID = 6321792448424424931L;
@@ -36,13 +39,17 @@ public class Order implements Serializable {
   private int orderId;
   private String username;
   private Date orderDate;
+  @Asset
   private String shipAddress1;
+  @Asset
   private String shipAddress2;
   private String shipCity;
   private String shipState;
   private String shipZip;
   private String shipCountry;
+  @Asset
   private String billAddress1;
+  @Asset
   private String billAddress2;
   private String billCity;
   private String billState;
@@ -54,7 +61,9 @@ public class Order implements Serializable {
   private String billToLastName;
   private String shipToFirstName;
   private String shipToLastName;
+  @Asset
   private String creditCard;
+  @Asset
   private String expiryDate;
   private String cardType;
   private String locale;

@@ -34,6 +34,7 @@ import org.mybatis.jpetstore.domain.Product;
 import org.mybatis.jpetstore.service.AccountService;
 import org.mybatis.jpetstore.service.CatalogService;
 
+import com.github.secarchunit.concepts.AssetHandler;
 import com.github.secarchunit.concepts.InputValidator;
 import com.github.secarchunit.concepts.UserInput;
 
@@ -43,6 +44,7 @@ import com.github.secarchunit.concepts.UserInput;
  * @author Eduardo Macarron
  */
 @SessionScope
+@AssetHandler
 public class AccountActionBean extends AbstractActionBean {
 
   private static final long serialVersionUID = 5499663666155758178L;

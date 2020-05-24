@@ -20,6 +20,8 @@ import org.mybatis.jpetstore.mapper.AccountMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.github.secarchunit.concepts.AssetHandler;
+
 import java.util.Optional;
 
 /**
@@ -28,6 +30,7 @@ import java.util.Optional;
  * @author Eduardo Macarron
  */
 @Service
+@AssetHandler
 public class AccountService {
 
   private final AccountMapper accountMapper;

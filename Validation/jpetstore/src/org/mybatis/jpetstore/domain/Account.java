@@ -17,6 +17,8 @@ package org.mybatis.jpetstore.domain;
 
 import java.io.Serializable;
 
+import com.github.secarchunit.concepts.Asset;
+import com.github.secarchunit.concepts.AssetHandler;
 import com.github.secarchunit.concepts.InputValidator;
 import com.github.secarchunit.concepts.UserInput;
 
@@ -27,22 +29,27 @@ import net.sourceforge.stripes.validation.Validate;
  *
  * @author Eduardo Macarron
  */
+@AssetHandler
 public class Account implements Serializable {
 
   private static final long serialVersionUID = 8751282105532159742L;
 
   private String username;
+  @Asset
   private String password;
   private String email;
   private String firstName;
   private String lastName;
   private String status;
+  @Asset
   private String address1;
+  @Asset
   private String address2;
   private String city;
   private String state;
   private String zip;
   private String country;
+  @Asset
   private String phone;
   private String favouriteCategoryId;
   private String languagePreference;
