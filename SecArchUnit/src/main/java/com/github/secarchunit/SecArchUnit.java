@@ -65,7 +65,7 @@ public class SecArchUnit {
                 .orShould().callMethodWhere(MethodCallPredicates.aProcessIsStartedWithoutRestriction);
     }
 
-    public static ArchRule doNotBleedAssetsBetweenComponents() {
+    public static ArchRule doNotBleedSensitiveAssets() {
         return fields()
                 .that().areAnnotatedWith(Asset.class)
                 .should(FieldConditions.notBleedToInsecureComponents);
