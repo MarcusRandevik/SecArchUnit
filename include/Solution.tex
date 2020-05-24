@@ -197,7 +197,7 @@ ArchRule validateUserInput() {
 \end{lstlisting}
 \end{minipage}
 
-As shown in Listing~\ref{lst:constraint_4_impl}, the \textbf{UserInput} annotation is used on line 3 to limit the set of applicable code units, whereas the custom condition \texttt{performDirectOrIndirect\-Validation} implements the logic to ensure that at least one of the three cases outlined above is satisfied.
+As shown in Listing~\ref{lst:constraint_4_impl}, the \textbf{UserInput} annotation is used on line 3 to limit the set of applicable code units, whereas \texttt{performDirectOrIndirect\-Validation} is a custom condition that implements the logic to ensure that at least one of the three cases outlined above is satisfied. The full definition of this condition can be seen in Listing~\ref{lst:constraint_4_condition}.
 
 In BlogWeb, a user publishes a status update in the form of a string that the UserService class receives. The status is then passed to the StatusSanitizer class, where it is validated. The affected methods of each class are marked with the appropriate annotation, as shown in Figure~\ref{fig:validate_input_toy_system}. If the two annotations were to be added, without a call from the relevant method in the \texttt{UserService} class to the \texttt{StatusSanitizer}, the rule would fail and mark it as a violation of the constraint.
 
@@ -228,7 +228,7 @@ ArchRule limitResourceAllocation() {
 \end{lstlisting}
 \end{minipage}
 
-The marking is done with the help of a \textbf{ResourceRestriction} annotation, either on the relevant method or the entire class. The decision of how the restriction mechanism is implemented is left to the developer of the system.
+The marking is done with the help of a \textbf{ResourceRestriction} annotation, either on the relevant method or the entire class. The custom predicates, \texttt{aThreadIsStarted\-WithoutRestriction} and \texttt{aProcessIsStartedWithoutRestriction}, select all code units that start a new thread or process without being marked with this annotation. Their full definitions can be seen in Listing~\ref{lst:constraint_5_predicate_1} and Listing~\ref{lst:constraint_5_predicate_2}. The decision of how the restriction mechanism is implemented is left to the developer of the system.
 
 In BlogWeb, the \texttt{RequestHandler} class spawns new threads in order to handle several user requests concurrently. For the system to conform to the constraint, the \textbf{ResourceRestriction} annotation either has to be added to the entire class, or to the specific method that spawns the thread as shown in Figure~\ref{fig:toy_resource_restriction}. If not, the rule will report a violation, and the developer will have to ensure that the class cannot excessively spawn new threads.
 
@@ -333,7 +333,7 @@ ArchRule doNotBleedAssetsBetweenComponents() {
 \end{minipage}
 
 % Rule definition
-The rule itself requires no arguments, as all the necessary information is injected into the source code in the form of annotations. The custom condition, \texttt{notBleedTo\-InsecureComponents}, ensures that the asset is only accessed directly by asset handlers. Moreover, it utilizes the information about information flow to ensure that the asset is not accessed indirectly through calls to methods where the asset flows into the return value.
+The rule itself requires no arguments, as all the necessary information is injected into the source code in the form of annotations. The custom condition, \texttt{notBleedTo\-InsecureComponents}, ensures that the asset is only accessed directly by asset handlers. Moreover, it utilizes the information about information flow to ensure that the asset is not accessed indirectly through calls to methods where the asset flows into the return value. Its full definition can be seen in Listing~\ref{lst:constraint_6_condition}.
 
 The concept of asset handlers is treated as a single group of classes that have to a high security level, and are therefore granted access to all assets. No distinction is made between different assets and asset handlers in the current implementation.
 
@@ -342,7 +342,7 @@ In BlogWeb, the \texttt{password} field is considered an asset that must stay wi
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.6\textwidth]{figure/toyexamples/Assets.png}
+    \includegraphics[width=0.8\textwidth]{figure/toyexamples/Assets.png}
     \caption
         [Application of constraint 6 to BlogWeb]
         {Application of constraint 6 to BlogWeb.}
@@ -379,9 +379,9 @@ ArchRule doNotLogSecrets = SecArchUnit
 \end{lstlisting}
 \end{minipage}
 
-\begin{figure}
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.2\textwidth]{figure/toyexamples/Secrets.png}
+    \includegraphics[width=0.25\textwidth]{figure/toyexamples/Secrets.png}
     \caption
         [Annotation added to BlogWeb for constraint 7]
         {Annotation added to BlogWeb for constraint 7.}

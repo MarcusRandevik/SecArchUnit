@@ -1,7 +1,6 @@
 \chapter{Evaluation}
 
 This chapter presents an evaluation of SecArchUnit in terms of performance and usability when compared to static analysis tools used in industry. The results are discussed and related to the research questions. Finally, a discussion is held regarding the validity threats of the evaluation.
-\todo{fine tune}
 
 \section{Results}
 This section presents the results of the evaluation in two steps: first the evaluation relating to how effectively SecArchUnit and similar tools validate the constraints, and then an evaluation of differences between the tools in terms of their usability.
@@ -32,11 +31,11 @@ Finally, the performance of SecArchUnit for each constraint across all systems c
 \input{include/graphsAndTables/SecArchUnit_constraint_table}
 
 \subsection{Usability}
-The tools were additionally evaluated in terms of their usability. Firstly, the effort required to express the constraints in the different tools was considered. This effort was quantified as the amount of time spent implementing the rule pertaining to each constraint. These results can be seen in Figure~\ref{fig:Design_time}. From the figure, and the fact that the constraints were implemented sequentially, we can infer that the time required to implement new constraints decreases following increased knowledge of the tools. As constraint 4 included additional functionality, in the form of inspecting annotations, an increase in time can be seen between constraint 3 and 4. For both SecArchUnit and SonarQube, the time to implement is significantly reduced when later implementing constraint 5. PMD, on the other hand, does not see the same decrease. The absence of decreased time was attributed to the fact that there was additional work involved with extracting and checking annotations in PMD, which we distributed equally between the two constraints.
+The tools were additionally evaluated in terms of their usability. Firstly, the effort required to express the constraints in the different tools was considered. This effort was quantified as the amount of time spent implementing the rule pertaining to each constraint. These results can be seen in Figure~\ref{fig:Design_time}. From the figure, and the fact that the constraints were implemented sequentially, we can infer that the time required to implement new constraints decreases following increased knowledge of the tools. As constraint 4 included additional functionality, in the form of inspecting annotations, an increase in time can be seen between constraint 3 and 4. For both SecArchUnit and SonarQube, the time to implement is significantly reduced when later implementing constraint 5. PMD, on the other hand, does not see the same decrease. The absence of decreased time was attributed to the fact that there was additional work involved with extracting and checking annotations in PMD, which we distributed equally between the two constraints. Excluding the first 2 constraints, SecArchUnit required a total of 10 hours to implement the constraints, whereas SonarQube and PMD required 16 and 21 hours respectively. 
 
 \input{include/graphsAndTables/DesignTimeGraph}
 
-Secondly, the time required to validate the constraints, i.e. the running time of each tool, was considered. The tools were executed three times on each system to improve the accuracy of the measurement. These results are presented in Table~\ref{tab:benchmark}. SecArchUnit and PMD perform similarly on the two smaller systems, with both finishing in approximately 1 second. In contrast, the time required for SonarQube to finish is increased by a factor of ten. When validating iTrust, there is an apparent disparity between SecArchUnit, which completes its validation in 2 seconds, whereas PMD and SonarQube complete their validation in 7 and 39 seconds, respectively.
+Secondly, the time required to validate the constraints, i.e. the running time of each tool, was considered. The tools were executed three times on each system to improve the accuracy of the measurement. These results are presented in Table~\ref{tab:benchmark}. SecArchUnit and PMD perform similarly on the two smaller systems, with both finishing in approximately 1 second. In contrast, the time required for SonarQube to finish is increased by a factor of ten. When validating iTrust, there is an apparent disparity between SecArchUnit, which completes its validation in 2 seconds, and PMD and SonarQube, which complete their validation in 7 and 39 seconds, respectively.
 
 \input{include/graphsAndTables/ToolBenchmarks}
 
@@ -54,19 +53,12 @@ Both in regards to precision, as well as recall, the tools performed equally. Ho
 
 As shown in Figure~\ref{bar:frequency_violation_comparison}, the tools were evaluated using imbalanced data. Constraint 1 accounted for a majority of all violations found throughout all three systems, while no system violated constraint 5. Additionally, iTrust was the only system to contain a violation of constraint 3. 
 
-% RQ1: What architectural security constraints can be validated using the tool?
-To answer the research question regarding which architectural security constraints can be validated using ArchUnit (\textbf{RQ1}), the evaluation has shown that ArchUnit can validate constraints 1-4, which relate to the security goals of confidentiality, integrity and accountability. Its performance, in terms of precision and recall, is comparable to tools used in the industry. As the evaluation found no violation of constraint 5, it remains unclear whether the tool can validate constraints related to the security goal of availability.
-
-\todo{transition to RQ2}
 The system, iTrust, initially contained no violations of constraint 7. Therefore, violations were injected by systematically marking all identifier fields (e.g. \texttt{patientId}, \texttt{personnelId}) in the model and base-action packages as secrets. We chose to mark these identifiers because they were commonly sent to the logger as a way to describe the patient or personnel involved in a transaction. Hence, the 37 violations of constraint 7, as seen in Table~\ref{tab:tool_extension}, are artificially injected.
 
 Moreover, iTrust is built with a mix of Java and Java Server Pages (JSP) files whereas ArchUnit can only analyze plain Java. The classes in the action package, from which the logger is called, are all instantiated in the JSP files outside the view of our analysis. As such, the types of information flow that are analyzed and included in the ground truth are rather rudimentary. Out of the 37 violations of constraint 7, 1 was found without recursion (direct access to secret field) and the remaining 36 were found using a single recursion step (access to getter method of a secret field).
 % This is bad - we could just as well put the secret annotation on the getter and enforce the same constraint in SonarQube/PMD
 
-% RQ2: What modifications can be made to the tool in order to facilitate the validation of additional constraints?
-To answer the research question regarding what modifications can be made to ArchUnit (\textbf{RQ2}), the evaluation suggests that the tool can be extended with an analysis of information flow, and that this can be leveraged to validate additional constraints relating to the security goal of confidentiality.
-
-\todo{Discuss examples of things that the tools won't catch}
+%\todo{Discuss examples of things that the tools won't catch}
 % different levels of assets, i.e some fields are more sensitive than others
 
 
@@ -98,6 +90,15 @@ When inspecting a method invocation node in the AST, SonarQube exposes informati
 Moreover, PMD contains no information about the annotations that are present on the target method. As a workaround, a separate rule was created which visited all class and method declarations, dumping their annotations into a text file. This text file was then fed into the rules related to constraints 4 and 5.
 
 To summarize, while it is possible for SonarQube and PMD to enforce some security architectural constraints, these rules are not expressed at the proper level of abstraction. This was made especially apparent in PMD, where several workarounds had to be devised in order to express the constraints.
+
+
+
+\section{Answering research questions}
+% RQ1: What architectural security constraints can be validated using the tool?
+To answer the research question regarding which architectural security constraints can be validated using SecArchUnit (\textbf{RQ1}), the evaluation has shown that SecArchUnit can validate constraints 1-4, which relate to the security goals of confidentiality, integrity and accountability. Its performance, in terms of precision and recall, is comparable to tools used in the industry. As the evaluation found no violation of constraint 5, it remains unclear whether the tool can validate constraints related to the security goal of availability.
+
+% RQ2: What modifications can be made to the tool in order to facilitate the validation of additional constraints?
+To answer the research question regarding what modifications can be made to ArchUnit (\textbf{RQ2}), the evaluation suggests that the tool can be extended with an analysis of information flow, and that this can be leveraged to validate additional constraints relating to the security goal of confidentiality.
 
 
 
