@@ -265,7 +265,7 @@ public class EditOfficeVisitAction extends EditOfficeVisitBaseAction {
 	 * @throws DBException
 	 */
 	public void logOfficeVisitBillingEvent(TransactionType trans) throws DBException {
-		loggingAction.logEvent(trans, loggedInMID, getPid(), "Office visit " +  getOvID() + "billed");
+		loggingAction.logEvent(trans, loggedInMID, getPid(), "Office visit " +  getOvID() + "billed"); // C7 violation x2
 	}
 	
 	/**
@@ -275,7 +275,7 @@ public class EditOfficeVisitAction extends EditOfficeVisitBaseAction {
 	 * @throws DBException
 	 */
 	public void logOfficeVisitEvent(TransactionType trans) throws DBException {
-		loggingAction.logEvent(trans, loggedInMID, getPid(), "Office visit ID: " + getOvID());
+		loggingAction.logEvent(trans, loggedInMID, getPid(), "Office visit ID: " + getOvID()); // C7 violation x2
 	}
 	
 	/**

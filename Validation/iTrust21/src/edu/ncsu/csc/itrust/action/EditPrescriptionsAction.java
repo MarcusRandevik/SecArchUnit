@@ -99,7 +99,7 @@ public class EditPrescriptionsAction extends EditOfficeVisitBaseAction {
 			PatientBean patient = patientDAO.getPatient(getPid());
 			PersonnelBean hcp = personnelDAO.getPersonnel(getHcpid());
 			loggingAction.logEvent(TransactionType.OVERRIDE_INTERACTION_WARNING, hcp.getMID(), patient.getMID(), pres.getMedication().getNDCode()+
-					" Override: "+pres.getReasons().toString());
+					" Override: "+pres.getReasons().toString()); // C7 violation x2
 			if(validOverride(pres)){
 				emailUtil.sendEmail(makeEmail(pres, warnings));
 			}else{

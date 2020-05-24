@@ -3,6 +3,8 @@ package edu.ncsu.csc.itrust.beans;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import com.github.secarchunit.concepts.Secret;
+
 
 public class ApptBean implements Serializable {
 	/**
@@ -10,7 +12,9 @@ public class ApptBean implements Serializable {
 	 */
 	private static final long serialVersionUID = -1965704529780021183L;
 	private String apptType;
+	@Secret
 	private int apptID;
+	@Secret
 	private long patient;
 	private long hcp;
 	private Timestamp date;

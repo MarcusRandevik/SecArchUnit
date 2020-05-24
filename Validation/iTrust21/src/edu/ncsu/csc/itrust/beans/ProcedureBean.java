@@ -2,6 +2,8 @@ package edu.ncsu.csc.itrust.beans;
 
 import java.sql.Date;
 
+import com.github.secarchunit.concepts.Secret;
+
 /**
  * A bean for storing data about a procedure.
  * 
@@ -12,12 +14,15 @@ import java.sql.Date;
  */
 public class ProcedureBean {
 
+	@Secret
 	private long visitID;
+	@Secret
 	private long ovProcedureID = 0L;
 	private String CPTCode;
 	private String description;
 	private String attribute;
 	private Date date;
+	@Secret
 	private String hcpid;
 
 	public ProcedureBean() {

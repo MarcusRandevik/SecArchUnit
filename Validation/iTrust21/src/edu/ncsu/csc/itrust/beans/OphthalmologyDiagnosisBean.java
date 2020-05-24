@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.beans;
 
+import com.github.secarchunit.concepts.Secret;
+
 /**
  * A bean for storing data about Diagnosis.
  * 
@@ -9,11 +11,13 @@ package edu.ncsu.csc.itrust.beans;
  * to create these easily)
  */
 public class OphthalmologyDiagnosisBean {
+	@Secret
 	private long ovDiagnosisID = 0L; // optional
 	private String icdCode;
 	private String description;
 	private String classification;
 	private String URL = "";
+	@Secret
 	private long visitID;
 
 	/**

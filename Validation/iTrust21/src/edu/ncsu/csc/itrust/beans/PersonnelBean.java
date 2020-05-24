@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.github.secarchunit.concepts.Asset;
 import com.github.secarchunit.concepts.AssetHandler;
+import com.github.secarchunit.concepts.Secret;
 
 /**
  * A bean for storing data about a hospital employee.
@@ -19,6 +20,7 @@ import com.github.secarchunit.concepts.AssetHandler;
 public class PersonnelBean implements Serializable {
 	private static final long serialVersionUID = 6575544592646001050L;
 	
+	@Secret
 	private long MID = 0;
 	private long AMID = 0;
 	private String roleString;

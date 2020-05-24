@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.action.base;
 
+import com.github.secarchunit.concepts.Secret;
+
 import edu.ncsu.csc.itrust.dao.DAOFactory;
 import edu.ncsu.csc.itrust.dao.mysql.OfficeVisitDAO;
 import edu.ncsu.csc.itrust.exception.ITrustException;
@@ -29,6 +31,7 @@ abstract public class OfficeVisitBaseAction extends PatientBaseAction {
 	/**
 	 * The unique identifier of the office visit this action is associated with.
 	 */
+	@Secret
 	protected long ovID;
 
 	/**

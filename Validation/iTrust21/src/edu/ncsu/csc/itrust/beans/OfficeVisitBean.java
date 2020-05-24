@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.github.secarchunit.concepts.Secret;
+
 /**
  * A bean for storing data about an office visit at the hospital.
  * 
@@ -13,11 +15,15 @@ import java.util.Date;
  * to create these easily)
  */
 public class OfficeVisitBean {
+	@Secret
 	private long visitID = 0;
+	@Secret
 	private long patientID = 0;
+	@Secret
 	private long hcpID = 0;
 	private String notes = "";
 	private String visitDateStr = new SimpleDateFormat("MM/dd/yyyy").format(new Date());
+	@Secret
 	private String hospitalID = "";
 	private boolean isERIncident = false;
 	private String appointmentType;

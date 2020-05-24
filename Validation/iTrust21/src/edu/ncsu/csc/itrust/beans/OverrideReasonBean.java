@@ -1,12 +1,16 @@
 package edu.ncsu.csc.itrust.beans;
 
+import com.github.secarchunit.concepts.Secret;
+
 /**
  * A reason code is like "Aspirin". A reason code is not associated with an
  * office visit; that's a reason associated with a "prescription". See {@link PrescriptionBean}
  * 
  */
 public class OverrideReasonBean {
+	@Secret
 	private long id;
+	@Secret
 	private long presID;
 	private String reasonCode;
 	private String description;

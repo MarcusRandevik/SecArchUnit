@@ -3,6 +3,8 @@ package edu.ncsu.csc.itrust.beans;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.github.secarchunit.concepts.Secret;
+
 /**
  * A bean for storing data about Allergies.
  * 
@@ -13,7 +15,9 @@ import java.util.Date;
  * these easily)
  */
 public class AllergyBean {
+	@Secret
 	private long id;
+	@Secret
 	private long patientID;
 	private String description;
 	private String ndcode;

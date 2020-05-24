@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.github.secarchunit.concepts.Secret;
+
 import edu.ncsu.csc.itrust.enums.MealType;
 
 /**
@@ -18,6 +20,7 @@ public class FoodEntryBean extends EntryBean {
 	/**
 	 * Unique Primary key so entries can be edited and deleted
 	 */
+	@Secret
 	private long entryID;
 	
 	/**
@@ -79,11 +82,13 @@ public class FoodEntryBean extends EntryBean {
 	/**
 	 * The MID of the user this Food Entry belongs to
 	 */
+	@Secret
 	private long patientID;
 
 	/**
 	 * EntryID of the label belonging to this entry
 	 */
+	@Secret
 	private long labelID;
 	
 	/**

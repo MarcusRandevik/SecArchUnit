@@ -3,6 +3,9 @@ package edu.ncsu.csc.itrust.beans;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import com.github.secarchunit.concepts.Secret;
+
 import edu.ncsu.csc.itrust.Messages;
 
 /**
@@ -14,8 +17,11 @@ import edu.ncsu.csc.itrust.Messages;
  * to create these easily)
  */
 public class ReportRequestBean {
+	@Secret
 	private long ID = 0L;
+	@Secret
 	private long requesterMID = 0L;
+	@Secret
 	private long patientMID = 0L;
 	private Date requestedDate;
 	private Date viewedDate;

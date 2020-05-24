@@ -3,6 +3,8 @@
  */
 package edu.ncsu.csc.itrust.action.base;
 
+import com.github.secarchunit.concepts.Secret;
+
 import edu.ncsu.csc.itrust.dao.DAOFactory;
 import edu.ncsu.csc.itrust.exception.ITrustException;
 
@@ -16,6 +18,7 @@ import edu.ncsu.csc.itrust.exception.ITrustException;
 
 public class EditOfficeVisitBaseAction extends OfficeVisitBaseAction {
 		
+	@Secret
 	private long hcpid;
 
 	/**

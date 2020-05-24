@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.beans;
 
+import com.github.secarchunit.concepts.Secret;
+
 /**
  * Bean to be used for survey results (search).  Stores address information about a HCP
  * in addition to their specialty, hospital, and averages from survey (results range from 1-5).  This
@@ -8,6 +10,7 @@ package edu.ncsu.csc.itrust.beans;
  */
 public class SurveyResultBean {
 
+	@Secret
 	private long hcpMID;
 	private String hcpFirstName;
 	private String hcpLastName;

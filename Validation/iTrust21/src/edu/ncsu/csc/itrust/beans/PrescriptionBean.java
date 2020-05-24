@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.github.secarchunit.concepts.Secret;
+
 /**
  * A bean for storing data about a prescription.
  * 
@@ -15,8 +17,10 @@ import java.util.List;
  * to create these easily)
  */
 public class PrescriptionBean {
+	@Secret
 	private long id = 0L;
 	private MedicationBean medication = new MedicationBean();
+	@Secret
 	private long visitID = 0L;
 	private String startDateStr = new SimpleDateFormat("MM/dd/yyyy").format(new Date());
 	private String endDateStr = new SimpleDateFormat("MM/dd/yyyy").format(new Date());

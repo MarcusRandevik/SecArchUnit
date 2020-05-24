@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.beans;
 
+import com.github.secarchunit.concepts.Secret;
+
 /**
  * A bean for storing data about a medical referral.
  * 
@@ -9,14 +11,19 @@ package edu.ncsu.csc.itrust.beans;
  * to create these easily)
  */
 public class VerboseReferralBean {
+	@Secret
 	private long id = 0L;
+	@Secret
 	private long patientID = 0L;
+	@Secret
 	private long senderID = 0L;
+	@Secret
 	private long receiverID = 0L;
 	private String patientName = "";
 	private String senderName = "";
 	private String receiverName = "";
 	private String referralDetails = "";
+	@Secret
 	private long ovid = 0L;
 	private String ovDate = "";
 	private boolean viewedByPatient = false;
