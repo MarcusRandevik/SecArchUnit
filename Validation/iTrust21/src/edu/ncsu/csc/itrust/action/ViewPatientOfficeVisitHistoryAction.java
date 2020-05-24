@@ -58,7 +58,7 @@ public class ViewPatientOfficeVisitHistoryAction {
 				// Add patient's information to the visit
 				visitBean.setPatient(pb);
 				visitBean.setPatientName(pb.getFullName());
-				visitBean.setAddress1(pb.getStreetAddress1() +" " + pb.getStreetAddress2());
+				visitBean.setAddress1(pb.getStreetAddress1() +" " + pb.getStreetAddress2()); // C6 violation x2
 				visitBean.setAddress2(pb.getCity() + " " +pb.getState() +" " +pb.getZip());
 				
 				// Get this patients office visit history

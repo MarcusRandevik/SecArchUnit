@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.beans;
 
+import com.github.secarchunit.concepts.Secret;
+
 /**
  * A bean for storing data about a visit with an HCP.
  * 
@@ -15,6 +17,7 @@ public class HCPVisitBean {
 
 	private String OVDate;
 	private boolean designated;
+	@Secret
 	private long hcpMID;
 	
 	public HCPVisitBean() {

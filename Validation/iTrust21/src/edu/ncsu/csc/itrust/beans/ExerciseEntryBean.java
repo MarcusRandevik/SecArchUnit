@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.github.secarchunit.concepts.Secret;
+
 import edu.ncsu.csc.itrust.enums.ExerciseType;
 
 ;
@@ -17,6 +19,7 @@ public class ExerciseEntryBean extends EntryBean {
 	/**
 	 * Unique Primary key so entries can be edited and deleted
 	 */
+	@Secret
 	private long entryID;
 
 	/**

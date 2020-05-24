@@ -6,6 +6,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.github.secarchunit.concepts.Secret;
+
 /**
  * A bean for storing health record data.
  * 
@@ -15,7 +17,9 @@ import java.util.Date;
  * to create these easily)
  */
 public class HealthRecord {
+	@Secret
 	private long patientID = 0;
+	@Secret
 	private long officeVisitID = 0;
 	private String officeVisitDate = "0000-00-00";
 	private double headCircumference = 0;
@@ -31,6 +35,7 @@ public class HealthRecord {
 	private int cholesterolHDL = 0;
 	private int cholesterolLDL = 0;
 	private int cholesterolTri = 0;
+	@Secret
 	private long personnelID = 0;
 	private Timestamp dateRecorded = new Timestamp(new Date().getTime());
 	private double bmi = -1;

@@ -4,6 +4,10 @@ import edu.ncsu.csc.itrust.enums.Role;
 import java.io.Serializable;
 import java.util.List;
 
+import com.github.secarchunit.concepts.Asset;
+import com.github.secarchunit.concepts.AssetHandler;
+import com.github.secarchunit.concepts.Secret;
+
 /**
  * A bean for storing data about a hospital employee.
  * 
@@ -12,23 +16,31 @@ import java.util.List;
  * A bean must only have Getters and Setters (Eclipse Hint: Use Source > Generate Getters and Setters 
  * to create these easily)
  */
+@AssetHandler
 public class PersonnelBean implements Serializable {
 	private static final long serialVersionUID = 6575544592646001050L;
 	
+	@Secret
 	private long MID = 0;
 	private long AMID = 0;
 	private String roleString;
 	private String firstName = "";
 	private String lastName = "";
+	@Asset
 	private String password = "";
+	@Asset
 	private String confirmPassword = "";
 	private String securityQuestion = "";
+	@Asset
 	private String securityAnswer = "";
+	@Asset
 	private String streetAddress1 = "";
+	@Asset
 	private String streetAddress2 = "";
 	private String city = "";
 	private String state = "";
 	private String zip = "";
+	@Asset
 	private String phone = "";
 	private String email = "";
 	private String specialty = "";

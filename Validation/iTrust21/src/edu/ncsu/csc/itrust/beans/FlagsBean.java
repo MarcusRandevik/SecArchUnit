@@ -1,13 +1,18 @@
 package edu.ncsu.csc.itrust.beans;
 
+import com.github.secarchunit.concepts.Secret;
+
 import edu.ncsu.csc.itrust.enums.FlagValue;
 
 /**
  * FlagsBean represents a flag.
  */
 public class FlagsBean {
+	@Secret
 	private long fid;
+	@Secret
 	private long mid;
+	@Secret
 	private long pregId;
 	private FlagValue flagValue;
 	private boolean flagged;

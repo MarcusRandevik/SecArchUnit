@@ -265,7 +265,7 @@ public class EditOfficeVisitAction extends EditOfficeVisitBaseAction {
 	 * @throws DBException
 	 */
 	public void logOfficeVisitBillingEvent(TransactionType trans) throws DBException {
-		loggingAction.logEvent(trans, loggedInMID, getPid(), "Office visit " +  getOvID() + "billed");
+		loggingAction.logEvent(trans, loggedInMID, getPid(), "Office visit " +  getOvID() + "billed"); // C7 violation x2
 	}
 	
 	/**
@@ -275,7 +275,7 @@ public class EditOfficeVisitAction extends EditOfficeVisitBaseAction {
 	 * @throws DBException
 	 */
 	public void logOfficeVisitEvent(TransactionType trans) throws DBException {
-		loggingAction.logEvent(trans, loggedInMID, getPid(), "Office visit ID: " + getOvID());
+		loggingAction.logEvent(trans, loggedInMID, getPid(), "Office visit ID: " + getOvID()); // C7 violation x2
 	}
 	
 	/**
@@ -293,7 +293,7 @@ public class EditOfficeVisitAction extends EditOfficeVisitBaseAction {
 		String hcpName = personnelDAO.getName(hcpID);
 		Email email = new Email();
 		email.setFrom("no-reply@itrust.com");
-		email.setToList(Arrays.asList(p.getEmail()));
+		email.setToList(Arrays.asList(p.getEmail()));// C6 violation
 		email.setSubject("HCP has prescribed you a potentially dangerous medication");
 		email.setBody(String
 				.format(

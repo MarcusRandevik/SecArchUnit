@@ -1,6 +1,9 @@
 package edu.ncsu.csc.itrust.beans;
 
 import java.util.Date;
+
+import com.github.secarchunit.concepts.Secret;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -8,8 +11,11 @@ import edu.ncsu.csc.itrust.enums.DeliveryType;
 import edu.ncsu.csc.itrust.enums.PregnancyStatus;
 
 public class ObstetricsRecordBean {
+	@Secret
 	private long mid;
+	@Secret
 	private long oid;
+	@Secret
 	private long pregId;
 	private String lmp;
 	private String edd;

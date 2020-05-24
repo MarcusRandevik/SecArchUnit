@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+import com.github.secarchunit.concepts.Secret;
+
 /**
  * A bean for storing information about releasing medical records.
  * 
@@ -14,8 +16,11 @@ import java.text.SimpleDateFormat;
  */
 public class RecordsReleaseBean {
 	
+	@Secret
 	private long releaseID = 0;
+	@Secret
 	private long pid;
+	@Secret
 	private String releaseHospitalID;
 	private String recHospitalName;
 	private String recHospitalAddress;

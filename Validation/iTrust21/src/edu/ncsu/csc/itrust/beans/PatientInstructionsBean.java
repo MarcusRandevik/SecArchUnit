@@ -6,6 +6,8 @@ package edu.ncsu.csc.itrust.beans;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.github.secarchunit.concepts.Secret;
+
 /**
  * A bean for storing data about patient-specific instructions given during an
  * office visit.
@@ -22,7 +24,9 @@ public class PatientInstructionsBean implements Serializable {
 	 */
 	private static final long serialVersionUID = 5599914802451418319L;
 	
+	@Secret
 	private long id;
+	@Secret
 	private long visitID;
 	private String name;
 	private String url;

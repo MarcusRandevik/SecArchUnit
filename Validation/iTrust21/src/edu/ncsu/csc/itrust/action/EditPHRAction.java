@@ -135,7 +135,7 @@ public class EditPHRAction extends PatientBaseAction {
 		
 		//log that this was added
 		loggingAction.logEvent(TransactionType.parse(6700), HCPUAP.getMID(), 
-				patient.getMID(), "An allergy record has been added: " +  bean.getId());
+				patient.getMID(), "An allergy record has been added: " +  bean.getId()); // C7 violation x3
 		
 		return "Allergy Added"; //If loop is successful, it will never reach here.
 	}
@@ -374,9 +374,9 @@ public class EditPHRAction extends PatientBaseAction {
 		List<PatientBean> reps = patientDAO.getRepresenting(patient.getMID());
 		
 		List<String> toAddrs = new ArrayList<String>();
-		toAddrs.add(patient.getEmail());
+		toAddrs.add(patient.getEmail()); // C6 violation
 		for (PatientBean r: reps) {
-			toAddrs.add(r.getEmail());
+			toAddrs.add(r.getEmail()); // C6 violation
 		}
 		
 		email.setFrom("no-reply@itrust.com");

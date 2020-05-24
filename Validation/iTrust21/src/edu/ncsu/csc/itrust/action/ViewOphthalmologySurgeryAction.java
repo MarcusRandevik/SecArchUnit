@@ -53,7 +53,7 @@ public class ViewOphthalmologySurgeryAction {
 	public OphthalmologySurgeryRecordBean getOphthalmologySurgeryForHCP(long oid) throws ITrustException{
 		OphthalmologySurgeryRecordBean record = ophthalmologySurgeryDAO.getOphthalmologySurgeryRecord(oid);
     	loggingAction.logEvent(TransactionType.parse(8601), loggedInMID, 
-				record.getMid(), "Surgical Ophthalmology Office Visit " +  oid + " viewed by " + loggedInMID);
+				record.getMid(), "Surgical Ophthalmology Office Visit " +  oid + " viewed by " + loggedInMID); // C7 violation
     	return record;
 	}
 	

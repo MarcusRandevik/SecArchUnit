@@ -5,6 +5,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.github.secarchunit.concepts.Secret;
+
 /**
  * A bean for storing historical data about a patient.
  * 
@@ -17,6 +19,7 @@ public class PatientHistoryBean extends PatientBean implements Serializable {
 	private static final long serialVersionUID = -6474182977342257877L;
 	
 	private String changeDateStr = new SimpleDateFormat("MM/dd/yyyy").format(new Date());
+	@Secret
 	private long changeMID = 0;
 	
 	public String getChangeDateStr() {

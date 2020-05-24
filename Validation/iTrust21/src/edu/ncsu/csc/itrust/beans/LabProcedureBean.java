@@ -2,6 +2,8 @@ package edu.ncsu.csc.itrust.beans;
 
 import java.sql.Timestamp;
 
+import com.github.secarchunit.concepts.Secret;
+
 
 
 /**
@@ -28,17 +30,20 @@ public class LabProcedureBean {
 	/**
 	 * Unique 10-digit number that does not start with 9
 	 */
-	 private long pid;	 
+	@Secret
+	private long pid;	 
 	 
 	 /**
 	  * Unique identifier for a laboratory procedure of a patient
 	  */
-	 private long procedureID;
+	@Secret
+	private long procedureID;
 	 
 	 /**
 	  * Digits of the format nnnnn-n 
 	  */
-	 private String loinc; 
+	@Secret
+	private String loinc; 
 	
 	 /**
 	  * One of (NOT YET RECEIVED, PENDING, COMPLETED)
@@ -59,6 +64,7 @@ public class LabProcedureBean {
 	  * Office VisitID	Identifier that specifies the office visit in 
 	  * which the laboratory procedure was ordered
 	  */
+	 @Secret
 	 private long ovID; 
 	 
 	 /**
@@ -75,6 +81,7 @@ public class LabProcedureBean {
 	 /**
 	  * The assigned Lab Tech ID
 	  */
+	 @Secret
 	 private long LTID;
 	 
 	 /**

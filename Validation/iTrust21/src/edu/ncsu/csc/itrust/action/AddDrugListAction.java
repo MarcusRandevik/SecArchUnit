@@ -58,7 +58,7 @@ public class AddDrugListAction {
 				try {
 					ndcodesDAO.addNDCode(bean);
 					loggingAction.logEvent(TransactionType.DRUG_CODE_ADD, loggedInMID, 0,
-							"" + bean.getNDCode() + bean.getDescription());
+							"" + bean.getNDCode() + bean.getDescription()); // No violation
 				} catch (ITrustException e) {
 					//We just want to skip duplicate-entries. Let it pass.
 					e.printStackTrace();
@@ -88,12 +88,12 @@ public class AddDrugListAction {
 				try {
 					ndcodesDAO.addNDCode(bean);
 					loggingAction.logEvent(TransactionType.DRUG_CODE_ADD, loggedInMID, 0,
-							"" + bean.getNDCode() + " - " + bean.getDescription());
+							"" + bean.getNDCode() + " - " + bean.getDescription()); // No violation
 				} catch (ITrustException e) {
 					//Overwrite duplicate entries
 					ndcodesDAO.updateCode(bean);
 					loggingAction.logEvent(TransactionType.DRUG_CODE_EDIT, loggedInMID, 0,
-							"" + bean.getNDCode() + " - " + bean.getDescription());
+							"" + bean.getNDCode() + " - " + bean.getDescription()); // No violation
 				}
 			}
 			fileScanner.close();

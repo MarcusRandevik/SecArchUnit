@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.beans;
 
+import com.github.secarchunit.concepts.Secret;
+
 /**
  * A bean for storing data about a WardRoom.
  * 
@@ -10,6 +12,7 @@ package edu.ncsu.csc.itrust.beans;
  */
 public class WardRoomBean {
 	
+	@Secret
 	long roomID = 0;
 	Long occupiedBy = null;
 	long inWard = 0;

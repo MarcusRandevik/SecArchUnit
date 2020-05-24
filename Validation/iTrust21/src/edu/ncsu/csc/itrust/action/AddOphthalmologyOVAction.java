@@ -54,7 +54,7 @@ public class AddOphthalmologyOVAction {
 			
 			//Log the transaction
 			loggingAction.logEvent(TransactionType.parse(8300), loggedInMID, 
-					p.getMid(), "Ophthalmology Office Visit " +  p.getOid() + " added");
+					p.getMid(), "Ophthalmology Office Visit " +  p.getOid() + " added"); // C7 violation x2
 		} else {
 			throw new ITrustException("Cannot add a null Ophthalmology Office Visit.");
 		}

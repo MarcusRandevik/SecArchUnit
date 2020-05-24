@@ -60,7 +60,7 @@ public class ViewOphthalmologyOVAction {
 	public OphthalmologyOVRecordBean getOphthalmologyOVForHCP(long oid) throws ITrustException{
 		OphthalmologyOVRecordBean record = ophthalmologyOVDAO.getOphthalmologyOVRecord(oid);
     	loggingAction.logEvent(TransactionType.parse(8301), loggedInMID, 
-				record.getMid(), "Ophthalmology Office Visit " +  oid + " viewed by " + loggedInMID);
+				record.getMid(), "Ophthalmology Office Visit " +  oid + " viewed by " + loggedInMID); // C7 violation
     	return record;
 	}
 	
@@ -73,7 +73,7 @@ public class ViewOphthalmologyOVAction {
 	public OphthalmologyOVRecordBean getOphthalmologyOVForPatient(long oid) throws ITrustException{
 		OphthalmologyOVRecordBean record = ophthalmologyOVDAO.getOphthalmologyOVRecord(oid);
     	loggingAction.logEvent(TransactionType.parse(8400), loggedInMID, 
-				record.getMid(), "Ophthalmology Office Visit " +  oid + " viewed by " + loggedInMID);
+				record.getMid(), "Ophthalmology Office Visit " +  oid + " viewed by " + loggedInMID); // C7 violation
     	return record;
 	}
 	
@@ -86,7 +86,7 @@ public class ViewOphthalmologyOVAction {
 	public OphthalmologyOVRecordBean getOphthalmologyOVForDependent(long oid) throws ITrustException{
 		OphthalmologyOVRecordBean record = ophthalmologyOVDAO.getOphthalmologyOVRecord(oid);
     	loggingAction.logEvent(TransactionType.parse(8401), loggedInMID, 
-				record.getMid(), "Ophthalmology Office Visit " +  oid + " viewed by " + loggedInMID);
+				record.getMid(), "Ophthalmology Office Visit " +  oid + " viewed by " + loggedInMID); // C7 violation
     	return record;
 	}
 	

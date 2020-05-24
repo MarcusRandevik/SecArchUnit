@@ -54,7 +54,7 @@ public class ViewVisitedHCPsAction {
 		visitBean.setHCPName(pb.getFullName());
 		visitBean.setOVDate(visitDate);
 		visitBean.setHCPSpecialty(pb.getSpecialty());
-		visitBean.setHCPAddr(pb.getStreetAddress1() +" "+ pb.getStreetAddress2() +" "
+		visitBean.setHCPAddr(pb.getStreetAddress1() +" "+ pb.getStreetAddress2() +" " // C6 violation x2
 						   + pb.getCity() +", "+ pb.getState() +" "+ pb.getZip());
 		visitBean.setDesignated(patientDAO.checkDeclaredHCP(patientMID, hcpid));
 		return visitBean;
@@ -242,7 +242,7 @@ public class ViewVisitedHCPsAction {
 						visitBean.setHCPName(ele.getFullName());
 						visitBean.setOVDate("");
 						visitBean.setHCPSpecialty(ele.getSpecialty());
-						visitBean.setHCPAddr(ele.getStreetAddress1() +" "+ ele.getStreetAddress2() +" "+ ele.getCity() +", "+ ele.getState() +" "+ ele.getZip());
+						visitBean.setHCPAddr(ele.getStreetAddress1() +" "+ ele.getStreetAddress2() +" "+ ele.getCity() +", "+ ele.getState() +" "+ ele.getZip()); // C6 violation x2
 						
 						visitBean.setDesignated(true);
 				

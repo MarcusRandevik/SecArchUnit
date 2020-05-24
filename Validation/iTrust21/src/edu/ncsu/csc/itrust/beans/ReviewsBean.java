@@ -2,6 +2,8 @@ package edu.ncsu.csc.itrust.beans;
 
 import java.util.Date;
 
+import com.github.secarchunit.concepts.Secret;
+
 /**
  * A bean for storing data about a review of a physician.
  * 
@@ -12,8 +14,10 @@ import java.util.Date;
  */
 public class ReviewsBean 
 {
+	@Secret
 	private long MID;
 	private Date dateOfReview;
+	@Secret
 	private long PID;
 	private int rating;
 	private String descriptiveReview;

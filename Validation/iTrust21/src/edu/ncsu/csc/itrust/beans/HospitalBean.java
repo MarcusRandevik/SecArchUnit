@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.beans;
 
+import com.github.secarchunit.concepts.Secret;
+
 /**
  * A bean for storing data about a hospital.
  * 
@@ -9,6 +11,7 @@ package edu.ncsu.csc.itrust.beans;
  * to create these easily)
  */
 public class HospitalBean {
+	@Secret
 	String hospitalID = "";
 	String hospitalName = "";
 	String hospitalAddress = "";

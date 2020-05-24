@@ -1,5 +1,7 @@
 package edu.ncsu.csc.itrust.beans;
 
+import com.github.secarchunit.concepts.Secret;
+
 /**
  * A bean for storing data about a adverse event based on a drug.
  * 
@@ -9,6 +11,7 @@ package edu.ncsu.csc.itrust.beans;
  * to create these easily)
  */
 public class AdverseEventBean {
+	@Secret
 	String MID;
 	String drug;
 	String description;

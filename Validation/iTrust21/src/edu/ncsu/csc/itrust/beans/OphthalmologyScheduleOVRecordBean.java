@@ -2,6 +2,8 @@ package edu.ncsu.csc.itrust.beans;
 
 import java.sql.Timestamp;
 
+import com.github.secarchunit.concepts.Secret;
+
 /**
  * Bean for Scheduled Ophthalmology Office Visits.
  * Holds all of the data needed for a scheduled Ophthalmology Office Visit.
@@ -9,10 +11,13 @@ import java.sql.Timestamp;
 public class OphthalmologyScheduleOVRecordBean {
 
 	/**The mid of the patient.*/
+	@Secret
 	private long patientmid;
 	/**The mid of the doctor.*/
+	@Secret
 	private long doctormid;
 	/**The scheduled Ophthalmology office visit id.*/
+	@Secret
 	private long oid;
 	/**The time of the scheduled Ophthalmology office visit.*/
 	private Timestamp date;

@@ -1,6 +1,7 @@
 package edu.ncsu.csc.itrust.action.base;
 
 import com.github.secarchunit.concepts.InputValidator;
+import com.github.secarchunit.concepts.Secret;
 import com.github.secarchunit.concepts.UserInput;
 
 import edu.ncsu.csc.itrust.HtmlEncoder;
@@ -31,6 +32,7 @@ public class PatientBaseAction {
 	/**
 	 * Stores the MID of the patient associated with this action.
 	 */
+	@Secret
 	protected long pid;
 
 	/**

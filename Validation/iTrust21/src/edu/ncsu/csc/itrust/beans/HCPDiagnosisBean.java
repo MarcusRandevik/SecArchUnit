@@ -2,6 +2,8 @@ package edu.ncsu.csc.itrust.beans;
 
 import java.util.List;
 
+import com.github.secarchunit.concepts.Secret;
+
 /**
  * A bean for storing data about the diagnosis given by an HCP.
  * 
@@ -12,6 +14,7 @@ import java.util.List;
  */
 public class HCPDiagnosisBean {
 
+	@Secret
 	private long HCPID;
 	private String HCPname;
 	private long numPatients;
