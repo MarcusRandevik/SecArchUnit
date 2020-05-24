@@ -1,18 +1,5 @@
 @startuml
 
-class Logger {
-    + void info(String message)
-}
-
-class UserService {
-    + User signInUser(UserLoginRequest request)
-    + boolean publishStatus(String statusMessage)
-}
-
-UserService ..> Logger
-UserService ..> User
-UserService ..> UserLoginRequest
-
 class UserLoginRequest {
     - String username
     - String password @Asset
@@ -24,46 +11,11 @@ class UserAuthenticator {
     + User authenticateUser(UserLoginRequest request)
 }
 
-UserAuthenticator ..> User
-UserAuthenticator ..> UserLoginRequest
-UserService ..> UserAuthenticator
-
-class UserAuthorizer {
-    + boolean canPublishStatus()
-}
-
-UserAuthorizer ..> User
-UserService ..> UserAuthorizer
-
-class HttpResponse {
-    + void write(Object response)
-}
-
-class OutboundMessageSanitizer {
-    + void sendResponse(Object message)
-    - void sanitizeMessage(Object message)
-}
-
-OutboundMessageSanitizer ..> HttpResponse
-
-class StatusSanitizer {
-    + String sanitizeStatusMessage(String statusMessage)
-}
-
-UserService ..> StatusSanitizer
-
-class RequestHandler {
-    + void handle(HttpRequest request, HttpResponse response)
-}
-
-RequestHandler ..> Thread
-RequestHandler ..> UserService
-RequestHandler ..> OutboundMessageSanitizer
-RequestHandler ..> HttpResponse
-RequestHandler ..> UserLoginRequest
+UserAuthenticator .down.> UserLoginRequest
 
 note "Annotated with @AssetHandler" as N1
-UserAuthenticator .. N1
-N1 .. UserLoginRequest
+note "Annotated with @AssetHandler" as N2
+UserAuthenticator .right. N1
+UserLoginRequest .right. N2
 
 @enduml
