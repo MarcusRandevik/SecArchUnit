@@ -285,14 +285,14 @@ public class SecArchUnit {
                 return hints.stream();
             }
 
-            // Hints with an originating member
+            // Extract originating members from hints
             Set<JavaMember> hintOrigins = hints.stream()
                     .filter(hint -> hint.getMemberOrigin() != null)
                     .map(hint -> hint.getMemberOrigin())
                     .collect(Collectors.toSet());
 
             // Hints flowing into a field
-            Stream<Hint> hintsFlowingIntoMembers = hintOrigins.stream()
+            Stream<Hint> hintsFlowingIntoFields = hintOrigins.stream()
                     .filter(member -> member instanceof JavaField)
                     .map(member -> (JavaField) member)
                     .flatMap(hint -> hint.getAccessesToSelf().stream())
@@ -305,7 +305,7 @@ public class SecArchUnit {
                     .flatMap(method -> method.getReturnValueHints().stream());
 
             // Collect hints from this level
-            Set<Hint> recursedHints = Stream.concat(hintsFlowingIntoMembers, hintsFlowingOutOfMethods)
+            Set<Hint> recursedHints = Stream.concat(hintsFlowingIntoFields, hintsFlowingOutOfMethods)
                     .collect(Collectors.toSet());
 
             // Concatenate this level of hints with the next recursion level
