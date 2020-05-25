@@ -18,11 +18,11 @@ As depicted in Figure~\ref{bar:frequency_violation_comparison}, constraint 1 acc
 
 \input{include/graphsAndTables/ConstraintFrequency}
 
-In the second stage, constraints 6-7 were applied to iTrust and validated solely using SecArchUnit. The performance metrics resulting from this evaluation are presented in Table~\ref{tab:tool_extension}. Similarly to the results of the first stage, SecArchUnit reliably detects violations of both constraints without reporting any false negatives, resulting in a high recall.  Additionally, no false positives were found, leading to a high degree of precision.
+In the second stage, constraints 6-7 were applied to the test systems and validated solely using SecArchUnit. The performance metrics resulting from this evaluation are presented in Table~\ref{tab:tool_extension}. In iTrust, SecArchUnit reliably detected violations of both constraints, resulting in high precision and recall. In contrast, JPetStore had no violations that could be assessed, whereas ATM Simulation failed to report one of its two violations, and additionally reported two false positives, resulting in poor precision and recall.
 
 \input{include/graphsAndTables/ExtensionConstraints}
 
-Looking at the distribution of constraint violations for constraint 6 and 7 in iTrust, found in Figure~\ref{bar:frequency_violation_extension}, we can see that both constraints had enough violation to allow for an evaluation. 
+Looking at the distribution of constraint violations for constraint 6 and 7, found in Figure~\ref{bar:frequency_violation_extension}, we can see that in iTrust, both constraints had enough violations to allow for an evaluation, whereas in ATM Simulation and JPetStore, there were very few violations. This is attributed in part to the differences in size between these two projects and iTrust, and in part to the fact that JPetStore had no logging functionality.
 
 \input{include/graphsAndTables/ConstraintFrequencyExtension}
 
@@ -46,14 +46,17 @@ Secondly, the time required to validate the constraints, i.e. the running time o
 Both in regards to precision, as well as recall, the tools performed equally. However, the causes of failure differed noticeably in cases where the results of the tools varied. The examples are described below:
 
 \begin{itemize}
-    \item In ATM simulator, the same false positive occurred in all three tools. This was in relation to constraint 3, where a subclass of the sending point contained a method call to the sender. Additionally, PMD had 4 false negatives which occurred because it was unable to determine the classes that these method calls targeted.
+    \item In ATM Simulation, the same false positive occurred in all three tools. This was in relation to constraint 3, where a subclass of the sending point contained a method call to the sender. Additionally, PMD had 4 false negatives which occurred because it was unable to determine the classes that these method calls targeted.
     \item In JPetStore, PMD reported 4 false negatives, again because it was unable to determine the target class of these method calls.
     \item In iTrust, a security service contained both an inner interface and an inner static class whose methods did not perform any security events. In both PMD and SonarQube, these methods were determined to be declared in the inner class by traversing the AST from the method to its first parent class or interface declaration. In comparison, SecArchUnit considers the members of the inner class to be declared in both the inner and outer class. This improperly marks the inner methods as violating the constraint, resulting in 3 false positives in SecArchUnit.
 \end{itemize}
 
 As shown in Figure~\ref{bar:frequency_violation_comparison}, the tools were evaluated using imbalanced data. Constraint 1 accounted for a majority of all violations found throughout all three systems, while no system violated constraint 5. Additionally, iTrust was the only system to contain a violation of constraint 3. 
 
-The system, iTrust, initially contained no violations of constraint 7. Therefore, violations were injected by systematically marking all identifier fields (e.g. \texttt{patientId}, \texttt{personnelId}) in the model and base-action packages as secrets. We chose to mark these identifiers because they were commonly sent to the logger as a way to describe the patient or personnel involved in a transaction. Hence, the 37 violations of constraint 7, as seen in Table~\ref{tab:tool_extension}, are artificially injected.
+\textbf{Extension constraints.}
+In ATM Simulation, the tool performed poorly when validating constraint 7. The false negative resulted from the fact that an object, which owned a secret field, was passed to the logger and converted to a string representation that exposed the secret \textit{inside} the logger class. Therefore, the hint to the secret field was not included in the arguments of the call to the logger and the constraint subsequently failed to catch the violation. In addition, SecArchUnit reported two false positives which were found after three recursion steps on the argument hints (access to method, which accesses method, which accesses getter method of the secret field). While the concerned method did indeed access the secret fields, neither of their values flowed into the return value of the method. Therefore, it is suspected that stack hints are improperly handled for some instructions during the analysis of the system.
+
+The system, iTrust, initially contained no violations of constraint 7. Therefore, violations were injected by systematically marking all identifier fields (e.g. \texttt{patientId}, \texttt{personnelId}) in the model and base-action packages as secrets. We chose to mark these identifiers because they were commonly sent to the logger as a way to describe the patient or personnel involved in a transaction. Hence, the 37 violations of constraint 7 in iTrust, as seen in Table~\ref{tab:tool_extension}, are artificially injected.
 
 Moreover, iTrust is built with a mix of Java and Java Server Pages (JSP) files whereas ArchUnit can only analyze plain Java. The classes in the action package, from which the logger is called, are all instantiated in the JSP files outside the view of our analysis. As such, the types of information flow that are analyzed and included in the ground truth are rather rudimentary. Out of the 37 violations of constraint 7, 1 was found without recursion (direct access to secret field) and the remaining 36 were found using a single recursion step (access to getter method of a secret field).
 % This is bad - we could just as well put the secret annotation on the getter and enforce the same constraint in SonarQube/PMD
@@ -66,10 +69,15 @@ Moreover, iTrust is built with a mix of Java and Java Server Pages (JSP) files w
 \section{Discussion of qualitative differences}
 While SecArchUnit, SonarQube and PMD are all static analysis tools that support evaluation of custom rules, they differ considerably in how their rules are defined and evaluated.
 
-SecArchUnit builds a representation of the entirety of the analyzed system, which is available during the evaluation of the rules. As shown throughout Chapter~\ref{ch:enforcing_constraints}, rules have access to information about both incoming and outgoing accesses to all members, within and between classes, making it convenient to specify architectural constraints at an appropriate level of abstraction.
+SecArchUnit builds an architectural representation of the entirety of the analyzed system, which is available during the evaluation of the rules. As shown throughout Chapter~\ref{ch:enforcing_constraints}, rules have access to information about both incoming and outgoing accesses to all members, within and between classes, making it convenient to specify architectural constraints at an appropriate level of abstraction.
 
-Regarding SonarQube and PMD, both of these tools evaluate rules by traversing an Abstract Syntax Tree (AST) where the root node is the Java class currently being analyzed. As a consequence, a rule can only inspect one class at a time; it can audit outgoing accesses from the current class, but it does not know anything about incoming accesses from other classes. In a constraint where incoming accesses to a specific class need to be restricted, these tools instead inspect all classes one by one and look for outgoing accesses to the concerned class, as exemplified in Listing~\ref{lst:sonarqube_excerpt}. 
+Regarding SonarQube and PMD, both of these tools evaluate rules by traversing an Abstract Syntax Tree (AST). Accesses to fields and methods must therefore be extracted from the AST by searching the tree for nodes that describe, for example, method invocations. 
 
+where the root node is the Java class currently being analyzed. As a consequence, a rule can only inspect one class at a time; it can audit outgoing accesses from the current class, but it does not know anything about incoming accesses from other classes. In a constraint where incoming accesses to a specific class need to be restricted, these tools instead inspect all classes one by one and look for outgoing accesses to the concerned class, as exemplified in Listing~\ref{lst:sonarqube_excerpt}. 
+
+\todo{Much like query optimization/indexing, in ArchUnit the relevant accesses are selected directly and then have a condition applied to them. The other tools go through all classes, once for every rule, which is less efficient and is reflected in the benchmarks}
+
+\begin{minipage}{\textwidth}
 \begin{lstlisting}[caption={Excerpt of constraint 3 in SonarQube, simplified using pseudo code. See full rule definition in Appendix~\ref{apx:sonarqube} and the related PMD rule in Appendix~\ref{apx:pmd}.}, captionpos=b, label=lst:sonarqube_excerpt, numbers=left, showstringspaces=false]
 public void visitNode(MethodInvocation node) {
     if (target method is declared in a sender) {
@@ -82,6 +90,7 @@ public void visitNode(MethodInvocation node) {
     }
 }
 \end{lstlisting}
+\end{minipage}
 
 As a consequence, these tools cannot enforce constraints where both incoming and outgoing accesses need to be inspected in unison. An example of this is constraint 4, where the constraint allows user input to be validated either by calling a validator or by only being called by validators. The rules in SonarQube and PMD can only look for outgoing calls to validators, not taking incoming accesses into account, and therefore risk reporting false positives. However, no such case was found in the evaluation.
 

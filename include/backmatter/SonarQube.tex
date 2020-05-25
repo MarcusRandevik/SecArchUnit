@@ -3,38 +3,38 @@
 
 \begin{lstlisting}[caption={SonarQube custom rule that enforces constraint 3.}, captionpos=b, label=lst:sonarqube_rule, numbers=left, showstringspaces=false]
 class CentralMessageRule extends IssuableSubscriptionVisitor {
-    private static final String SENDING_POINT = "Transaction";
-    private static final MethodMatchers SENDERS = MethodMatchers
-        .create()
-        .ofTypes("atm.physical.NetworkToBank")
-        .anyName()
-        .addParametersMatcher(parameters -> !parameters.isEmpty())
-        .build();
+  private static final String SENDING_POINT = "Transaction";
+  private static final MethodMatchers SENDERS = MethodMatchers
+    .create()
+    .ofTypes("atm.physical.NetworkToBank")
+    .anyName()
+    .addParametersMatcher(parameters -> !parameters.isEmpty())
+    .build();
 
-    @Override
-    public List<Tree.Kind> nodesToVisit() {
-        return Collections.singletonList(Tree.Kind.METHOD_INVOCATION);
+  @Override
+  public List<Tree.Kind> nodesToVisit() {
+    return Collections.singletonList(Tree.Kind.METHOD_INVOCATION);
+  }
+
+  @Override
+  public void visitNode(Tree tree) {
+    MethodInvocationTree methodInvocation =
+      (MethodInvocationTree) tree;
+
+    if (SENDERS.matches(methodInvocation)) {
+      // Get class where method invocation takes place
+      Tree parent = methodInvocation.parent();
+      while (!parent.is(Tree.Kind.CLASS)) {
+        parent = parent.parent();
+      }
+      ClassTree classTree = (ClassTree) parent;
+
+      // Compare class with sending point
+      String sendingClassName = classTree.symbol().name();
+      if (!SENDING_POINT.equals(sendingClassName)) {
+        reportIssue(methodInvocation, "Messages must only be sent from the sending point");
+      }
     }
-
-    @Override
-    public void visitNode(Tree tree) {
-        MethodInvocationTree methodInvocation =
-            (MethodInvocationTree) tree;
-
-        if (SENDERS.matches(methodInvocation)) {
-            // Get class where method invocation takes place
-            Tree parent = methodInvocation.parent();
-            while (!parent.is(Tree.Kind.CLASS)) {
-                parent = parent.parent();
-            }
-            ClassTree classTree = (ClassTree) parent;
-
-            // Compare class with sending point
-            String sendingClassName = classTree.symbol().name();
-            if (!SENDING_POINT.equals(sendingClassName)) {
-                reportIssue(methodInvocation, "Messages must only be sent from the sending point");
-            }
-        }
-    }
+  }
 }
 \end{lstlisting}
