@@ -71,28 +71,75 @@ While SecArchUnit, SonarQube and PMD are all static analysis tools that support 
 
 SecArchUnit builds an architectural representation of the entirety of the analyzed system, which is available during the evaluation of the rules. As shown throughout Chapter~\ref{ch:enforcing_constraints}, rules have access to information about both incoming and outgoing accesses to all members, within and between classes, making it convenient to specify architectural constraints at an appropriate level of abstraction.
 
-Regarding SonarQube and PMD, both of these tools evaluate rules by traversing an Abstract Syntax Tree (AST). Accesses to fields and methods must therefore be extracted from the AST by searching the tree for nodes that describe, for example, method invocations. 
+Regarding SonarQube and PMD, both of these tools evaluate rules by traversing an Abstract Syntax Tree (AST) that describes the source code of the system. While this allows the tools to enforce low-level code constraints by inspecting, for example, if-statements, try-catch blocks and the order of statements within a code unit, they do not lend themselves to specifying security architectural constraints. The implementations of constraint 1 in SecArchUnit and SonarQube can be seen in Listing~\ref{lst:secarchunit_1_excerpt} and Listing~\ref{lst:sq_1_excerpt}, respectively. The rule in SecArchUnit is defined in 4 lines, whereas the equivalent rule in SonarQube requires approximately 30 lines of code and multiple traversals of the AST to extract the information relevant to the constraint. Admittedly, the rule in SecArchUnit makes use of a custom condition which is defined in another 6 lines of code, but the difference is still considerable.
 
-where the root node is the Java class currently being analyzed. As a consequence, a rule can only inspect one class at a time; it can audit outgoing accesses from the current class, but it does not know anything about incoming accesses from other classes. In a constraint where incoming accesses to a specific class need to be restricted, these tools instead inspect all classes one by one and look for outgoing accesses to the concerned class, as exemplified in Listing~\ref{lst:sonarqube_excerpt}. 
+\begin{lstlisting}[caption={Constraint 1 in SecArchUnit.}, captionpos=b, label=lst:secarchunit_1_excerpt, numbers=left, showstringspaces=false]
+return methods()
+    .that().haveModifier(JavaModifier.PUBLIC)
+    .and().areDeclaredInClassesThat(securityServicesDescriptor)
+    .should(callMethod(declaredIn(logger)));
+\end{lstlisting}
 
-\todo{Much like query optimization/indexing, in ArchUnit the relevant accesses are selected directly and then have a condition applied to them. The other tools go through all classes, once for every rule, which is less efficient and is reflected in the benchmarks}
+\begin{lstlisting}[caption={Constraint 1 in SonarQube. The definition of the entire class can be seen in Appendix~\ref{lst:sq_1}.}, captionpos=b, label=lst:sq_1_excerpt, numbers=left, showstringspaces=false]
+String methodEnclosingClass =
+  method.symbol().enclosingClass().name().toLowerCase();
+if (!SECURITY_CLASSES.contains(methodEnclosingClass)) {
+  return;
+}
 
-\begin{minipage}{\textwidth}
-\begin{lstlisting}[caption={Excerpt of constraint 3 in SonarQube, simplified using pseudo code. See full rule definition in Appendix~\ref{apx:sonarqube} and the related PMD rule in Appendix~\ref{apx:pmd}.}, captionpos=b, label=lst:sonarqube_excerpt, numbers=left, showstringspaces=false]
-public void visitNode(MethodInvocation node) {
-    if (target method is declared in a sender) {
-        // Get class in which method invocation takes place
-        ClassTree classTree = node.parent() until type is ClassTree
+boolean isPublicMethod = false;
+for (ModifierKeywordTree keywordTree : 
+    method.modifiers().modifiers()) {
+  if (keywordTree.modifier() == Modifier.PUBLIC) {
+    isPublicMethod = true;
+    break;
+  }
+}
 
-        if (classTree is not the sending point) {
-            reportIssue(...);
-        }
+if (!isPublicMethod) {
+  return;
+}
+
+boolean containsCallToLogger = false;
+ControlFlowGraph cfg = method.cfg();
+
+for (ControlFlowGraph.Block block : cfg.blocks()) {
+  for (Tree blockTree : block.elements()) {
+    if (blockTree.is(Tree.Kind.METHOD_INVOCATION)) {
+      MethodInvocationTree mit = (MethodInvocationTree) blockTree;
+      if (loggerMethods.matches(mit)) {
+        containsCallToLogger = true;
+      }
     }
+  }
+}
+
+if (!containsCallToLogger) {
+  reportIssue(...);
 }
 \end{lstlisting}
-\end{minipage}
 
-As a consequence, these tools cannot enforce constraints where both incoming and outgoing accesses need to be inspected in unison. An example of this is constraint 4, where the constraint allows user input to be validated either by calling a validator or by only being called by validators. The rules in SonarQube and PMD can only look for outgoing calls to validators, not taking incoming accesses into account, and therefore risk reporting false positives. However, no such case was found in the evaluation.
+In SonarQube and PMD, the root node of the AST is the Java class currently being analyzed. As a consequence, a rule can only inspect one class at a time; it can audit outgoing accesses from the current class, but it does not know anything about incoming accesses from other classes. In a constraint where incoming accesses to a specific class need to be restricted, these tools instead inspect all classes one by one and look for outgoing accesses to the concerned class.
+This likely contributes to the inefficient validation of the constraints, as shown in the benchmarks, due to each rule traversing the AST of all classes in the system. In contrast, SecArchUnit uses the predicate to select only the elements relevant to the constraint, on which the condition is subsequently applied.
+
+%\todo{Much like query optimization/indexing, in ArchUnit the relevant accesses are selected directly and then have a condition applied to them. The other tools go through all classes, once for every rule, which is less efficient and is reflected in the benchmarks}
+
+%\begin{minipage}{\textwidth}
+%\begin{lstlisting}[caption={Excerpt of constraint 3 in SonarQube, simplified using pseudo %code. See full rule definition in Appendix~\ref{apx:sonarqube} and the related PMD rule in %Appendix~\ref{apx:pmd}.}, captionpos=b, label=lst:sonarqube_excerpt, numbers=left, %showstringspaces=false]
+%public void visitNode(MethodInvocation node) {
+%    if (target method is declared in a sender) {
+%        // Get class in which method invocation takes place
+%        ClassTree classTree = node.parent() until type is ClassTree
+%
+%        if (classTree is not the sending point) {
+%            reportIssue(...);
+%        }
+%    }
+%}
+%\end{lstlisting}
+%\end{minipage}
+
+In addition, these tools cannot enforce constraints where both incoming and outgoing accesses need to be inspected in unison. An example of this is constraint 4, where the constraint allows user input to be validated either by calling a validator or by only being called by validators. The rules in SonarQube and PMD can only look for outgoing calls to validators, not taking incoming accesses into account, and therefore risk reporting false positives. However, no such case was found in the evaluation.
 
 When inspecting a method invocation node in the AST, SonarQube exposes information about the target method, including its signature, annotations, and information about the class in which it is declared. In PMD, however, the node that corresponds to method invocations only contains information about the return type of the method. In order to resolve the target class of a method invocation, we examined the immediately preceding expression. If the expression had a return type, this was assumed to be the target owner. Otherwise, the expression was further examined for references to local variables and fields, the declarations of which contained the necessary type information. This lack of type information not only made the constraints complicated to express, but it also resulted in an unreliable resolution of method targets, as reflected in the number of false negatives reported by the tool.
 

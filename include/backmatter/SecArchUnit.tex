@@ -158,7 +158,7 @@ return new ArchCondition<>("pass @Secret argument to "
 \end{lstlisting}
 
 \clearpage
-\begin{lstlisting}[caption={Constraint 7: InformationFlow class used to recursively follow hints to their originating members. For hints originating from fields, we check all hints that flow into said field. For hints originating from methods, we check all hints that flow into the return value of the method. This process is repeated until the "breadcrumb trail" of hints is exhausted, or up to a maximum of 5 recursions.}, captionpos=b, label=lst:constraint_7_flow, numbers=left, showstringspaces=false]
+\begin{lstlisting}[caption={Constraint 7: InformationFlow class used to recursively follow hints to their originating members. For hints originating from fields, we check all hints that flow into said field. For hints originating from methods, we check all hints that flow into the return value of the method. This process is repeated until the "breadcrumb trail" of hints is exhausted, or to a maximum of 5 recursive steps.}, captionpos=b, label=lst:constraint_7_flow, numbers=left, showstringspaces=false]
 class InformationFlow {
   Stream<Hint> recurseOnHints(Set<Hint> hints) {
     return recurseOnHints(hints, 5).distinct();

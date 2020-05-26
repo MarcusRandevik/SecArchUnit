@@ -1,7 +1,232 @@
-\chapter{PMD Rule Definition}
+\chapter{PMD Rule Definitions}
 \label{apx:pmd}
 
-\begin{lstlisting}[caption={PMD custom rule that enforces constraint 3.}, captionpos=b, label=lst:pmd_rule, numbers=left, showstringspaces=false]
+\begin{lstlisting}[caption={Utility class which attempts to extract the required information about method calls from the Abstract Syntax Tree.}, captionpos=b, label=lst:pmd_util, numbers=left, showstringspaces=false]
+public class Util {
+  public static class MethodCall {
+    public final String targetOwner;
+    public final Class<?> targetOwnerClass;
+    public final String target;
+    public final int argumentCount;
+    public final Node source;
+
+    public MethodCall(Class<?> targetOwner,
+        JavaNameOccurrence occurrence) {
+      this.targetOwner = targetOwner == null ? null :
+        targetOwner.getCanonicalName();
+      this.targetOwnerClass = targetOwner;
+      this.target = occurrence.getImage();
+      this.argumentCount = occurrence.getArgumentCount();
+      this.source = occurrence.getLocation();
+    }
+  }
+
+  public static List<MethodCall> getMethodCallsFrom(JavaNode body){
+    List<MethodCall> methodCalls = new ArrayList<>();
+
+    // Find expressions that contain at least one method call
+    Set<List<JavaNameOccurrence>> invocationChains = body
+        .findDescendantsOfType(ASTPrimaryExpression.class).stream()
+        .map(expr -> new NameFinder(expr).getNames())
+        .filter(names ->
+          names.stream().anyMatch(name ->
+            name.isMethodOrConstructorInvocation()
+          )
+        )
+        .collect(Collectors.toSet());
+
+    for (List<JavaNameOccurrence> chain : invocationChains) {
+      Class<?> targetOwner;
+      if (chain.get(0).isMethodOrConstructorInvocation()) {
+        // First name in chain is a method call
+
+        // Look for previous sibling
+        JavaNode node = chain.get(0).getLocation();
+        if (node.getIndexInParent() > 0) {
+          // Get return type from sibling
+          Class<?> siblingType = getType(
+            node.getParent().getChild(
+              node.getIndexInParent() - 1
+            )
+          );
+          if (siblingType != null) {
+            MethodCall call = new MethodCall(
+              siblingType, chain.get(0)
+            );
+            methodCalls.add(call);
+          }
+        } else {
+          // Should be local method, super method or static import
+          // Assumed to be local method
+          ASTClassOrInterfaceDeclaration enclosingClass = body
+            .getFirstParentOfType(
+              ASTClassOrInterfaceDeclaration.class
+            );
+          if (enclosingClass != null
+              && enclosingClass.getType() != null) {
+            MethodCall call = new MethodCall(
+              enclosingClass.getType(), chain.get(0)
+            );
+            methodCalls.add(call);
+          }
+        }
+      }
+
+      // Resolve type of first sub-expression, i.e. owner of next target method
+      targetOwner = getType(chain.get(0), body.getScope());
+
+      // Iterate over suffixes to resolve method calls
+      for (Iterator<JavaNameOccurrence> it = chain.listIterator(1); it.hasNext();) {
+        JavaNameOccurrence occurrence = it.next();
+
+        if (occurrence.isMethodOrConstructorInvocation()
+            && targetOwner != null) {
+          methodCalls.add(new MethodCall(
+            targetOwner, occurrence
+          ));
+        }
+
+        // Return type becomes target owner for the next iteration
+        targetOwner = getType(occurrence.getLocation());
+      }
+    }
+
+    return methodCalls;
+  }
+
+  public static Class<?> getType(NameOccurrence nameOccurrence,
+      Scope scope) {
+    Class<?> type = null;
+
+    // Search for name in current and parent scopes
+    while (scope != null) {
+      Optional<NameDeclaration> nameDeclaration = scope
+        .getDeclarations().keySet().stream()
+        .filter(name -> name.getName() != null)
+        .filter(name -> 
+          name.getName().equals(nameOccurrence.getImage())
+        )
+        .findFirst();
+
+      if (nameDeclaration.isPresent()) {
+        type = getType(nameDeclaration.get().getNode());
+        break;
+      }
+
+      scope = scope.getParent();
+    }
+
+    if (type == null) {
+      // Try to extract type directly from node
+      type = getType(nameOccurrence.getLocation());
+    }
+
+    return type;
+  }
+
+  public static Class<?> getType(ScopedNode node) {
+    if (node instanceof TypeNode) {
+      return ((TypeNode) node).getType();
+    }
+
+    return null;
+  }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Constraint 1.}, captionpos=b, label=lst:pmd_1, numbers=left, showstringspaces=false]
+public class LogSecurityEventsRule extends AbstractJavaRule {
+  private static final String LOGGER =
+    "edu.ncsu.csc.itrust.action.EventLoggingAction";
+  private static final Collection<String> SECURITY_SERVICES =
+    Arrays.asList(
+      "edu.ncsu.csc.itrust.action.ActivityFeedAction",
+    );
+
+  public LogSecurityEventsRule() {
+    super();
+
+    // Types of nodes to visit
+    addRuleChainVisit(ASTMethodDeclaration.class);
+  }
+
+  @Override
+  public Object visit(ASTMethodDeclaration method, Object data) {
+    ASTClassOrInterfaceDeclaration owningClass = method
+      .getFirstParentOfType(ASTClassOrInterfaceDeclaration.class);
+    if (owningClass == null) {
+      // Method defined in enum => ignore
+      return data;
+    }
+
+    if (!SECURITY_SERVICES.contains(owningClass.getBinaryName())
+        || !method.isPublic()) {
+      // Not a security event; skip method
+      return data;
+    }
+
+    boolean callsLogger = Util.getMethodCallsFrom(method).stream()
+        .anyMatch(call -> LOGGER.equals(call.targetOwner));
+
+    if (!callsLogger) {
+      addViolation(data, method);
+    }
+
+    return data;
+  }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Constraint 2.}, captionpos=b, label=lst:pmd_2, numbers=left, showstringspaces=false]
+public class AuthSingleComponentRule extends AbstractJavaRule {
+  private static final String AUTH_POINT =
+    "atm.transaction.Transaction";
+  private static final String AUTH_ENFORCER =
+    "atm.transaction.Transaction";
+
+  public AuthSingleComponentRule() {
+    super();
+
+    // Types of nodes to visit
+    addRuleChainVisit(ASTClassOrInterfaceDeclaration.class);
+  }
+
+  @Override
+  public Object visit(ASTClassOrInterfaceDeclaration clazz,
+      Object data) {
+    boolean isAuthPoint = AUTH_POINT.equals(clazz.getBinaryName());
+    Stream<Util.MethodCall> methodCallsFromClass = clazz
+      .findDescendantsOfType(
+        ASTClassOrInterfaceBodyDeclaration.class
+      )
+      .stream()
+      .flatMap(body -> Util.getMethodCallsFrom(body).stream());
+
+    if (isAuthPoint) {
+      // Ensure at least one call to authentication enforcer
+      boolean callsEnforcer = methodCallsFromClass
+        .anyMatch(call -> AUTH_ENFORCER.equals(call.targetOwner));
+
+      if (!callsEnforcer) {
+        addViolationWithMessage(data, clazz, "#2 Authentication point must call authentication enforcer");
+      }
+    } else {
+      // Ensure no calls to authentication enforcer
+      methodCallsFromClass
+        .filter(call -> AUTH_ENFORCER.equals(call.targetOwner))
+        .forEach(offendingCall -> {
+          String message = "#2 Method invocation to enforcer must be performed at auth point";
+          addViolationWithMessage(data, offendingCall.source, message);
+        });
+    }
+
+    return data;
+  }
+}
+
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Constraint 3.}, captionpos=b, label=lst:pmd_3, numbers=left, showstringspaces=false]
 class CentralSendingRule extends AbstractJavaRule {
   private static final String SENDING_POINT =
     "atm.transaction.Transaction";
@@ -14,9 +239,7 @@ class CentralSendingRule extends AbstractJavaRule {
     super();
 
     // Types of nodes to visit
-    addRuleChainVisit(
-      ASTClassOrInterfaceBodyDeclaration.class
-    );
+    addRuleChainVisit(ASTClassOrInterfaceBodyDeclaration.class);
   }
 
   @Override
@@ -27,21 +250,263 @@ class CentralSendingRule extends AbstractJavaRule {
       body.getFirstParentOfType(
         ASTClassOrInterfaceDeclaration.class
       );
-    boolean isSendingPoint = owningClass != null &&
-      SENDING_POINT.equals(owningClass.getBinaryName());
+    boolean isSendingPoint = owningClass != null
+      && SENDING_POINT.equals(owningClass.getBinaryName());
     if (isSendingPoint) {
       // Method defined in sending point; skip this method
       return data;
     }
 
     Util.getMethodCallsFrom(body).stream()
-      .filter(call -> SENDERS.contains(call.targetOwner)
-        && call.argumentCount > 0)
+      .filter(call ->
+        SENDERS.contains(call.targetOwner)
+        && call.argumentCount > 0
+      )
       .forEach(offendingCall -> 
         addViolation(data, offendingCall.source)
       );
 
     return data;
+  }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={AnnotationHelper, a class that is used to store annotations to, and fetch annotations from, a text file. A separate file is created for each annotation, and each line in this file describes the canonical name of a class or method that is marked with the annotation. This functionality is required to implement case 2 of constraint 4, i.e. looking up the annotations of a remote method or class.}, captionpos=b, label=lst:pmd_annotation_helper, numbers=left, showstringspaces=false]
+public class AnnotationHelper {
+  public static void createFiles(List<String> annotations) {
+    for (String annotation : annotations) {
+      try {
+        Files.write(
+          Paths.get("pmd_" + annotation + ".txt"),
+          new byte[0],
+          StandardOpenOption.CREATE,
+          StandardOpenOption.TRUNCATE_EXISTING
+        );
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  public static void dumpAnnotation(String annotation, JavaNode node) {
+    try {
+      String content = getLocation(node) + "\n";
+
+      Files.write(getPath(annotation), content.getBytes(),
+        StandardOpenOption.APPEND);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static List<String> getAnnotations(String annotation) {
+    try {
+      String dump = new String(
+        Files.readAllBytes(getPath(annotation))
+      );
+      return Arrays.asList(dump.strip().split("\n"));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    return Collections.emptyList();
+  }
+
+  private static Path getPath(String annotation) {
+    return Paths.get("pmd_" + annotation + ".txt");
+  }
+
+  private static String getLocation(JavaNode node) {
+    String location;
+    if (node instanceof ASTClassOrInterfaceDeclaration) {
+      location = ((ASTClassOrInterfaceDeclaration) node)
+        .getBinaryName();
+    } else {
+      location = node.getFirstParentOfType(
+          ASTClassOrInterfaceDeclaration.class
+        )
+        .getBinaryName();
+    }
+
+    if (node instanceof ASTMethodDeclaration) {
+      ASTMethodDeclaration method = (ASTMethodDeclaration) node;
+      location += "." + method.getName();
+    } else if (node instanceof ASTConstructorDeclaration) {
+      location += "." + node.getImage();
+    }
+
+    return location;
+  }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={AnnotationDumper, a rule that traverses all classes and dumps their annotations into a text file using AnnotationHelper.}, captionpos=b, label=lst:pmd_annotation_dumper, numbers=left, showstringspaces=false]
+public class DumpAnnotations extends AbstractJavaRule {
+  private static final List<String> ANNOTATIONS = Arrays.asList(
+    "com.github.secarchunit.concepts.UserInput",
+    "com.github.secarchunit.concepts.InputValidator"
+  );
+
+  public DumpAnnotations() {
+    super();
+
+    // Create annotation dump files
+    AnnotationHelper.createFiles(ANNOTATIONS);
+
+    // Types of nodes to visit
+    addRuleChainVisit(ASTClassOrInterfaceDeclaration.class);
+  }
+
+  @Override
+  public Object visit(ASTClassOrInterfaceDeclaration clazz,
+      Object data) {
+    for (String annotation : ANNOTATIONS) {
+      if (clazz.isAnnotationPresent(annotation)) {
+        AnnotationHelper.dumpAnnotation(annotation, clazz);
+      }
+    }
+
+    for (ASTMethodDeclaration method : clazz
+        .findDescendantsOfType(ASTMethodDeclaration.class)) {
+      for (String annotation : ANNOTATIONS) {
+        if (method.isAnnotationPresent(annotation)) {
+          AnnotationHelper.dumpAnnotation(annotation, method);
+        }
+      }
+    }
+
+    for (ASTConstructorDeclaration constructor : clazz
+        .findDescendantsOfType(ASTConstructorDeclaration.class)) {
+      for (String annotation : ANNOTATIONS) {
+        if (constructor.isAnnotationPresent(annotation)) {
+          AnnotationHelper.dumpAnnotation(annotation, constructor);
+        }
+      }
+    }
+
+    return super.visit(clazz, data);
+  }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Constraint 4.}, captionpos=b, label=lst:pmd_4, numbers=left, showstringspaces=false]
+public class ValidateInputRule extends AbstractJavaRule {
+  private static final String USER_INPUT =
+    "com.github.secarchunit.concepts.UserInput";
+  private static final String INPUT_VALIDATOR =
+    "com.github.secarchunit.concepts.InputValidator";
+
+  public ValidateInputRule() {
+    super();
+
+    // Types of nodes to visit
+    addRuleChainVisit(ASTMethodDeclaration.class);
+  }
+
+  @Override
+  public Object visit(ASTMethodDeclaration method, Object data) {
+    if (method.isAnnotationPresent(USER_INPUT)) {
+      // Check for in-line validation (case 1)
+      if (method.isAnnotationPresent(INPUT_VALIDATOR)) {
+        // Checks out
+        return data;
+      }
+
+      // Check for calls to validator (case 2)
+      List<String> inputValidators = AnnotationHelper
+        .getAnnotations(INPUT_VALIDATOR);
+      boolean callsValidator = Util.getMethodCallsFrom(method)
+        .stream()
+        .anyMatch(call ->
+          inputValidators.contains(call.targetOwner)
+          || inputValidators.contains(
+            call.targetOwner + "." + call.target
+          )
+        );
+
+      if (callsValidator) {
+        // Checks out
+        return data;
+      }
+
+      // Check if all callers of this method are input validators (case 3)
+      // This can't be done in PMD => assume no validation occurs
+
+      addViolation(data, method);
+    }
+
+    return data;
+  }
+}
+
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Constraint 5.}, captionpos=b, label=lst:pmd_5, numbers=left, showstringspaces=false]
+public class RestrictThreadSpawningRule extends AbstractJavaRule {
+  private static final String RESOURCE_RESTRICTION =
+    "com.github.secarchunit.concepts.ResourceRestriction";
+
+  public RestrictThreadSpawningRule() {
+    super();
+
+    // Types of nodes to visit
+    addRuleChainVisit(ASTMethodDeclaration.class);
+    addRuleChainVisit(ASTConstructorDeclaration.class);
+  }
+
+  @Override
+  public Object visit(ASTMethodDeclaration method, Object data) {
+    if (containsViolation(method)) {
+      addViolation(data, method);
+    }
+
+    return super.visit(method, data);
+  }
+
+  @Override
+  public Object visit(ASTConstructorDeclaration constructor,
+      Object data) {
+    if (containsViolation(constructor)) {
+      addViolation(data, constructor);
+    }
+
+    return super.visit(constructor, data);
+  }
+
+  private boolean containsViolation(Annotatable annotatable) {
+    boolean startsThreadOrProcess =
+      Util.getMethodCallsFrom(annotatable).stream()
+      .anyMatch(call ->
+        Thread.class.isAssignableFrom(call.targetOwnerClass)
+          && "start".equals(call.target)
+        || ProcessBuilder.class.equals(call.targetOwnerClass)
+          && "start".equals(call.target)
+        || Runtime.class.equals(call.targetOwnerClass)
+          && "exec".equals(call.target)
+      );
+
+    if (!startsThreadOrProcess) {
+      // Skip
+      return false;
+    }
+
+    // Ensure there is resource restriction
+    if (annotatable.isAnnotationPresent(RESOURCE_RESTRICTION)) {
+      // Checks out
+      return false;
+    }
+
+    ASTClassOrInterfaceDeclaration sourceOwner =
+      annotatable.getFirstParentOfType(
+        ASTClassOrInterfaceDeclaration.class
+      );
+    if (sourceOwner.isAnnotationPresent(RESOURCE_RESTRICTION)) {
+      // Checks out
+      return false;
+    }
+
+    // Violation
+    return true;
   }
 }
 \end{lstlisting}

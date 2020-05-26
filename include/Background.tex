@@ -3,19 +3,32 @@
 This chapter...
 
 \section{Software architecture}
-\textbf{Although not intended to provide any contribution to the definition of software architecture, our work relies on a shared understanding of what constitutes as architecture}
+The intention of this study is not to contribute to the definition of software architecture, though, our work relies on a shared understanding of what constitutes as the architecture of a system. This section presents the concept of software architecture and the definitions considered in our study.   
 
-\textbf{Initially considered by Djikstra in the organisation of systems and by Parnas \cite{broy_criteria_1972, parnas_design_1976}, the term was introduced by \cite{perry_foundations_1992} later to be segmented by \cite{ambriola_introduction_1993}}
+During the 1970s,  the idea of organizing software into distinguishable structures was initially introduced. Djikstra \cite{dijkstra_structure_1968} organized the system into a hierarchy of layers, each being dependent upon the interface of the layer below. Parnas discussed the criteria used to modularize systems \cite{broy_criteria_1972}, i.e. responsibility assignment, which allowed for independent development. Further, he introduced the concept of program families \cite{parnas_design_1976} where a set of systems share much of their functionality, allowing for a common design. The work on product families was later extended to describe the process of designing systems that support extensions by using abstracted components \cite{parnas_designing_1979}. 
 
-\textbf{Today, there are mainly two defintions used where one is concernd with the structure of system components and their relations \cite{bass_software_2013} whereas the other focuses on the major decision \cite{jansen_software_2005} later representing these within views. Common to both is the fact that they focus on the overall structure of a system}
+However, the term \textit{software architecture} was formally introduced by Perry and Wolf in \cite{perry_foundations_1992}, where they defined software architecture as:
 
-\textbf{Another common element is the realization that architecure is a trade-off between quality attributs}
+\[ Software \;  Architecture = \{elements,form,rationale\} \]
 
-\textbf{Further clarification regarding the distinction between the design and the architecture \cite{eden_architecture_2003}using extensional and non-local criteria}
+In words, software architecture is defined as a set of architectural elements that persist in a particular form. Form relates to the properties of each element and the relationship between elements. To make an architecture explicit, Perry and Wolf \cite{perry_foundations_1992} suggest the usage of views to represent different aspects of the architecture. 
+
+Related to that of a specific architecture, Perry and Wolf \cite{perry_foundations_1992} define an architectural style as a generalization of various similar architectures. Garlan and Shaw \cite{ambriola_introduction_1993} extended the knowledge by providing a list of architectural styles that were commonly used in the design of software systems, these include \textit{pipes and filters}, and \textit{layered systems}. Perhaps more importantly, Garlan and Shaw \cite{ambriola_introduction_1993} describe the rationale of using a specific style and the trade-offs between styles.
+
+Today, there are mainly two definitions of software architecture:
+
+\begin{itemize}
+    \item \textbf{Bass et Al \cite{bass_software_2013}}: \say{The software architecture of a program or computing system is the structure or structures of the system, which comprise software elements, the externally visible properties of those elements, and the relationships among them.}
+    \item \textbf{Jansen and Bosch \cite{jansen_software_2005}}: \say{The composition of a set of architectural design decisions} where a design decision represents \say{A description of the set of architectural additions, subtractions and modifications to the software architecture, the rationale, and the design rules, design constraints and additional requirements that (partially) realize one or more requirements on a given architecture.}
+\end{itemize}
+
+While both definitions acknowledge that a system should always meet the functional requirements and that the process of creating the architecture is a balance between quality attributes, it is the former definitions that lend itself naturally to structural analysis.
+
+Finally, in many references to architecture, the term design is often used ambiguously. To remedy this, Eden and Kazman \cite{eden_architecture_2003} formalized the hypothesis of an intension and locality criteria. A specification is said to be intensional if there are infinitely many ways of realization, all others are extensional. Further, a specification is said to be local if it only affects a small part of a program. Architectural specifications are both intensional and non-local, whereas design level specifications are intensional and local.
 
 \section{Architectural security constraints}
 
-\textbf{The purpose of software security is to ensure the}
+\textbf{The purpose of software security is to ensure the security of information in the presence of malicous actors}
 \cite{broy_software_2007}, \cite{felderer_security_2016}, \cite{haley_security_2008}, 
 
 Security goals, CIAA...
