@@ -28,12 +28,22 @@ Finally, in many references to architecture, the term design is often used ambig
 
 \section{Architectural security constraints}
 
-\textbf{The purpose of software security is to ensure the security of information in the presence of malicous actors}
-\cite{broy_software_2007}, \cite{felderer_security_2016}, \cite{haley_security_2008}, 
+The purpose of software and architectural security is to ensure that no harm occurs to the systems assets in the presence of malicious actors \cite{mcgraw_software_2004}. Assets are identified by the needs of the systems stakeholders and may be tangible (e.g, cash) or intangible (e.g, information) \cite{haley_security_2008}. At the core of software security are the following four concerns, often refereed to as CIAA:
 
-Security goals, CIAA...
+\begin{itemize}
+    \item \textbf{Confidentiality}, \say{Preserving authorized restrictions on information access and disclosure.} \cite{ross_systems_2018}
+    \item \textbf{Integrity}, \say{Guarding against improper information modification or destruction.} \cite{ross_systems_2018}
+    \item \textbf{Availability}, \say{Ensuring timely and reliable access to and use of information.} \cite{ross_systems_2018}
+    \item \textbf{Accountability}, \say{Ensuring that it is possible to trace security relevant actions (i.e., subject-object interactions) to the entity on whose behalf the action is being taken} \cite{ross_systems_2018}
+\end{itemize}
 
-\section{Static analysis}
+These concerns relate to a system's security goals as a violation of a concern to one of the assets describe a possible threat \cite{haley_security_2008}.  Security requirements later operationalize the security goals and constrain the architecture of a system. As security is often considered a quality attribute, the satisfaction of a security requirement becomes a risk management issue.  Highly valuable assets should warrant a higher degree of protection. \cite{broy_software_2007}.
+
+Security principles constitute the foundation of securely developing a system and ensuring that the created architecture adheres to the constraints put in place by the requirements. Examples of such principles include \textit{The principle of Least privilege}, stating that any user should have the least amount of privileges needed to perform an action.
+
+The use of security patterns represents a common technique for realizing security requirements and constraining the architecture of a system. 
+
+\section{Static analysis}\todo{static analysis}
 
 Information flow analysis \cite{hutchison_information_2005} which we lend ideas from for our extension
 
@@ -45,10 +55,17 @@ ASM, class/method visitors
 
 Explain concept of code units, members, accesses (target, target owner)
 
-\section{Related Work}
+\section{Related Work}\todo{related work}
 
 \subsection{Architectural conformance monitoring}
-\cite{aldrich_archjava_2002}, \cite{abi-antoun_analyzing_2010}, \cite{luckham_event-based_1995}, \cite{abi-antoun_static_2009}, \cite{de_silva_controlling_2012}, \cite{knodel_comparison_2007}, \cite{jansen_documenting_2008}, \cite{hong_yan_discotect_2004}, 
+
+\subsubsection{Static conformance monitoring}
+\cite{aldrich_archjava_2002}, \cite{abi-antoun_analyzing_2010}, \cite{luckham_event-based_1995}, \cite{abi-antoun_static_2009}, \cite{de_silva_controlling_2012}, \cite{knodel_comparison_2007} 
+
+\subsubsection{Dynamic conformance monitoring}
+
+\subsection{architectural description language (ADL}
+\cite{jansen_documenting_2008}, \cite{hong_yan_discotect_2004}
 
 \subsection{Security annotations}
 

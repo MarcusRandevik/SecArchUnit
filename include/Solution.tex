@@ -179,13 +179,13 @@ The need for additional information within the source code becomes apparent in t
 The rule definition of constraint 4 can be seen in Listing~\ref{lst:constraint_4_impl}.
 User input comes in many forms, and therefore, it is impossible to define a single algorithm to properly validate every single type. The problem grows further as queries (such as SQL) or other types of processed data (such as XML), each with its own set of grammar, are often formed using strings. As a consequence, the implemented constraint is more abstract as it checks whether a class that receives user input is said to either perform validation on its own or delegate the task another method. In total, three distinct cases conforming to the constraint were considered: 
 
-\begin{itemize}
+\begin{enumerate}
     \item \textit{Method A} is annotated with both \textbf{UserInput} and \textbf{InputValidator}.
     
     \item \textit{Method A} is annotated with \textbf{UserInput} and calls a \textit{method B} that is annotated with \textbf{InputValidator}.
     
     \item \textit{Method A} is annotated with \textbf{UserInput} and is only called by methods that are annotated with \textbf{InputValidator}.
-\end{itemize}
+\end{enumerate}
 
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[caption={Rule definition for constraint 4.}, captionpos=b, label=lst:constraint_4_impl, numbers=left]
