@@ -37,23 +37,54 @@ The purpose of software and architectural security is to ensure that no harm occ
     \item \textbf{Accountability}, \say{Ensuring that it is possible to trace security relevant actions (i.e., subject-object interactions) to the entity on whose behalf the action is being taken} \cite{ross_systems_2018}
 \end{itemize}
 
-These concerns relate to a system's security goals as a violation of a concern to one of the assets describe a possible threat \cite{haley_security_2008}.  Security requirements later operationalize the security goals and constrain the architecture of a system. As security is often considered a quality attribute, the satisfaction of a security requirement becomes a risk management issue.  Highly valuable assets should warrant a higher degree of protection. \cite{broy_software_2007}.
+These concerns relate to a system's security goals as a violation of a concern to one of the assets describe a possible threat \cite{haley_security_2008}. Security requirements later operationalize the security goals and constrain the architecture of a system. As security is often considered a quality attribute, the satisfaction of a security requirement becomes a risk management issue.  Highly valuable assets should warrant a higher degree of protection and consequently, require stronger constraints on the architecture \cite{broy_software_2007}.
 
-Security principles constitute the foundation of securely developing a system and ensuring that the created architecture adheres to the constraints put in place by the requirements. Examples of such principles include \textit{The principle of Least privilege}, stating that any user should have the least amount of privileges needed to perform an action.
+While the term architectural constraint means anything that limits the set of design choices, several concepts have come to form a generalizable knowledge at different levels of abstraction. 
 
-The use of security patterns represents a common technique for realizing security requirements and constraining the architecture of a system. 
+\textbf{Security principles}, such as those proposed by OWASP\footnote{\url{https://blog.threatpress.com/security-design-principles-owasp/}}, are defined at a level of abstraction that allows them to be used on almost any component in a system. Examples of such principles include \textit{The principle of least privilege}, stating that any user should have the least amount of privileges needed to perform an action. While the abstraction of principles enables them to apply to most components of a system, it also means that an architect has to assess, instead of precisely knowing, whether a designed conforms to the principle. 
+
+\textbf{Security patters}
+
+\textbf{Security rules}
 
 \section{Static analysis}\todo{static analysis}
+\cite{chess_secure_2007}
 
-Information flow analysis \cite{hutchison_information_2005} which we lend ideas from for our extension
+\cite{pistoia_survey_2007}
+
+Information flow analysis \cite{hutchison_information_2005} from which we lend ideas for our extension
+
 
 \subsection{ArchUnit}\label{archunit-back-section}
+ArchUnit is a library that leverages static analysis of Java bytecode to validate architectural constraints. These constraints are expressed in Java code, and can be validated using conventional unit testing frameworks, such as JUnit\footnote{\url{https://junit.org}}.
+
+The architectural rules are expressed against a representation of the analyzed system, which is outlined in Figure~\ref{fig:archunit}. This representation contains a number of constructs. Most notably:
+
+\begin{itemize}
+    \item Methods, constructs and static class initializers, i.e. anything that contains code statements, are collectively referred to as \textbf{code units}.
+    \item Fields and code units, i.e. constructs that are declared inside a class, are known as \textbf{members}.
+    \item Field accesses, method calls, and object instantiations are collectively known as \textbf{accesses}. An access has a source, i.e. the code unit from which the access originates, and a target, i.e. the member that is being accessed.
+\end{itemize}
+
+
+
+field accesses, method calls and object instantiations are collectively referred to as accesses.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figure/ArchUnit.png}
+    \caption{The architectural constructs present in the domain of ArchUnit, adapted from [...].}
+    \label{fig:archunit}
+\end{figure}
+
+
+Member = \{Field, code unit\}\\
+Code unit = \{Method, constructor, static initializer\}\\
+Access = \{field access, method/constructor call\}
+
+Accesses have a source, i.e. the code unit from which the access occurs, and a target, i.e. the member being accessed. There is also a source owner and a target owner, which refer to the class in which the respective members are declared.
 
 Overview of functionality
-
-ASM, class/method visitors
-
-Explain concept of code units, members, accesses (target, target owner)
 
 \section{Related Work}\todo{related work}
 
@@ -64,8 +95,7 @@ Explain concept of code units, members, accesses (target, target owner)
 
 \subsubsection{Dynamic conformance monitoring}
 
-\subsection{architectural description language (ADL}
-\cite{jansen_documenting_2008}, \cite{hong_yan_discotect_2004}
+\subsection{architectural description language (ADL)}
 
 \subsection{Security annotations}
 

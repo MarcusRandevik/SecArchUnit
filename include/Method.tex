@@ -2,7 +2,7 @@
 
 This chapter describes the adopted method for collecting relevant constraints, relating these to the common security-goals of CIAA, and later mapping them to functionality within ArchUnit. Second, this chapter presents the validation plan for expressing security constraints with ArchUnit, both by comparing it to industry used static analysis tools and a separate analysis focusing on constraints that could only be expressed in ArchUnit.
 
-\section{Identification of design constraints}
+\section{Identification of architectural constraints}
 
 The evaluation of SecArchUnit was based on the reliability to detect violations of security architectural constraints. In the absence of any pre-existing set of constraints, the first part of our study was devoted to collecting relevant constraints. The following sections describe the two-part process of collecting and filtering said constraints. 
 
@@ -39,7 +39,7 @@ Starting from each of the three sources of architectural constraints described i
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{figure/Half-time presentation.png}
+    \includegraphics[width=\textwidth]{figure/SelectionProcess.png}
     \caption
         [Overview of the process of mapping the three sources to constraints]
         {Overview of the process of mapping the three sources to constraints.}
@@ -64,7 +64,6 @@ This work followed the research design described in \cite{stol_abc_2018} as a \s
 In order to test how reliably SecArchUnit can validate the constraints, we perform a comparison with two static analysis tools widely adopted in industry: SonarQube and PMD.
 While these tools have a multitude of built-in rules, none of these rules can be used to enforce the architectural security constraints presented in this thesis. However, both tools are extensible, allowing a developer to define custom rules using their respective APIs.
 
-\todo{describe limitations}
 An initial assessment of the tools determined that constraints 1-5 are possible to implement and validate using SonarQube and PMD. Constraints 6-7, however, track the flow of information in the system, which neither of these tools inherently support. While it should be possible to extend these tools with such analysis, doing so is outside the scope of this thesis.
 %In addition, these tools evaluate a rule on a single class at a time which further hinders any attempts to track information flow between multiple classes.
 Hence, the first five constraints are evaluated in SecArchUnit, SonarQube and PMD, whereas the final two constraints are evaluated solely in SecArchUnit.
@@ -129,7 +128,7 @@ Based on the presented criterion, three systems were selected for the evaluation
 \subsection{Ground truth}
 A ground truth had to be set to validate the results of applying the tools to the included projects. The ground truth consisted of: a set of classes applicable to the concepts defined in the final list of constraints, annotations to the source code, and a record of each violation found. 
 
-In the absence of any previously established ground truth, in large because we defined the constraints, a structural analysis was performed for each of the systems. Our analysis was guided by the architectural descriptions supplied with the projects and the extraction of SecDFDs by Peldszus et al. \cite{peldszus_secure_2019}. Each constraint was applied to the system by analyzing every file in the project in a separate pass. Although time-consuming, performing a complete scan of the entire system for each constraint reduced the change of wrongfully dismissing a class and ensured that violations were detected.
+In the absence of any previously established ground truth, in large because we defined the constraints, a structural analysis was performed for each of the systems. Our analysis was guided by the architectural descriptions supplied with the projects and the extraction of SecDFDs by Peldszus et al. \cite{peldszus_secure_2019}. Each constraint was applied to the system by analyzing every file in the project in a separate pass. Although time-consuming, performing a complete scan of the entire system for each constraint reduced the risk of wrongfully dismissing a class and ensured that violations were detected.
 
 In order to reduce the bias of the ground truth, the analysis was performed individually, later comparing the results. In cases were the classification differed, a careful review of the reasoning behind each author's choice was performed, resulting in a combined decision. 
 

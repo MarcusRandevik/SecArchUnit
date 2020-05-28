@@ -3,60 +3,47 @@ In the age of an ever more digitalized world, ensuring the security of software 
 
 Introducing a weakness into a system can be done in every part of the software development lifecycle. An early introduction often leads to a more costly fix as the scope of the flaw is increased \cite{mcgraw_software_2004}. Typically, weaknesses are categorized as either implementation bugs (e.g. buffer overflow) or design flaws (e.g. client-side validation) where the later commonly has a more extensive scope and is the responsibility of the architect \cite{arce_avoiding_2014}. However, this binary division might be too simplified as it assumes a secure design is implemented correctly, meaning that there is no discrepancy between the "intended architecture" and the actual one found in the source code. Jasser \cite{franch_constraining_2019} considers violations of the architectural security design as a third type of category with a comparable impact to that of design flaws.
 
-Deviations from the intended architecture are not unique to the initial implementation of a system. Over time, subsequent changes made to the system, often due to new requirements, frequently lead to further disparency called software erosion \cite{de_silva_controlling_2012}. Proponents of the agile methodology also somewhat worsen the problem of erosion as the reduction of upfront design severely hinders the design of the architecture \cite{van_gurp_design_2002}. Many of the tools and techniques produced by academia to try and remedy the frequent violations of architectural design have failed to gain wide adoption in the industry \cite{de_silva_controlling_2012}.  Of the few that have, architectural design documentation is the most prominent and widely included in numerous software processes. While the technique is well adopted, performing it formally to allow for automatic compliance monitoring is seldom done, causing developers to rely on the less scalable method of manual reviews \cite{de_silva_controlling_2012}.
+Deviations from the intended architecture are not unique to the initial implementation of a system. Over time, subsequent changes made to the system, often due to new requirements, frequently lead to further disparency called software erosion \cite{de_silva_controlling_2012}. Proponents of the agile methodology also somewhat worsen the problem of erosion as the reduction of upfront design severely hinders the design of the architecture \cite{van_gurp_design_2002}. Many of the tools and techniques produced by academia to try and remedy the frequent violations of architectural design have failed to gain wide adoption in the industry \cite{de_silva_controlling_2012}.  Of the few that have, architectural design documentation is the most prominent and widely included in numerous software processes. While the technique is well adopted, performing it formally to allow for automatic conformance monitoring is seldom done, causing developers to rely on the less scalable method of manual reviews \cite{de_silva_controlling_2012}.
 
-A recently developed tool called ArchUnit\footnote{https://www.archunit.org/} has provided architects with the capability of validating architectural constraints using Java unit testing frameworks. While ArchUnit is not the first tool developed for architectural conformance checking, it is possibly the first to leverage already existing testing infrastructure (unit testing) in a manner that allows for testing over time. In its current form, ArchUnit has not provided any explicit functionality to test security constraints. Thus, the objective of this thesis is to explore the feasibility of expressing and enforcing typical security architectural constraints trough ArchUnit.
-
-\section{Scope}
-
-This study focuses on architectural measures that aid in fulfilling a security goal. Moreover, these measures should be possible to enforce through static analysis of Java bytecode. Any measure related to the configuration (of an application or operating system), the file-system, or other run-time properties that cannot be validated through static code analysis is deemed to be out of scope.
+A recently developed tool called ArchUnit\footnote{\url{https://www.archunit.org/}} has provided architects with the capability of validating architectural constraints using Java unit testing frameworks. While ArchUnit is not the first tool developed for architectural conformance checking, it is possibly the first to leverage already existing testing infrastructure (unit testing) in a manner that allows for testing over time. In its current form, ArchUnit has not provided any explicit functionality to test security constraints. Thus, the objective of this thesis is to explore the feasibility of expressing and enforcing typical security architectural constraints trough ArchUnit.
 
 \section{Research questions}
 To fulfill the objective of the study, the following research questions have been defined:
 
 \begin{itemize}
-    \item RQ1: What architectural security constraints can be validated using the tool?
-    \item RQ2: What modifications can be made to the tool in order to facilitate the validation of additional constraints?
+    \item RQ1: What architectural security constraints can be validated using the ArchUnit?
+    \item RQ2: What modifications can be made to ArchUnit in order to facilitate the validation of additional constraints?
 \end{itemize}
+
+We answer these questions by first gathering a set of constraints from previous literature in the domain of architectural security. Secondly, we map the constraints to functionality already provided by ArchUnit and identify areas of extension. Lastly, we apply the constraints to a set of open-source systems to experimentally determine how reliably the tool detects violations of said constraints. Additionally, we compare ArchUnit to two static analysis tools to determine whether ArchUnit provides any improvements over existing tools. 
 
 \section{Research contribution}
 
 This study aims to show how architectural security constraints can be validated with the help of a static analysis tool. The thesis demonstrates applications of the tool to several open source systems, in an evaluation of its efficacy and precision in terms of detecting violations of constraints.
 
+
+
 \section{Limitations}
 \label{sec:limitations}
 
-This thesis, and the modified version of ArchUnit, is not aimed at being a complete solution for all security architectural constraints. Instead, the study is performed to provide an initial evaluation of the possibility of using ArchUnit as an alternative to already existing techniques of static conformance checking. 
+This thesis, and the modified version of ArchUnit, is not aimed at being a complete solution for all security architectural constraints. Instead, the study was performed to provide an initial evaluation of the possibility of using ArchUnit as an alternative to already existing techniques of static conformance checking. 
+
+The constraints that were considered in our work could be enforced through static analysis of Java bytecode. Any measure related to the configuration (of an application or operating system), the file-system, or other run-time properties that cannot be validated through static code analysis was deemed to be out of scope. 
 
 Although the principle of ArchUnit may very well apply to programming languages other than Java, the limited scope of the thesis makes it unfeasible to provide functionality to analyze source-code in additional languages.
 
 \section{Thesis outline}
 
 The remainder of this report is structured as follows.
-\todo{Outline chapters}
 
-Chapter 2: Provides a general background to the topic of software architecture and architectural security constraints. In addition, the ArchUnit framework is introduced and compared to previously developed tools for architectural conformance.  
+Chapter 2: Provides a general background to the topic of software architecture, architectural security constraints and static analysis. In addition, the ArchUnit library is introduced and compared to previously developed tools for architectural conformance.  
 
-Chapter 3:
-design of our evaluation,
-how systems are chosen,
-the protocol for testing the tool,
-how to assert the ground truth,
-process of mapping constraints to rules
+Chapter 3: Presents our methodology of identifying a set of statically enforceable constraints as well as the experimental setup. 
 
-Chapter 4:
-composing the architectural constraints,
-our final constraints, what they prevent and how they are expressed
+Chapter 4: Contains the complete list of identified constraints and the final list of constraints selected for the evaluation with a detailed description of each. 
 
-Chapter 5:
-expressing and enforcing constraints with the tool,
-the identification of missing information / tool features
+Chapter 5: Showcases how the constraints are expressed within ArchUnit and the identified gaps in functionality.
 
-Chapter 6:
-results from the empirical validation,
-discussion,
-answer our research questions
+Chapter 6: Presents the results of our evaluation, a discussion of the inferences and answers to the research questions. 
 
-Chapter 7:
-conclusion,
-future work
+Chapter 7: Concludes our work and outlines examples of future research.
