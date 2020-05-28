@@ -5,7 +5,6 @@ import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
 import org.sonar.plugins.java.api.cfg.ControlFlowGraph;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
 import org.sonar.plugins.java.api.semantic.Symbol;
-import org.sonar.plugins.java.api.tree.ClassTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.MethodTree;
 import org.sonar.plugins.java.api.tree.Tree;
@@ -19,12 +18,10 @@ import java.util.*;
 )
 public class AuthSingleComponentRule extends IssuableSubscriptionVisitor {
 
-    public static String AUTHN_POINT_CLASS = "OrderActionBean".toLowerCase();
-    public static List<String> AUTH_POINT_CLASSES = new ArrayList<>(Arrays.asList(AUTHN_POINT_CLASS));
+    public static String AUTH_POINT_CLASS = "OrderActionBean".toLowerCase();
+    public static String AUTH_ENFORCER_CLASS = "org.mybatis.jpetstore.web.actions.OrderActionBean";
 
-    public static String AUTHN_CLASS = "org.mybatis.jpetstore.web.actions.OrderActionBean";
-
-    MethodMatchers authNMethods = MethodMatchers.create().ofTypes(AUTHN_CLASS).anyName().withAnyParameters().build();
+    MethodMatchers authNMethods = MethodMatchers.create().ofTypes(AUTH_ENFORCER_CLASS).anyName().withAnyParameters().build();
 
     private static int INITIAL_AMOUNT_OF_METHODS = -1;
     int methodsInAuthPoint = INITIAL_AMOUNT_OF_METHODS;
@@ -34,23 +31,20 @@ public class AuthSingleComponentRule extends IssuableSubscriptionVisitor {
     @Override
     public List<Tree.Kind> nodesToVisit() {
         return Collections.singletonList(Tree.Kind.METHOD);
-
-
     }
 
     @Override
     public void visitNode(Tree tree) {
         MethodTree method = (MethodTree) tree;
 
-        String enclosingCLassName = method.symbol().enclosingClass().name().toLowerCase();
-        // Check if were in the auth point class
-        if (!AUTH_POINT_CLASSES.contains(enclosingCLassName)) {
+        String enclosingClassName = method.symbol().enclosingClass().name().toLowerCase();
+        // Check if we're in the auth point class
+        if (!AUTH_POINT_CLASS.equals(enclosingClassName)) {
             return;
         }
 
         methodsVisited++;
 
-        System.out.println("we're in");
         // If this is the first time we're in the auth point class, calculate the number of methods
         if (methodsInAuthPoint == INITIAL_AMOUNT_OF_METHODS) {
             Collection<Symbol> symbols = method.symbol().enclosingClass().memberSymbols();
@@ -61,7 +55,6 @@ public class AuthSingleComponentRule extends IssuableSubscriptionVisitor {
         ControlFlowGraph cfg = method.cfg();
 
         for (ControlFlowGraph.Block block : cfg.blocks()) {
-            System.out.println(block.elements().size());
             for (Tree blockTree : block.elements()) {
                 if (blockTree.is(Tree.Kind.METHOD_INVOCATION)) {
                     MethodInvocationTree mit = (MethodInvocationTree) blockTree;
@@ -72,11 +65,9 @@ public class AuthSingleComponentRule extends IssuableSubscriptionVisitor {
             }
         }
 
-        System.out.println("Number of methods visited " + methodsVisited + " nbr of methods in class " + methodsInAuthPoint);
         if (methodsVisited >= methodsInAuthPoint && !containsCallToEnforcer) {
             reportIssue(method.symbol().enclosingClass().declaration(), "Authpoint must contain call to enforcer");
         }
-
     }
 
     /**

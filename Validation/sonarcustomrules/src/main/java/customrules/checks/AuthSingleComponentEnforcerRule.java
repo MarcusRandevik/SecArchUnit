@@ -7,8 +7,6 @@ import org.sonar.plugins.java.api.tree.ClassTree;
 import org.sonar.plugins.java.api.tree.MethodInvocationTree;
 import org.sonar.plugins.java.api.tree.Tree;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,12 +17,11 @@ import java.util.List;
 )
 public class AuthSingleComponentEnforcerRule extends IssuableSubscriptionVisitor {
 
-    public static String AUTHN_POINT_CLASS = "OrderActionBean".toLowerCase();
-    public static List<String> AUTH_POINT_CLASSES = new ArrayList<>(Arrays.asList(AUTHN_POINT_CLASS));
+    private static final String AUTH_POINT_CLASS = "OrderActionBean".toLowerCase();
 
-    public static String AUTHN_CLASS = "org.mybatis.jpetstore.web.actions.OrderActionBean";
+    private static final String AUTH_ENFORCER_CLASS = "org.mybatis.jpetstore.web.actions.OrderActionBean";
 
-    MethodMatchers enforcerMethods = MethodMatchers.create().ofTypes(AUTHN_CLASS).anyName().withAnyParameters().build();
+    private final MethodMatchers enforcerMethods = MethodMatchers.create().ofTypes(AUTH_ENFORCER_CLASS).anyName().withAnyParameters().build();
 
     @Override
     public List<Tree.Kind> nodesToVisit() {
@@ -44,13 +41,9 @@ public class AuthSingleComponentEnforcerRule extends IssuableSubscriptionVisitor
             ClassTree classTree = (ClassTree) parent;
             String enclosingClassOfCaller = classTree.symbol().name().toLowerCase();
 
-            System.out.println(enclosingClassOfCaller);
-            if (AUTH_POINT_CLASSES.contains(enclosingClassOfCaller)) {
-                return;
-            } else {
+            if (!AUTH_POINT_CLASS.equals(enclosingClassOfCaller)) {
                 reportIssue(mit, "Method invocation to enforcer must be performed at auth points");
             }
         }
     }
-
 }

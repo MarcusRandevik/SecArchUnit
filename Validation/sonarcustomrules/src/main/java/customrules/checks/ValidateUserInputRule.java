@@ -27,51 +27,53 @@ public class ValidateUserInputRule extends IssuableSubscriptionVisitor {
         MethodTree methodTree = (MethodTree) tree;
 
         // Check if this method deals with user input
-        if (methodTree.symbol().metadata().isAnnotatedWith(USER_INPUT)) {
-            // Check for in-line validation
-            if (methodTree.symbol().metadata().isAnnotatedWith(INPUT_VALIDATOR)) {
+        if (!methodTree.symbol().metadata().isAnnotatedWith(USER_INPUT)) {
+            return;
+        }
+
+        // Check for in-line validation
+        if (methodTree.symbol().metadata().isAnnotatedWith(INPUT_VALIDATOR)) {
+            return;
+        }
+
+        // Check for calls to validator
+        for (ControlFlowGraph.Block block : methodTree.cfg().blocks()) {
+            for (Tree blockTree : block.elements()) {
+                if (blockTree.is(Tree.Kind.METHOD_INVOCATION)) {
+                    MethodInvocationTree mit = (MethodInvocationTree) blockTree;
+                    if (mit.symbol().metadata().isAnnotatedWith(INPUT_VALIDATOR)
+                            || mit.symbol().enclosingClass().metadata().isAnnotatedWith(INPUT_VALIDATOR)) {
+                        return;
+                    }
+                }
+            }
+        }
+
+        // Check if all callers are marked as validators
+        boolean hasCallers = !methodTree.symbol().usages().isEmpty();
+        if (hasCallers) {
+            boolean validatedInAllCallers = true;
+
+            for (IdentifierTree caller : methodTree.symbol().usages()) {
+                if (caller.symbol().metadata().isAnnotatedWith(INPUT_VALIDATOR)) {
+                    // Caller method is validator
+                    continue;
+                }
+
+                if (caller.symbol().enclosingClass().metadata().isAnnotatedWith(INPUT_VALIDATOR)) {
+                    // Caller class is validator
+                    continue;
+                }
+
+                validatedInAllCallers = false;
+                break;
+            }
+
+            if (validatedInAllCallers) {
                 return;
             }
-
-            // Check for calls to validator
-            for (ControlFlowGraph.Block block : methodTree.cfg().blocks()) {
-                for (Tree blockTree : block.elements()) {
-                    if (blockTree.is(Tree.Kind.METHOD_INVOCATION)) {
-                        MethodInvocationTree mit = (MethodInvocationTree) blockTree;
-                        if (mit.symbol().metadata().isAnnotatedWith(INPUT_VALIDATOR)
-                                || mit.symbol().enclosingClass().metadata().isAnnotatedWith(INPUT_VALIDATOR)) {
-                            return;
-                        }
-                    }
-                }
-            }
-
-            // Check if all callers are marked as validators
-            boolean hasCallers = !methodTree.symbol().usages().isEmpty();
-            if (hasCallers) {
-                boolean validatedInAllCallers = true;
-
-                for (IdentifierTree caller : methodTree.symbol().usages()) {
-                    if (caller.symbol().metadata().isAnnotatedWith(INPUT_VALIDATOR)) {
-                        // Caller method is validator
-                        continue;
-                    }
-
-                    if (caller.symbol().enclosingClass().metadata().isAnnotatedWith(INPUT_VALIDATOR)) {
-                        // Caller class is validator
-                        continue;
-                    }
-
-                    validatedInAllCallers = false;
-                    break;
-                }
-
-                if (validatedInAllCallers) {
-                    return;
-                }
-            }
-
-            reportIssue(methodTree, "User input must be validated");
         }
+
+        reportIssue(methodTree, "User input must be validated");
     }
 }
