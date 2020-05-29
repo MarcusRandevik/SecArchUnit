@@ -11,6 +11,7 @@ A UML class diagram of BlogWeb is illustrated in Figure~\ref{fig:toy_application
 
 \begin{figure}
     \centering
+    \captionsetup{justification=centering}
     \includegraphics[width=\textwidth]{figure/ToyApp.png}
     \caption
         [UML class diagram of the toy system BlogWeb]
@@ -203,6 +204,7 @@ In BlogWeb, a user publishes a status update in the form of a string that the Us
 
 \begin{figure}
     \centering
+    \captionsetup{justification=centering}
     \includegraphics[width=\textwidth]{figure/toyexamples/validate_input_toy_system.png}
     \caption
         [Applying constraint 4 to BlogWeb]
@@ -234,6 +236,7 @@ In BlogWeb, the \texttt{RequestHandler} class spawns new threads in order to han
 
 \begin{figure}
     \centering
+    \captionsetup{justification=centering}
     \includegraphics[width=\linewidth]{figure/toyexamples/resource_restriction.png}
     \caption
         [Applying constraint 5 to BlogWeb]
@@ -273,6 +276,7 @@ ArchUnit extends the \texttt{MethodVisitor} class in \texttt{MethodProcessor}, w
 
 \begin{figure}[H]
     \centering
+    \captionsetup{justification=centering}
     \includegraphics[width=0.6\textwidth]{figure/extension/MethodProcessor1.png}
     \caption
         [ArchUnit: The context of the \texttt{MethodProcessor} class]
@@ -285,8 +289,9 @@ Conveniently, ASM provides an extension of its \texttt{MethodVisitor} class, cal
 
 \textbf{SecArchUnit.} As seen in Figure~\ref{fig:method_processor_2}, \texttt{MethodProcessor} now extends \texttt{Analyzer\-Adapter} and utilizes the information about the operand stack to perform an analysis of information flow within a code unit.
 
-\begin{figure}[H]
+\begin{figure}[h]
     \centering
+    \captionsetup{justification=centering}
     \includegraphics[width=0.7\textwidth]{figure/extension/MethodProcessor2.png}
     \caption
         [SecArchUnit: Changes made to the analysis of code units]
@@ -294,7 +299,7 @@ Conveniently, ASM provides an extension of its \texttt{MethodVisitor} class, cal
     \label{fig:method_processor_2}
 \end{figure}
 
-The information flow analysis of a code unit can be boiled down to the following key points:
+The information flow analysis of a code unit, which lends ideas from \cite{hutchison_information_2005}, can be boiled down to the following key points:
 
 \begin{itemize}
     \item Loading a field onto the stack yields a hint in that stack position about its originating member, i.e. the field.
@@ -311,6 +316,7 @@ Once the analysis of all classes has been completed and SecArchUnit has built it
 
 \begin{figure}
     \centering
+    \captionsetup{justification=centering}
     \includegraphics[width=0.7\textwidth]{figure/extension/DomainChanges1.png}
     \caption
         [SecArchUnit: Changes made to the domain surrounding code units]
@@ -342,6 +348,7 @@ In BlogWeb, the \texttt{password} field is considered an asset that must stay wi
 
 \begin{figure}[ht]
     \centering
+    \captionsetup{justification=centering}
     \includegraphics[width=0.8\textwidth]{figure/toyexamples/Assets.png}
     \caption
         [Application of constraint 6 to BlogWeb]

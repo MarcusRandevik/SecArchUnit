@@ -11,24 +11,21 @@ A recently developed tool called ArchUnit\footnote{\url{https://www.archunit.org
 To fulfill the objective of the study, the following research questions have been defined:
 
 \begin{itemize}
-    \item RQ1: What architectural security constraints can be validated using the ArchUnit?
+    \item RQ1: What architectural security constraints can be validated using ArchUnit?
     \item RQ2: What modifications can be made to ArchUnit in order to facilitate the validation of additional constraints?
 \end{itemize}
 
-We answer these questions by first gathering a set of constraints from previous literature in the domain of architectural security. Secondly, we map the constraints to functionality already provided by ArchUnit and identify areas of extension. Lastly, we apply the constraints to a set of open-source systems to experimentally determine how reliably the tool detects violations of said constraints. Additionally, we compare ArchUnit to two static analysis tools to determine whether ArchUnit provides any improvements over existing tools. 
+These questions are answered by first gathering a set of constraints from previous literature in the domain of architectural security. Secondly, we map the constraints to functionality already provided by ArchUnit and identify areas of extension. Lastly, we apply the constraints to a set of open-source systems to experimentally determine how reliably the tool detects violations of said constraints. Additionally, we compare ArchUnit to two static analysis tools to determine whether ArchUnit provides any improvements over existing tools. 
 
 \section{Research contribution}
-
-This study aims to show how architectural security constraints can be validated with the help of a static analysis tool. The thesis demonstrates applications of the tool to several open source systems, in an evaluation of its efficacy and precision in terms of detecting violations of constraints.
-
-
+This work shows how architectural security constraints can be validated with the help of a static analysis tool. The thesis demonstrates the application of the tool to several open source system, in an evaluation of its precision and efficacy in terms of validating the constraints, and compares this to existing tools. In addition, a qualitative comparison is made between ArchUnit and existing tools in terms of their appropriateness for validating architectural security constraints.
 
 \section{Limitations}
 \label{sec:limitations}
 
-This thesis, and the modified version of ArchUnit, is not aimed at being a complete solution for all security architectural constraints. Instead, the study was performed to provide an initial evaluation of the possibility of using ArchUnit as an alternative to already existing techniques of static conformance checking. 
+This thesis, and the modified version of ArchUnit, is not intended to be a complete solution for all security architectural constraints. Instead, the study is performed to provide an initial evaluation of the possibility of using ArchUnit as an alternative to existing techniques of static conformance checking. 
 
-The constraints that were considered in our work could be enforced through static analysis of Java bytecode. Any measure related to the configuration (of an application or operating system), the file-system, or other run-time properties that cannot be validated through static code analysis was deemed to be out of scope. 
+The constraints that are considered in our work could be enforced through static analysis of Java bytecode. Any measure related to the configuration (of an application or operating system), the file-system, or other run-time properties that cannot be validated through static code analysis was deemed to be out of scope. 
 
 Although the principle of ArchUnit may very well apply to programming languages other than Java, the limited scope of the thesis makes it unfeasible to provide functionality to analyze source-code in additional languages.
 
