@@ -1,6 +1,6 @@
 \chapter{Background}
 
-This chapter...
+This chapter provides background knowledge regarding software architecture and architectural security constraints. 
 
 \section{Software architecture}
 The intention of this study is not to contribute to the definition of software architecture, though, our work relies on a shared understanding of what constitutes as the architecture of a system. This section presents the concept of software architecture and the definitions considered in our study.   
@@ -37,52 +37,88 @@ The purpose of software and architectural security is to ensure that no harm occ
     \item \textbf{Accountability}, \say{Ensuring that it is possible to trace security relevant actions (i.e., subject-object interactions) to the entity on whose behalf the action is being taken} \cite{ross_systems_2018}
 \end{itemize}
 
-These concerns relate to a system's security goals as a violation of a concern to one of the assets describe a possible threat \cite{haley_security_2008}. Security requirements later operationalize the security goals and constrain the architecture of a system. As security is often considered a quality attribute, the satisfaction of a security requirement becomes a risk management issue.  Highly valuable assets should warrant a higher degree of protection and consequently, require stronger constraints on the architecture \cite{broy_software_2007}.
+These concerns relate to a system's security goals as a violation of a concern to one of the assets describes a possible threat \cite{haley_security_2008}. Security requirements later operationalize the security goals and constrain the architecture of a system. As security is often considered a quality attribute, the satisfaction of a security requirement becomes a risk management issue.  Highly valuable assets should warrant a higher degree of protection and consequently, require stronger constraints on the architecture \cite{broy_software_2007}.
 
-While the term architectural constraint means anything that limits the set of design choices, several concepts have come to form a generalizable knowledge at different levels of abstraction. 
+While the term architectural constraint means anything that limits the set of design choices, several concepts and techniques have come to form a generalizable knowledge of solutions, at different levels of abstraction, that serve as constraints to satisfy the requirements. The concepts outlined below have definitions that vary across authors; thus, our goal is not to provide conclusive definitions but rather an overview. 
 
-\textbf{Security principles}, such as those proposed by OWASP\footnote{\url{https://blog.threatpress.com/security-design-principles-owasp/}}, are defined at a level of high abstraction that allows them to be used on almost any component in a system. Examples of such principles include \textit{The principle of least privilege}, stating that any user should have the least amount of privileges needed to perform an action. While the abstraction of principles enables them to apply to most components of a system, it also means that an architect has to assess, instead of precisely knowing, whether a designed conforms to the principle. 
+\textbf{Security principles}, such as those proposed by OWASP\footnote{\url{https://blog.threatpress.com/security-design-principles-owasp/}}, are defined at a level of high abstraction that allows them to be used on almost any component in a system. Examples of such principles include \textit{The principle of least privilege}, stating that any user should have the least amount of privileges needed to perform an action. While the abstraction of principles enables them to apply to most components of a system, it also means that an architect has to assess, instead of precisely knowing, whether the constructed architecture conforms to the principle. 
 
-\textbf{Security patterns} are at a lower level of abstraction as they represent "encapsulated solutions to recurrent system problems" \cite{fernandez-buglioni_security_2013}. By providing a generalizable solution to a known problem, patterns help to bridge the gap between the developers and the architectural experts \cite{rosado_study_2006}. The extensive knowledge of security patterns and their implementation also allows for comparison in terms of their impact on other quality attributes, such as maintainability and performance \cite{scandariato_architecting_2009}. 
+\textbf{Architectural tactics}, introduced by Bass et al in \cite{bass_software_2003}, refers to \say{a design decision that influences the achievement of a quality attribute respone}. In particular, security tactics aim to control the security response of a system, i.e. ensuring that the security goals always hold true. The original list of security tactics has later been refined \cite{ryoo_revising_2012,fernandez_revisiting_2015} and includes techniques for detecting, resisting, reacting to and recovering from attacks, as seen in Figure~\ref{fig:security_tactics}. Much like principles, tactics lack a common realization causing the architect to subjectively asses whether the tactic is implemented.
 
-\textbf{Security rules}
+\begin{figure}
+    \centering
+    \captionsetup{justification=centering}
+    \includegraphics[width=\textwidth]{figure/securityTactics.png}
+    \caption{A hierarchical tree of security tactics, adapted from \cite{fernandez_revisiting_2015}.}
+    \label{fig:security_tactics}
+\end{figure}
 
-\section{Static analysis}\todo{static analysis}
-\cite{chess_secure_2007}
+\textbf{Security patterns} are at a lower level of abstraction as they represent \say{encapsulated solutions to recurrent system problems} \cite{fernandez-buglioni_security_2013}. By composing a set of tactics in a generalizable solution to a known problem, patterns help to bridge the gap between the developers and the architectural experts \cite{rosado_study_2006}. The extensive knowledge of security patterns and their implementation also allows for comparisons in terms of their impact on other quality attributes, such as maintainability and performance \cite{scandariato_architecting_2009}. 
 
-\cite{pistoia_survey_2007}
+\textbf{Security rules}, while not as established in the literature, has come to serve as a less solution-oriented version of patterns. Rules often define dependencies, such as "Layer X must not access layer Y", but may also define behavioral aspects. Much of the commonly used rules are tacit knowledge, meaning that there are few explicit mentionings. 
 
-Information flow analysis \cite{hutchison_information_2005} from which we lend ideas for our extension
+\section{ArchUnit}\label{archunit-back-section}
+ArchUnit is a library that leverages static analysis to validate architectural constraints. Static analysis refers to the analysis of code, either in the shape of source code or compiled bytecode, without executing the code itself \cite[p. 21]{chess_secure_2007}. In the case of ArchUnit, the analysis is performed on compiled Java bytecode.
 
-
-\subsection{ArchUnit}\label{archunit-back-section}
-ArchUnit is a library that leverages static analysis of Java bytecode to validate architectural constraints. These constraints are expressed in Java code and can be validated using conventional unit testing frameworks, which enables the constraints to be validated in a continuous integration setting.
-
-In ArchUnit, architectural rules are expressed against a representation of the analyzed system. This representation is composed of the constructs outlined in Figure~\ref{fig:archunit}. Most notably:
-
-\begin{itemize}
-    \item Methods, constructors and static initializers, i.e. anything that contains code statements, are collectively referred to as \textbf{code units}.
-    \item Fields and code units, i.e. constructs that are owned by a class, are known as \textbf{members} of that class.
-    \item Field accesses, method calls and constructor calls are collectively known as \textbf{accesses}. An access has a source, i.e. the code unit from which the access originates, and a target, i.e. the member that is being accessed.
-\end{itemize}
+Using ArchUnit, a target system can be analyzed and composed into a Java code structure \cite{gafert_archunit_2020}. This structure contains a number of classes, outlined in Figure~\ref{fig:archunit}, which describe the code of the analyzed system. Some key observations regarding this structure:
 
 \begin{figure}
     \centering
     \captionsetup{justification=centering}
     \includegraphics[width=\textwidth]{figure/ArchUnit.png}
-    \caption{The architectural constructs present in the domain of ArchUnit, adapted from [...].}
+    \caption{The architectural constructs present in the domain of ArchUnit, adapted from \cite{gafert_archunit_2020}.}
     \label{fig:archunit}
 \end{figure}
 
-\section{Related Work}\todo{related work}
+\begin{itemize}
+    \item Methods, constructors and static initializers, i.e. anything that contains code statements, are collectively referred to as \textbf{code units}.
+    \item Fields and code units, i.e. constructs that are owned by a class, are referred to as \textbf{members} of that class.
+    \item Field accesses, method calls and constructor calls are collectively known as \textbf{accesses}. An access has a source, i.e. the code unit from which the access originates, and a target, i.e. the member that is being accessed.
+\end{itemize}
+
+The validation of constraints is performed by evaluating conditions against select properties of this code structure. How these constraints are expressed will be explored in detail throughout Chapter~\ref{ch:enforcing_constraints}.
+
+\newpage
+
+
+% \cite{pistoia_survey_2007}
+
+% constraints can be enforced both statically and dynamically, as covered in related work
+% ArchUnit employs static analysis; explain briefly what it means
+% This, combined with constraints that can be validated with unit testing infrastructure, enables the tool to be used as part of a continuous integration pipeline
+% These constraints are expressed in Java code and can be validated using conventional unit testing frameworks. 
+
+
+\section{Related work}\todo{related work}
 
 \subsection{Architectural conformance monitoring}
-\cite{aldrich_archjava_2002}, \cite{abi-antoun_analyzing_2010}, \cite{luckham_event-based_1995}, \cite{abi-antoun_static_2009}, \cite{de_silva_controlling_2012}, \cite{knodel_comparison_2007} 
+
+In one approach to architectural conformance monitoring called ArchJava, presented by Aldrich et al. \cite{aldrich_archjava_2002}, the Java language is extended with syntax for describing architectural elements such as components and connectors. Constraints on these architectural elements are validated at compile-time, allowing violations to be caught at an early stage of development.
+
+Abi-Antoun and Barnes \cite{abi-antoun_analyzing_2010} present a two-tiered approach to architectural conformance monitoring called SECORIA. Their approach utilizes code annotations and static analysis to extract an architectural representation of a system. This representation is then compared to a target architecture, which is modeled separately in an Architecture Description Language (ADL), in order to detect discrepancies between the intended architecture and the actual implementation.
+
+De Silva \cite{de_silva_towards_2014} presents PANDArch, another two-tiered approach, in which the intended architecture is modeled using an ADL and checked for conformance with the actual implementation. As opposed to SECORIA, PANDArch utilizes dynamic analysis to extract the implemented architecture during executions of the system. 
+
+The approach used by ArchUnit allows architectural constraints to be expressed directly in the source code, replacing the need for a separate model of the intended architecture. In addition, these constraints can be validated using existing unit test runners, enabling the tool to be used as part of a continuous integration pipeline.
+
+%Comparison of static approaches
+%\cite{knodel_comparison_2007}
+
+%\cite{luckham_event-based_1995}
+%\cite{de_silva_controlling_2012}
 
 
 
-\subsection{Security annotations and Architectural description languages}
-\cite{sabo_preserving_2009}
+\subsection{Design annotations and security notations}
 
+Sabo and Porubän \cite{sabo_preserving_2009} use java annotations to preserve the correct form of design patterns during implementation. While the approach does not focus on security, the study showcases how constraints can be applied directly to the source code. Additionally, Sabo and Porubän argue that storing constraints at the location of its implementation increases developer awareness. 
 
+Similarly, Sulir et al. \cite{sulir_recording_2016} record the developer's intentions (including security concerns) using source code annotations. They showed through two controlled experiments that annotations helped improve program comprehension and the correctness of the implementation.
 
+Both SecureUML by Lodderstedt el al. \cite{goos_secureuml_2002} and UMLsec by Jürjens \cite{goos_umlsec_2002} propose extensions to UML to incorporate security-relevant information to allow for formal reasoning and evaluation. While SecureUML focuses solely on access control, specifically role-based access control, UMLsec provides more general constructs.
+
+While SecureUML and UMLsec define concept at a relatively low level of abstraction to allow for the generation of access control infrastructure for the former, and formal verification for the later, Sion et al. \cite{sion_masc_2015} proposes another set of extensions aimed at concerns on the architectural level. The extensions are based on two sets of security design concepts: (1) \say{well-known and often-used security concepts or techniques} and (2) \say{security goals and objectives}. As a consequence of the focus on architectural level concerns, much of their extension to UML are graphical elements rather than stereotypes and tagged values, as in the previous examples. 
+
+A systematic review of the field by van den Berghe et al. \cite{vandenberghe_design_2017} revealed that of the many proposed notations for security, few had any existing tool support outside of a vaguely mentioned prototype. Additionally, the coverage across security concerns was not equal. Most notations covered aspects of access-control but lacked support for most of the CIAA concerns. 
+
+Our approach tries to extend the field of security notation by applying them to architectural conformance testing. We utilize annotations, in the shared belief of \cite{sabo_preserving_2009} that constraints should be applied closest to their implementation. While the use of formal models allows for rigorous proofs, we believe a more lightweight model can be a complement in settings where formality becomes too large of overhead, such as in agile environments. 
