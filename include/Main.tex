@@ -9,9 +9,10 @@
 % COVER PAGE, TITLE PAGE AND IMPRINT PAGE
 \pagenumbering{roman}			% Roman numbering (starting with i (one)) until first main chapter
 \input{include/frontmatter/Titlepage}
-% asdf
-\todototoc
-\listoftodos
+
+%\todototoc
+%\listoftodos
+
 % ABSTRACT
 \newpage
 \input{include/frontmatter/Abstract}
@@ -34,6 +35,10 @@
 \clearpage
 \addcontentsline{toc}{chapter}{\listtablename}  
 \listoftables
+
+%\clearpage
+%\addcontentsline{toc}{chapter}{List of Listings}
+%\lstlistoflistings
 
 
 % START OF MAIN DOCUMENT
