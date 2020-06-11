@@ -20,9 +20,8 @@ import java.util.List;
 )
 public class AuthNSingleComponentEnforcerRule extends IssuableSubscriptionVisitor {
 
-    private static final String AUTH_POINT_CLASS = "OrderActionBean".toLowerCase();
-
-    private static final String AUTH_ENFORCER_CLASS = "org.mybatis.jpetstore.web.actions.OrderActionBean";
+    private static final String AUTH_POINT_CLASS = "AccountActionBean".toLowerCase();
+    private static final String AUTH_ENFORCER_CLASS = "org.mybatis.jpetstore.web.actions.AccountActionBean";
 
     private final MethodMatchers enforcerMethods = MethodMatchers.create().ofTypes(AUTH_ENFORCER_CLASS).anyName().withAnyParameters().build();
 

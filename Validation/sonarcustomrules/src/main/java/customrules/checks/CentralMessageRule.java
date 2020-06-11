@@ -19,9 +19,9 @@ import java.util.List;
         priority = Priority.MAJOR
 )
 public class CentralMessageRule extends IssuableSubscriptionVisitor {
-    private static final String SENDING_POINT = "EmailUtil";
+    private static final String SENDING_POINT = "AbstractActionBean";
     private static final MethodMatchers SENDERS = MethodMatchers.create()
-            .ofTypes("edu.ncsu.csc.itrust.dao.mysql.FakeEmailDAO")
+            .ofTypes("net.sourceforge.stripes.action.ActionBeanContext")
             .anyName()
             .addParametersMatcher(parameters -> !parameters.isEmpty())
             .build();

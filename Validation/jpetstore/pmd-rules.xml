@@ -9,7 +9,10 @@
   <rule name="LogSecurityEvents" language="java" message="#1 Security events must be logged." class="com.github.secarchunit.pmd.LogSecurityEventsRule" >
     <priority>3</priority>
   </rule>
-  <rule name="EnforceAuthentication" language="java" message="#2 Authentication must be enforced at authentication point." class="com.github.secarchunit.pmd.AuthSingleComponentRule" >
+  <rule name="EnforceAuthentication" language="java" message="#2 Authentication must be enforced at authentication point." class="com.github.secarchunit.pmd.AuthNSingleComponentRule" >
+    <priority>3</priority>
+  </rule>
+  <rule name="EnforceAuthorization" language="java" message="#2 Authorization must be enforced at authorization point." class="com.github.secarchunit.pmd.AuthZSingleComponentRule" >
     <priority>3</priority>
   </rule>
   <rule name="CentralSendingPoint" language="java" message="#3 Messages must only be sent from sending point." class="com.github.secarchunit.pmd.CentralSendingRule" >

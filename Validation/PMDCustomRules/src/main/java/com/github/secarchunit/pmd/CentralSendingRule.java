@@ -7,9 +7,9 @@ import java.util.Arrays;
 import java.util.Collection;
 
 public class CentralSendingRule extends AbstractJavaRule {
-    private static final String SENDING_POINT = "edu.ncsu.csc.itrust.action.SendMessageAction";
+    private static final String SENDING_POINT = "org.mybatis.jpetstore.web.actions.AbstractActionBean";
     private static final Collection<String> SENDERS = Arrays.asList(
-            "edu.ncsu.csc.itrust.dao.mysql.MessageDAO"
+            "net.sourceforge.stripes.action.ActionBeanContext"
     );
 
     public CentralSendingRule() {

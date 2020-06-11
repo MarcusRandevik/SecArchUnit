@@ -5,7 +5,6 @@ import org.sonar.plugins.java.api.JavaCheck;
 
 import java.util.*;
 
-
 public final class RulesList {
 
     private RulesList() {
@@ -23,9 +22,13 @@ public final class RulesList {
     public static List<Class<? extends JavaCheck>> getJavaChecks() {
         return Collections.unmodifiableList(Arrays.asList(
                 LogSecurityEventsRule.class,
+                AuthNSingleComponentRule.class,
+                AuthNSingleComponentEnforcerRule.class,
+                AuthZSingleComponentRule.class,
+                AuthZSingleComponentEnforcerRule.class,
+                CentralMessageRule.class,
                 ValidateUserInputRule.class,
-                LimitThreadSpawnRule.class,
-                CentralMessageRule.class
+                LimitThreadSpawnRule.class
         ));
     }
 

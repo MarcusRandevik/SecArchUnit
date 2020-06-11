@@ -6,8 +6,8 @@ import net.sourceforge.pmd.lang.java.rule.AbstractJavaRule;
 import java.util.stream.Stream;
 
 public class AuthNSingleComponentRule extends AbstractJavaRule {
-    private static final String AUTH_POINT = "atm.transaction.Transaction";
-    private static final String AUTH_ENFORCER = "atm.transaction.Transaction";
+    private static final String AUTH_POINT = "org.mybatis.jpetstore.web.actions.AccountActionBean";
+    private static final String AUTH_ENFORCER = "org.mybatis.jpetstore.web.actions.AccountActionBean";
 
     public AuthNSingleComponentRule() {
         super();
