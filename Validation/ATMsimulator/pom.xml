@@ -22,6 +22,20 @@
 
 		<dependency>
 			<groupId>com.tngtech.archunit</groupId>
+			<artifactId>archunit</artifactId>
+			<version>0.13.1</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/../../../ArchUnit/archunit/build/libs/archunit-0.13.1.jar</systemPath>
+		</dependency>
+
+		<dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>slf4j-api</artifactId>
+		    <version>1.7.25</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.tngtech.archunit</groupId>
 			<artifactId>archunit-junit4</artifactId>
 			<version>0.13.1</version>
 		</dependency>
