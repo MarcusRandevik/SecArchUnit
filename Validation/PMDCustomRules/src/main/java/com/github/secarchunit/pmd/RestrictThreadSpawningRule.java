@@ -3,8 +3,6 @@ package com.github.secarchunit.pmd;
 import net.sourceforge.pmd.lang.java.ast.*;
 import net.sourceforge.pmd.lang.java.rule.AbstractJavaRule;
 
-import java.util.List;
-
 public class RestrictThreadSpawningRule extends AbstractJavaRule {
     private static final String RESOURCE_RESTRICTION = "com.github.secarchunit.concepts.ResourceRestriction";
 

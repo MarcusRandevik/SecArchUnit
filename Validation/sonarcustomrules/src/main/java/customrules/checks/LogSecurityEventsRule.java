@@ -1,5 +1,6 @@
 package customrules.checks;
 
+import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
 import org.sonar.plugins.java.api.cfg.ControlFlowGraph;
@@ -14,7 +15,9 @@ import java.util.List;
 @Rule(
         key = "LogSecurityEvents",
         name = "All security events must be logged",
-        description = "Public methods within a security service class must call a logger"
+        description = "Public methods within a security service class must call a logger",
+        tags = "secarchunit",
+        priority = Priority.MAJOR
 )
 
 public class LogSecurityEventsRule extends IssuableSubscriptionVisitor {

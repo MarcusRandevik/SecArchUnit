@@ -1,5 +1,6 @@
 package customrules.checks;
 
+import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
 import org.sonar.plugins.java.api.cfg.ControlFlowGraph;
@@ -14,7 +15,9 @@ import java.util.List;
 @Rule(
         key = "LimitThreadSpawns",
         name = "Thread spawns must be restricted",
-        description = "Code that starts a thread or process must be marked as restricting resources"
+        description = "Code that starts a thread or process must be marked as restricting resources",
+        tags = "secarchunit",
+        priority = Priority.MAJOR
 )
 public class LimitThreadSpawnRule extends IssuableSubscriptionVisitor {
     private static final String RESOURCE_RESTRICTION = "com.github.secarchunit.concepts.ResourceRestriction";

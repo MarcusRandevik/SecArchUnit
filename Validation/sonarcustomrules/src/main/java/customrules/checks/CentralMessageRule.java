@@ -1,5 +1,6 @@
 package customrules.checks;
 
+import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
 import org.sonar.plugins.java.api.semantic.MethodMatchers;
@@ -13,7 +14,9 @@ import java.util.List;
 @Rule(
         key = "CentralMessageSend",
         name = "Outbound messages must be sent from central point",
-        description = "Outbound messages must be sent from central point"
+        description = "Outbound messages must be sent from central point",
+        tags = "secarchunit",
+        priority = Priority.MAJOR
 )
 public class CentralMessageRule extends IssuableSubscriptionVisitor {
     private static final String SENDING_POINT = "EmailUtil";

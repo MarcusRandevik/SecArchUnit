@@ -76,8 +76,6 @@ public class Util {
 
                 /*
                 System.err.println("First expression is method call");
-
-
                 System.err.println(" + " + call);
                 try {
                     boolean targetExists = Arrays.stream(Class.forName(call.targetOwner).getDeclaredMethods())

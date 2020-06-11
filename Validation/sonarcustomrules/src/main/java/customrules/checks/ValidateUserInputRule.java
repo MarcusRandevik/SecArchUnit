@@ -1,5 +1,6 @@
 package customrules.checks;
 
+import org.sonar.check.Priority;
 import org.sonar.check.Rule;
 import org.sonar.plugins.java.api.IssuableSubscriptionVisitor;
 import org.sonar.plugins.java.api.cfg.ControlFlowGraph;
@@ -11,7 +12,9 @@ import java.util.List;
 @Rule(
         key = "ValidateUserInput",
         name = "All user input must be validated",
-        description = "Methods that handle user input must validate it, directly or indirectly"
+        description = "Methods that handle user input must validate it, directly or indirectly",
+        tags = "secarchunit",
+        priority = Priority.MAJOR
 )
 public class ValidateUserInputRule extends IssuableSubscriptionVisitor {
     private static final String USER_INPUT = "com.github.secarchunit.concepts.UserInput";
