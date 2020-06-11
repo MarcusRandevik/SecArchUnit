@@ -1,0 +1,3 @@
+[submodule "ArchUnit"]
+	path = ArchUnit
+	url = https://github.com/SecArchUnit/ArchUnit
