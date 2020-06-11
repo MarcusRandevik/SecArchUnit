@@ -1,0 +1,1 @@
+pmd -d src -R pmd-rules.xml -no-cache -auxclasspath target/ATMsimulator-0.0.1-SNAPSHOT.jar

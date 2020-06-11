@@ -1,0 +1,1 @@
+pmd -d src/org -R pmd-rules.xml -no-cache -auxclasspath lib
