@@ -7,10 +7,13 @@ import java.util.Arrays;
 import java.util.Collection;
 
 public class LogSecurityEventsRule extends AbstractJavaRule {
-    private static final String LOGGER = "java.util.logging.Logger";
+    private static final String LOGGER = "atm.physical.Log";
     private static final Collection<String> SECURITY_SERVICES = Arrays.asList(
-            "org.mybatis.jpetstore.service.AccountService",
-            "org.mybatis.jpetstore.service.OrderService"
+            "atm.physical.CardReader",
+            "atm.physical.CashDispenser",
+            "atm.physical.EnvelopeAcceptor",
+            "atm.physical.NetworkToBank",
+            "atm.transaction.Transaction"
     );
 
     public LogSecurityEventsRule() {

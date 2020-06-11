@@ -19,9 +19,9 @@ import java.util.List;
         priority = Priority.MAJOR
 )
 public class CentralMessageRule extends IssuableSubscriptionVisitor {
-    private static final String SENDING_POINT = "AbstractActionBean";
+    private static final String SENDING_POINT = "Transaction";
     private static final MethodMatchers SENDERS = MethodMatchers.create()
-            .ofTypes("net.sourceforge.stripes.action.ActionBeanContext")
+            .ofTypes("atm.physical.NetworkToBank")
             .anyName()
             .addParametersMatcher(parameters -> !parameters.isEmpty())
             .build();

@@ -19,13 +19,15 @@ import java.util.List;
         tags = "secarchunit",
         priority = Priority.MAJOR
 )
-
 public class LogSecurityEventsRule extends IssuableSubscriptionVisitor {
 
-    public static String LOGGER_CLASS = "java.util.logging.Logger";
+    public static String LOGGER_CLASS = "atm.physical.Log";
     public static List<String> SECURITY_CLASSES = Arrays.asList(
-            "AccountService".toLowerCase(),
-            "OrderService".toLowerCase()
+            "CardReader".toLowerCase(),
+            "CashDispenser".toLowerCase(),
+            "EnvelopeAcceptor".toLowerCase(),
+            "NetworkToBank".toLowerCase(),
+            "Transaction".toLowerCase()
     );
 
     MethodMatchers loggerMethods = MethodMatchers.create().ofTypes(LOGGER_CLASS).anyName().withAnyParameters().build();

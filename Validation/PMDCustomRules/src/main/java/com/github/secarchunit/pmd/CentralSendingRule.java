@@ -7,9 +7,9 @@ import java.util.Arrays;
 import java.util.Collection;
 
 public class CentralSendingRule extends AbstractJavaRule {
-    private static final String SENDING_POINT = "org.mybatis.jpetstore.web.actions.AbstractActionBean";
+    private static final String SENDING_POINT = "atm.transaction.Transaction";
     private static final Collection<String> SENDERS = Arrays.asList(
-            "net.sourceforge.stripes.action.ActionBeanContext"
+            "atm.physical.NetworkToBank"
     );
 
     public CentralSendingRule() {
