@@ -1,0 +1,99 @@
+== Advanced Configuration
+
+Some behavior of ArchUnit can be centrally configured by adding a file `archunit.properties`
+to the root of the classpath (e.g. under `src/test/resources`).
+This section will outline some global configuration options.
+
+=== Overriding configuration
+
+ArchUnit will use exactly the `archunit.properties` file returned by the context
+`ClassLoader` from the classpath root, via the standard Java resource loading mechanism.
+
+It is possible to override any property from `archunit.properties`, by passing a system property
+to the respective JVM process executing ArchUnit:
+
+[source,options="nowrap"]
+----
+-Darchunit.propertyName=propertyValue
+----
+
+E.g. to override the property `resolveMissingDependenciesFromClassPath` described in the next section, it would be possible to pass:
+
+[source,options="nowrap"]
+----
+-Darchunit.resolveMissingDependenciesFromClassPath=false
+----
+
+=== Configuring the Resolution Behavior
+
+As mentioned in <<Dealing with Missing Classes>>, it might be preferable to configure a different
+import behavior if dealing with missing classes wastes too much performance.
+One way that can be chosen out of the box is to never resolve any missing class from the classpath:
+
+[source,options="nowrap"]
+.archunit.properties
+----
+resolveMissingDependenciesFromClassPath=false
+----
+
+If you want to resolve just some classes from the classpath (e.g. to import missing classes from
+your own organization but avoid the performance impact of importing classes from 3rd party packages),
+it is possible to configure only specific packages to be resolved from the classpath:
+
+[source,options="nowrap"]
+.archunit.properties
+----
+classResolver=com.tngtech.archunit.core.importer.resolvers.SelectedClassResolverFromClasspath
+classResolver.args=some.pkg.one,some.pkg.two
+----
+
+This configuration would only resolve the packages `some.pkg.one` and `some.pkg.two` from the
+classpath, and stub all other missing classes.
+
+The last example also demonstrates, how the behavior can be customized freely, for example
+if classes are imported from a different source and are not on the classpath:
+
+First Supply a custom implementation of
+
+[source,java,options="nowrap"]
+----
+com.tngtech.archunit.core.importer.resolvers.ClassResolver
+----
+
+Then configure it
+
+[source,options="nowrap"]
+.archunit.properties
+----
+classResolver=some.pkg.MyCustomClassResolver
+----
+
+If the resolver needs some further arguments, create a public constructor with one `List<String>`
+argument, and supply the concrete arguments as
+
+[source,options="nowrap"]
+.archunit.properties
+----
+classResolver.args=myArgOne,myArgTwo
+----
+
+For further details, compare the sources of `SelectedClassResolverFromClasspath`.
+
+=== MD5 Sums of Classes
+
+Sometimes it can be valuable to record the MD5 sums of classes being imported to track
+unexpected behavior. Since this has a performance impact, it is disabled by default,
+but it can be activated the following way:
+
+[source,options="nowrap"]
+.archunit.properties
+----
+enableMd5InClassSources=true
+----
+
+If this feature is enabled, the MD5 sum can be queried as
+
+[source,java,options="nowrap"]
+----
+javaClass.getSource().get().getMd5sum()
+----

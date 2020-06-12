@@ -1,0 +1,241 @@
+import org.gradle.internal.os.OperatingSystem
+
+import java.nio.file.Files
+
+def repositoryUrls = [
+        tng     : [
+                snapshots: 'https://nexus.int.tngtech.com/repository/maven-snapshots',
+                releases : 'https://nexus.int.tngtech.com/repository/maven-releases'
+        ],
+        sonatype: [
+                snapshots: 'https://oss.sonatype.org/content/repositories/snapshots',
+                releases : 'https://oss.sonatype.org/content/repositories/releases'
+        ]
+]
+def createRepositoriesTag = { repoUrls ->
+    """
+    <repositories>
+        <repository>
+            <id>snapshots</id>
+            <name>Snapshots</name>
+            <url>${repoUrls.snapshots}</url>
+        </repository>
+        <repository>
+            <id>releases</id>
+            <name>Releases</name>
+            <url>${repoUrls.releases}</url>
+        </repository>
+    </repositories>
+"""
+}
+def createPluginRepositoriesTag = { repoUrls ->
+    """
+    <pluginRepositories>
+        <pluginRepository>
+            <id>snapshots</id>
+            <name>Snapshots</name>
+            <url>${repoUrls.snapshots}</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </pluginRepository>
+        <pluginRepository>
+            <id>releases</id>
+            <name>Releases</name>
+            <url>${repoUrls.releases}</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+"""
+}
+def createAllRepositoryTags = { repoUrls ->
+    """
+${createRepositoriesTag(repoUrls)}
+${createPluginRepositoriesTag(repoUrls)}
+"""
+}
+
+def getRepoUrls = {
+    def repoUrls = repositoryUrls.get(it)
+    assert repoUrls: "The configured -PmavenRepos=${it} don't exist"
+    repoUrls
+}
+
+File mavenTestRootDir = rootProject.file('archunit-maven-test')
+File mavenSrc = new File(mavenTestRootDir, 'src')
+File mavenTarget = new File(mavenTestRootDir, 'target')
+File mavenPomTemplate = new File(mavenTestRootDir, 'pom.xml.template')
+File mavenPom = new File(mavenTestRootDir, 'pom.xml')
+File verificationTestPath = new File(mavenTestRootDir, 'verification/TestResultTest.java')
+File verificationResultOriginPath = new File(mavenTestRootDir, 'target/surefire-reports')
+File verificationResultArchivePath = new File(mavenTestRootDir, 'verification-results')
+
+clean {
+    doLast {
+        verificationResultArchivePath.deleteDir()
+    }
+}
+
+task initializeMavenTest {
+    doLast {
+        verificationResultArchivePath.with {
+            deleteDir()
+            assert mkdir(): "Couldn't create directory ${delegate}"
+        }
+    }
+}
+
+def mavenCommand = { String... params ->
+    OperatingSystem.current().isWindows() ?
+            ['cmd', '/c', 'mvnw.cmd'] + params.toList() :
+            ['./mvnw'] + params.toList()
+}
+
+def addMavenTest = { config ->
+    String prepareMavenTest = "prepareMavenTest${config.suffix}"
+    String executeRules = "executeRules${config.suffix}"
+    String verifyRules = "verifyRules${config.suffix}"
+    String cleanUpMavenTest = "cleanUpMavenTest${config.suffix}"
+    String runMavenTest = "runMavenTest${config.suffix}"
+
+    return {
+        tasks.create(name: prepareMavenTest, dependsOn: initializeMavenTest) {
+            doLast {
+                mavenPom.delete()
+                Files.copy(mavenPomTemplate.toPath(), mavenPom.toPath())
+
+                def repositories = project.hasProperty('mavenRepos') ?
+                        createAllRepositoryTags(getRepoUrls(project.getProperty('mavenRepos'))) :
+                        ''
+
+                mavenPom.text = mavenPom.text
+                                        .replace('#{archunit.version}', "${version}")
+                                        .replace('#{archunitTestArtifact}', config.archunitTestArtifact)
+                                        .replace('#{repositories}', repositories)
+                                        .replace('#{javaVersion}', "${config.javaVersion}")
+                                        .replace('#{additionalDependencies}', config.additionalDependencies ?: '')
+                                        .replace('#{surefireExampleConfiguration}', config.surefireExampleConfiguration)
+
+                copy {
+                    from new File(new File(project(':archunit-example:example-plain').projectDir, 'src'), 'main')
+                    into new File(mavenSrc, 'main')
+                }
+                copy {
+                    from new File(new File(project(":archunit-example:example-${config.examplePathSuffix}").projectDir, 'src'), 'test')
+                    into new File(mavenSrc, 'test')
+                }
+                copy {
+                    from verificationTestPath
+                    into new File(mavenSrc, 'test/java')
+                }
+            }
+        }
+
+        def mavenExec = { closure ->
+            return {
+                workingDir mavenTestRootDir
+
+                if (config.jdkPath) {
+                    environment JAVA_HOME: config.jdkPath
+                }
+
+                delegate.with(closure)
+            }
+        }
+
+        tasks.create(name: executeRules, type: Exec, dependsOn: prepareMavenTest).configure mavenExec {
+            commandLine mavenCommand('clean', 'test', '-P', 'execute-rules')
+        }
+
+        tasks.create(name: verifyRules, type: Exec, dependsOn: executeRules).configure mavenExec {
+            commandLine mavenCommand('surefire:test', '-P', 'verify-rules')
+        }
+
+        tasks.create(name: cleanUpMavenTest) {
+            doFirst {
+                copy {
+                    from verificationResultOriginPath
+                    include '**/*.xml'
+                    into new File(verificationResultArchivePath, "${config.suffix}")
+                }
+            }
+            doLast {
+                mavenPom.delete()
+                mavenSrc.deleteDir()
+                mavenTarget.deleteDir()
+            }
+        }
+
+        // Run cleanUp even if task fails
+        [tasks[prepareMavenTest], tasks[verifyRules], tasks[executeRules]]*.finalizedBy tasks[cleanUpMavenTest]
+
+        tasks.create(name: runMavenTest, dependsOn: [prepareMavenTest, executeRules, verifyRules, cleanUpMavenTest])
+
+        def executeRulesTask = tasks[executeRules]
+        releaseProjects*.with {
+            [install, uploadArchives].each { executeRulesTask.mustRunAfter it }
+        }
+    }
+}
+
+def javaConfigs = [
+        [suffix: "java7", javaVersion: JavaVersion.VERSION_1_7, jdkProp: "java7Home"],
+        [suffix: "java8", javaVersion: JavaVersion.VERSION_1_8, jdkProp: "java8Home"],
+        [suffix: "java9", javaVersion: JavaVersion.VERSION_1_9, jdkProp: "java9Home"],
+        [suffix: "java10", javaVersion: JavaVersion.VERSION_1_10, jdkProp: "java10Home"],
+        [suffix: "java11", javaVersion: JavaVersion.VERSION_11, jdkProp: "java11Home"],
+        [suffix: "java12", javaVersion: JavaVersion.VERSION_HIGHER, jdkProp: "java12Home"],
+        [suffix: "java13", javaVersion: JavaVersion.VERSION_HIGHER, jdkProp: "java13Home"],
+        [suffix: "java14", javaVersion: JavaVersion.VERSION_HIGHER, jdkProp: "java14Home"]
+]
+
+javaConfigs = javaConfigs.findAll { project.hasProperty(it.jdkProp) }
+                         .collect { config -> config + [jdkPath: project[config.jdkProp]] }
+
+javaConfigs = javaConfigs ?: [[suffix: 'java7', javaVersion: JavaVersion.VERSION_1_7]]
+
+javaConfigs = javaConfigs.collect { config ->
+    // JUnit 5 needs at least Java 8
+    def testSupportTypes = config.javaVersion > JavaVersion.VERSION_1_7 ?
+            ['plain', 'junit4', 'junit5'] :
+            ['plain', 'junit4']
+    testSupportTypes.collect { testType ->
+        config + [suffix: config.suffix + testType] + [examplePathSuffix: testType]
+    }
+}.flatten()
+
+javaConfigs.findAll { it.suffix.endsWith('plain') }*.with {
+    surefireExampleConfiguration = '<groups>com.tngtech.archunit.exampletest.Example</groups>'
+    archunitTestArtifact = 'archunit'
+}
+
+javaConfigs.findAll { it.suffix.endsWith('junit4') }*.with {
+    surefireExampleConfiguration = '<groups>com.tngtech.archunit.exampletest.junit4.Example</groups>'
+    archunitTestArtifact = 'archunit-junit4'
+}
+
+javaConfigs.findAll { it.suffix.endsWith('junit5') }*.with {
+    surefireExampleConfiguration = '<groups>example</groups>'
+    archunitTestArtifact = 'archunit-junit5'
+    additionalDependencies = """
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>5.5.2</version>
+            <scope>test</scope>
+        </dependency>"""
+}
+
+javaConfigs.each { config ->
+    project.with(addMavenTest(config))
+}
+
+def suffixes = javaConfigs*.suffix.sort()
+[suffixes, suffixes.tail()].transpose().each { twoConsecutiveSuffixes ->
+    tasks["prepareMavenTest${twoConsecutiveSuffixes[1]}"].mustRunAfter(tasks["cleanUpMavenTest${twoConsecutiveSuffixes[0]}"])
+}
+
+task runMavenTest
+tasks.findAll { it.name ==~ /^runMavenTest.+/ }.each { runMavenTest.dependsOn it }

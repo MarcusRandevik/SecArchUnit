@@ -1,0 +1,43 @@
+ext.moduleName = 'com.tngtech.archunit.junit5.engineapi'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+dependencies {
+    compile project(path: ':archunit')
+    compile dependency.guava
+    compile dependency.slf4j
+    compile dependency.junitPlatformEngine
+
+    testCompile project(path: ':archunit-junit5-api')
+    testCompile project(path: ':archunit', configuration: 'tests')
+    testCompile dependency.assertj
+    testCompile dependency.mockito
+    testCompile dependency.junit5JupiterApi
+
+    testRuntime dependency.junit5JupiterEngine
+}
+
+compileJava.dependsOn project(':archunit-junit5-api').finishArchive
+
+configureSlowTestsFor this
+
+test {
+    useJUnitPlatform() {
+        excludeEngines 'archunit'
+    }
+}
+
+shadowJar {
+    exclude 'META-INF/maven/**'
+
+    dependencies {
+        exclude(dependency { it.name != dependency.guava })
+    }
+}
+
+def configureDependencies = { pom ->
+    // dependencies to archunit only cover annotations; we can skip those without breaking consumers to keep the dependency slim
+    pom.dependencies.removeAll { it.artifactId != 'junit-platform-engine' }
+}
+this.with project(':archunit-junit').configureJUnitArchive(configureDependencies)

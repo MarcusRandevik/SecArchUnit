@@ -1,0 +1,95 @@
+apply plugin: 'idea'
+
+ext.moduleName = 'com.tngtech.archunit'
+
+dependencies {
+    compile dependency.asm
+    compile dependency.'asm-commons'
+    compile dependency.guava
+    compile dependency.slf4j
+
+    testCompile dependency.log4j_api
+    testCompile dependency.log4j_core
+    testCompile dependency.log4j_slf4j
+    testCompile dependency.junit4
+    testCompile dependency.junit_dataprovider
+    testCompile dependency.mockito
+    testCompile dependency.assertj
+    testCompile(dependency.assertj_guava) {
+        exclude module: 'assertj-core'
+        exclude module: 'guava'
+    }
+}
+
+ext.repackagesAsm = true // Will cause the ASM License to be packaged -> license.gradle
+shadowJar {
+    exclude 'META-INF/**'
+
+    dependencies {
+        exclude(dependency(dependency.slf4j))
+    }
+}
+
+/* Besides SLF4J we'll shadow everything we need into the JAR to avoid conflicts with other libraries*/
+def configureDependenciesAfterShadow = { pom ->
+    pom.dependencies.removeAll {
+        it.artifactId != 'slf4j-api' || it.scope != 'compile'
+    }
+}
+install.repositories.mavenInstaller.pom.whenConfigured configureDependenciesAfterShadow
+uploadArchives.repositories.mavenDeployer.pom.whenConfigured configureDependenciesAfterShadow
+
+addTestJarTo this
+configureSlowTestsFor this
+
+def jdk9MainDirs = ['src/jdk9main/java']
+def jdk9TestDirs = ['src/jdk9test/java']
+sourceSets {
+    jdk9main {
+        java {
+            srcDirs = jdk9MainDirs
+        }
+        compileClasspath += sourceSets.main.compileClasspath
+    }
+    jdk9test {
+        java {
+            srcDirs = jdk9TestDirs
+        }
+        compileClasspath += sourceSets.test.compileClasspath
+    }
+}
+
+dependencies {
+    jdk9mainCompile sourceSets.main.output
+    jdk9testCompile sourceSets.test.output
+    jdk9testCompile sourceSets.jdk9main.output
+
+    runtime sourceSets.jdk9main.output
+}
+
+compileJdk9mainJava.with {
+    sourceCompatibility = JavaVersion.VERSION_1_9
+    targetCompatibility = JavaVersion.VERSION_1_9
+
+    destinationDir = compileJava.destinationDir
+}
+
+compileJdk9testJava.with {
+    sourceCompatibility = JavaVersion.VERSION_1_9
+    targetCompatibility = JavaVersion.VERSION_1_9
+}
+
+task jdk9Test(type: Test) {
+    testClassesDirs = sourceSets.jdk9test.output.classesDirs
+    classpath = sourceSets.jdk9test.runtimeClasspath
+}
+
+[jar, test]*.dependsOn compileJdk9mainJava
+
+idea {
+    module {
+        sourceDirs += jdk9MainDirs.collect { file(it) }
+        sourceDirs -= jdk9TestDirs.collect { file(it) }
+        testSourceDirs += jdk9TestDirs.collect { file(it) }
+    }
+}

@@ -1,0 +1,196 @@
+== JUnit Support
+
+At the moment ArchUnit offers extended support for writing tests with JUnit 4 and JUnit 5.
+This mainly tackles the problem of caching classes between test runs and to remove some boilerplate.
+
+Consider a straight forward approach to write tests:
+
+[source,java,options="nowrap"]
+----
+@Test
+public void rule1() {
+    JavaClasses importedClasses = new ClassFileImporter().importClasspath();
+
+    ArchRule rule = classes()...
+
+    rule.check(importedClasses);
+}
+
+@Test
+public void rule2() {
+    JavaClasses importedClasses = new ClassFileImporter().importClasspath();
+
+    ArchRule rule = classes()...
+
+    rule.check(importedClasses);
+}
+----
+
+For bigger projects, this will have a significant performance impact, since the import can take
+a noticeable amount of time. Also rules will always be checked against the imported classes, thus
+the explicit call of `check(importedClasses)` is bloat and error prone (i.e. it can be forgotten).
+
+=== JUnit 4 & 5 Support
+
+Make sure you follow the installation instructions at <<Installation>>, in particular to include
+the correct dependency for the respective JUnit support.
+
+==== Writing tests
+
+Tests look and behave very similar between JUnit 4 and 5. The only difference is, that with JUnit 4
+it is necessary to add a specific `Runner` to take care of caching and checking rules, while JUnit 5
+picks up the respective `TestEngine` transparently. A test typically looks the following way:
+
+[source,java,options="nowrap"]
+----
+@RunWith(ArchUnitRunner.class) // Remove this line for JUnit 5!!
+@AnalyzeClasses(packages = "com.myapp")
+public class ArchitectureTest {
+
+    // ArchRules can just be declared as static fields and will be evaluated
+    @ArchTest
+    public static final ArchRule rule1 = classes().should()...
+
+    @ArchTest
+    public static final ArchRule rule2 = classes().should()...
+
+    @ArchTest
+    public static void rule3(JavaClasses classes) {
+        // The runner also understands static methods with a single JavaClasses argument
+        // reusing the cached classes
+    }
+
+}
+----
+
+The `JavaClass` cache will work in two ways. On the one hand it will cache the classes by test,
+so they can be reused by several rules declared within the same class. On the other hand, it
+will cache the classes by location, so a second test that wants to import classes from the same
+URLs will reuse the classes previously imported as well. Note that this second caching uses
+soft references, so the classes will be dropped from memory, if the heap runs low.
+For further information see <<Controlling the Cache>>.
+
+==== Controlling the Import
+
+Which classes will be imported can be controlled in a declarative way through `@AnalyzeClasses`.
+If no packages or locations are provided, the whole classpath will be imported.
+You can specify packages to import as strings:
+
+[source,java,options="nowrap"]
+----
+@AnalyzeClasses(packages = {"com.myapp.subone", "com.myapp.subone"})
+----
+
+To better support refactorings, packages can also be declared relative to classes, i.e. the
+packages these classes reside in will be imported:
+
+[source,java,options="nowrap"]
+----
+@AnalyzeClasses(packagesOf = {SubOneConfiguration.class, SubTwoConfiguration.class})
+----
+
+As a third option, locations can be specified freely by implementing a `LocationProvider`:
+
+[source,java,options="nowrap"]
+----
+public class MyLocationProvider implements LocationProvider {
+    @Override
+    public Set<Location> get(Class<?> testClass) {
+        // Determine Locations (= URLs) to import
+        // Can also consider the actual test class, e.g. to read some custom annotation
+    }
+}
+
+@AnalyzeClasses(locations = MyLocationProvider.class)
+----
+
+Furthermore to choose specific classes beneath those locations, `ImportOptions` can be
+specified (compare <<The Core API>>). For example, to import the classpath, but only consider
+production code, and only consider code that is directly supplied and does not come from JARs:
+
+[source,java,options="nowrap"]
+----
+@AnalyzeClasses(importOptions = {DoNotIncludeTests.class, DoNotIncludeJars.class})
+----
+
+As explained in <<The Core API>>, you can write your own custom implementation of `ImportOption`
+and then supply the type to `@AnalyzeClasses`.
+
+==== Controlling the Cache
+
+By default all classes will be cached by location. This means that between different
+test class runs imported Java classes will be reused, if the exact combination of locations has already
+been imported.
+
+If the heap runs low, and thus the garbage collector has to do a big sweep in one run,
+this can cause a noticeable delay. On the other hand, if it is known that no other test class will
+reuse the imported Java classes, it would make sense to deactivate this cache.
+
+This can be achieved by configuring `CacheMode.PER_CLASS`, e.g.
+
+[source,java,options="nowrap"]
+----
+@AnalyzeClasses(packages = "com.myapp.special", cacheMode = CacheMode.PER_CLASS)
+----
+
+The Java classes imported during this test run will not be cached by location and just be reused within
+the same test class. After all tests of this class have been run,
+the imported Java classes will simply be dropped.
+
+==== Ignoring Tests
+
+It is possible to skip tests by annotating them with `@ArchIgnore`, for example:
+
+[source,java,options="nowrap"]
+----
+public class ArchitectureTest {
+
+    // will run
+    @ArchTest
+    public static final ArchRule rule1 = classes().should()...
+
+    // won't run
+    @ArchIgnore
+    @ArchTest
+    public static final ArchRule rule2 = classes().should()...
+}
+----
+
+==== Grouping Rules
+
+Often a project might end up with different categories of rules, for example "service rules"
+and "persistence rules". It is possible to write one class for each set of rules, and then
+refer to those sets from another test:
+
+[source,java,options="nowrap"]
+----
+public class ServiceRules {
+    @ArchTest
+    public static final ArchRule ruleOne = ...
+
+    // further rules
+}
+
+public class PersistenceRules {
+    @ArchTest
+    public static final ArchRule ruleOne = ...
+
+    // further rules
+}
+
+@RunWith(ArchUnitRunner.class) // Remove this line for JUnit 5!!
+@AnalyzeClasses
+public class ArchitectureTest {
+
+    @ArchTest
+    public static final ArchRules serviceRules = ArchRules.in(ServiceRules.class);
+
+    @ArchTest
+    public static final ArchRules persistenceRules = ArchRules.in(PersistenceRules.class);
+
+}
+----
+
+The runner will evaluate all rules within `ServiceRules` and `PersistenceRules` against
+the classes declared at `ArchitectureTest`. This also allows an easy reuse of a rule library
+in different projects or modules.

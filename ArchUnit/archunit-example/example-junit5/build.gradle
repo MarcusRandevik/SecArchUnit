@@ -1,0 +1,21 @@
+ext.moduleName = 'com.tngtech.archunit.example.junit5'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+dependencies {
+    testCompile project(path: ':archunit-junit5')
+    testCompile project(path: ':archunit-example:example-plain')
+
+    testRuntime dependency.log4j_api
+    testRuntime dependency.log4j_core
+    testRuntime dependency.log4j_slf4j
+}
+
+test {
+    useJUnitPlatform {
+        if (!project.hasProperty('example')) {
+            excludeTags 'example'
+        }
+    }
+}

@@ -1,0 +1,88 @@
+== Installation
+
+To use ArchUnit, it is sufficient to include the respective JAR files in the classpath.
+Most commonly, this is done by adding the dependency to your dependency management tool,
+which is illustrated for Maven and Gradle below. Alternatively you
+can obtain the necessary JAR files directly from
+http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.tngtech.archunit%22[Maven Central].
+
+=== JUnit 4
+
+To use ArchUnit in combination with JUnit 4, include the following dependency from
+Maven Central:
+
+[source,xml,options="nowrap"]
+.pom.xml
+----
+<dependency>
+    <groupId>com.tngtech.archunit</groupId>
+    <artifactId>archunit-junit4</artifactId>
+    <version>0.13.1</version>
+    <scope>test</scope>
+</dependency>
+----
+
+[source,options="nowrap"]
+.build.gradle
+----
+dependencies {
+    testCompile 'com.tngtech.archunit:archunit-junit4:0.13.1'
+}
+----
+
+=== JUnit 5
+
+ArchUnit's JUnit 5 artifacts follow the pattern of JUnit Jupiter. There is one artifact containing
+the API, i.e. the compile time dependencies to write tests. Then there is another artifact containing
+the actual `TestEngine` used at runtime. Just like JUnit Jupiter ArchUnit offers one convenience
+artifact transitively including both API and engine with the correct scope, which in turn can be added
+as a test compile dependency. Thus to include ArchUnit's JUnit 5 support, simply add the following dependency
+from Maven Central:
+
+[source,xml,options="nowrap"]
+.pom.xml
+----
+<dependency>
+    <groupId>com.tngtech.archunit</groupId>
+    <artifactId>archunit-junit5</artifactId>
+    <version>0.13.1</version>
+    <scope>test</scope>
+</dependency>
+----
+
+[source,options="nowrap"]
+.build.gradle
+----
+dependencies {
+    testCompile 'com.tngtech.archunit:archunit-junit5:0.13.1'
+}
+----
+
+=== Other Test Frameworks
+
+ArchUnit works with any test framework that executes Java code. To use ArchUnit in such a
+context, include the core ArchUnit dependency from Maven Central:
+
+[source,xml,options="nowrap"]
+.pom.xml
+----
+<dependency>
+    <groupId>com.tngtech.archunit</groupId>
+    <artifactId>archunit</artifactId>
+    <version>0.13.1</version>
+    <scope>test</scope>
+</dependency>
+----
+
+[source,options="nowrap"]
+.build.gradle
+----
+dependencies {
+   testCompile 'com.tngtech.archunit:archunit:0.13.1'
+}
+----
+
+=== Maven Plugin
+
+There exists a Maven plugin by Société Générale to run ArchUnit rules straight from Maven. For
+more information visit their GitHub repo: https://github.com/societe-generale/arch-unit-maven-plugin
