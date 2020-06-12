@@ -1,0 +1,37 @@
+%\newcolumntype{g}{>{\columncolor{RowColor}}c}
+%\newcolumntype{x}{>{\columncolor{RowColor}}l}
+\begin{table}
+\captionsetup{justification=centering}
+\caption
+    [Run time benchmarks]
+    {A benchmark of the time (in seconds) required to validate the constraints in each tool and system, measured in 3 consecutive runs.}
+\begin{center}
+\begin{tabular}{lxggggg}
+\rowcolor{white}
+\textbf{Project} & \textbf{Tool} & \textbf{Mean time} & \textbf{sd} \\
+\hline
+\rowcolor{white}
+\multirow[t]{3}{*}{ATMSim}
+        & SecArchUnit & 0.957 & 0.072 \\
+        & PMD Plugin & 1.3 & 0.078 \\
+        \rowcolor{white}
+        & SonarQube Plugin & 13.7 & 1.7 \\
+\hline
+\rowcolor{white}
+\multirow[t]{3}{*}{JPetStore}
+        & SecArchUnit & 0.837 & 0.035 \\
+        & PMD Plugin & 1.46 & 0.21 \\
+        \rowcolor{white}
+        & SonarQube Plugin & 12.4 & 0.50 \\
+\hline
+\rowcolor{white}
+\multirow[t]{3}{*}{ITrust}
+        & SecArchUnit & 2.24 & 0.12 \\
+        & PMD Plugin & 7.37 & 0.23 \\
+        \rowcolor{white}
+        & SonarQube Plugin & 39.4 & 3.25 \\
+\hline
+\end{tabular}
+\end{center}
+\label{tab:benchmark}
+\end{table}

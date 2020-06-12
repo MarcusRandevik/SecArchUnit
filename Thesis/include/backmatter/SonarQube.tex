@@ -1,0 +1,386 @@
+\chapter{SonarQube Rule Definitions}
+\label{apx:sonarqube}
+
+\begin{lstlisting}[caption={Constraint 1.}, captionpos=b, label=lst:sq_1, numbers=left, showstringspaces=false]
+public class LogSecurityEventsRule
+    extends IssuableSubscriptionVisitor {
+
+  public static String LOGGER_CLASS = "edu.ncsu.csc.itrust.action.EventLoggingAction";
+  public static List<String> SECURITY_CLASSES = Arrays.asList(
+      "ActivityFeedAction".toLowerCase(),
+  );
+
+  MethodMatchers loggerMethods = MethodMatchers.create()
+    .ofTypes(LOGGER_CLASS).anyName().withAnyParameters()
+    .build();
+
+  @Override
+  public List<Tree.Kind> nodesToVisit() {
+    return Collections.singletonList(Tree.Kind.METHOD);
+  }
+
+  @Override
+  public void visitNode(Tree tree) {
+    MethodTree method = (MethodTree) tree;
+
+    String methodEnclosingClass = method.symbol().enclosingClass()
+      .name().toLowerCase();
+    if (!SECURITY_CLASSES.contains(methodEnclosingClass)) {
+      // Method not defined in a security service => skip
+      return;
+    }
+
+    boolean isPublicMethod = false;
+    for (ModifierKeywordTree keywordTree : method.modifiers().modifiers()) {
+      if (keywordTree.modifier() == Modifier.PUBLIC) {
+        isPublicMethod = true;
+        break;
+      }
+    }
+
+    if (!isPublicMethod) {
+      // Not a public method => skip
+      return;
+    }
+
+    boolean containsCallToLogger = false;
+
+    ControlFlowGraph cfg = method.cfg();
+
+    for (ControlFlowGraph.Block block : cfg.blocks()) {
+      for (Tree blockTree : block.elements()) {
+        if (blockTree.is(Tree.Kind.METHOD_INVOCATION)) {
+          MethodInvocationTree mit = (MethodInvocationTree) blockTree;
+          if (loggerMethods.matches(mit)) {
+            // 
+            containsCallToLogger = true;
+          }
+        }
+      }
+    }
+
+    if (!containsCallToLogger) {
+      reportIssue(method.simpleName(), "Secure classes must contain call to logger");
+    }
+  }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Constraint 2. This rule ensures that at least one method in the authentication point calls the authentication enforcer.}, captionpos=b, label=lst:sq_2, numbers=left, showstringspaces=false]
+public class AuthSingleComponentRule
+    extends IssuableSubscriptionVisitor {
+
+  private static final String AUTH_POINT_CLASS =
+    "OrderActionBean".toLowerCase();
+  private static final String AUTH_ENFORCER_CLASS =
+    "org.mybatis.jpetstore.web.actions.OrderActionBean";
+
+  private final MethodMatchers authMethods =
+    MethodMatchers.create()
+    .ofTypes(AUTH_ENFORCER_CLASS).anyName().withAnyParameters()
+    .build();
+
+  private static final int INITIAL_AMOUNT_OF_METHODS = -1;
+  private int methodsInAuthPoint = INITIAL_AMOUNT_OF_METHODS;
+  private int methodsVisited = 0;
+  private boolean containsCallToEnforcer = false;
+
+  @Override
+  public List<Tree.Kind> nodesToVisit() {
+    return Collections.singletonList(Tree.Kind.METHOD);
+  }
+
+  @Override
+  public void visitNode(Tree tree) {
+    MethodTree method = (MethodTree) tree;
+
+    String enclosingClassName = method.symbol().enclosingClass()
+      .name().toLowerCase();
+    // Check if we're in the auth point class
+    if (!AUTH_POINT_CLASS.equals(enclosingClassName)) {
+      return;
+    }
+
+    methodsVisited++;
+
+    // If this is the first time we're in the auth point class, calculate the number of methods
+    if (methodsInAuthPoint == INITIAL_AMOUNT_OF_METHODS) {
+      Collection<Symbol> symbols = method.symbol().enclosingClass()
+        .memberSymbols();
+      setMethodsInAuthPoint(symbols);
+    }
+
+    // From the cgf, see if the methods contains a call to enforcer class
+    ControlFlowGraph cfg = method.cfg();
+
+    for (ControlFlowGraph.Block block : cfg.blocks()) {
+      for (Tree blockTree : block.elements()) {
+        if (blockTree.is(Tree.Kind.METHOD_INVOCATION)) {
+          MethodInvocationTree mit =
+            (MethodInvocationTree) blockTree;
+          if (authMethods.matches(mit)) {
+            containsCallToEnforcer = true;
+          }
+        }
+      }
+    }
+
+    if (methodsVisited >= methodsInAuthPoint
+        && !containsCallToEnforcer) {
+      reportIssue(
+        method.symbol().enclosingClass().declaration(),
+        "Authpoint must contain call to enforcer"
+      );
+    }
+  }
+
+  /**
+   * Calculate the amount of methods in the authpoint class
+   * @param symbols the collection of symbols defined within the authpoint class
+   */
+  private void setMethodsInAuthPoint(Collection<Symbol> symbols) {
+    for (Symbol symbol : symbols) {
+      if (symbol.isMethodSymbol() 
+          && !symbol.name().equals("<init>")) {
+        if (methodsInAuthPoint == INITIAL_AMOUNT_OF_METHODS) {
+          methodsInAuthPoint = 1;
+        } else {
+          methodsInAuthPoint++;
+        }
+      }
+    }
+
+    if (methodsInAuthPoint == INITIAL_AMOUNT_OF_METHODS) {
+      methodsInAuthPoint = 0;
+    }
+  }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Constraint 2. This rule ensures that calls to the authentication enforcer only occur in the authentication point.}, captionpos=b, label=lst:sq_2b, numbers=left, showstringspaces=false]
+public class AuthSingleComponentEnforcerRule
+    extends IssuableSubscriptionVisitor {
+  private static final String AUTH_POINT_CLASS =
+    "OrderActionBean".toLowerCase();
+  private static final String AUTH_ENFORCER_CLASS =
+    "org.mybatis.jpetstore.web.actions.OrderActionBean";
+
+  private final MethodMatchers enforcerMethods =
+    MethodMatchers.create()
+    .ofTypes(AUTH_ENFORCER_CLASS).anyName().withAnyParameters()
+    .build();
+
+  @Override
+  public List<Tree.Kind> nodesToVisit() {
+    return Collections.singletonList(Tree.Kind.METHOD_INVOCATION);
+  }
+
+  @Override
+  public void visitNode(Tree tree) {
+    MethodInvocationTree mit = (MethodInvocationTree) tree;
+
+    if (enforcerMethods.matches(mit)) {
+      // Get the class of the calling method
+      Tree parent = mit.parent();
+      while (!parent.is(Tree.Kind.CLASS)) {
+        parent = parent.parent();
+      }
+      ClassTree classTree = (ClassTree) parent;
+      String enclosingClassOfCaller = classTree.symbol()
+        .name().toLowerCase();
+
+      if (!AUTH_POINT_CLASS.equals(enclosingClassOfCaller)) {
+        reportIssue(mit, "Method invocation to enforcer must be performed at auth points");
+      }
+    }
+  }
+}
+
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Constraint 3.}, captionpos=b, label=lst:sq_3, numbers=left, showstringspaces=false]
+class CentralMessageRule extends IssuableSubscriptionVisitor {
+  private static final String SENDING_POINT = "Transaction";
+  private static final MethodMatchers SENDERS =
+    MethodMatchers.create()
+    .ofTypes("atm.physical.NetworkToBank")
+    .anyName()
+    .addParametersMatcher(parameters -> !parameters.isEmpty())
+    .build();
+
+  @Override
+  public List<Tree.Kind> nodesToVisit() {
+    return Collections.singletonList(Tree.Kind.METHOD_INVOCATION);
+  }
+
+  @Override
+  public void visitNode(Tree tree) {
+    MethodInvocationTree methodInvocation =
+      (MethodInvocationTree) tree;
+
+    if (SENDERS.matches(methodInvocation)) {
+      // Get class where method invocation takes place
+      Tree parent = methodInvocation.parent();
+      while (!parent.is(Tree.Kind.CLASS)) {
+        parent = parent.parent();
+      }
+      ClassTree classTree = (ClassTree) parent;
+
+      // Compare class with sending point
+      String sendingClassName = classTree.symbol().name();
+      if (!SENDING_POINT.equals(sendingClassName)) {
+        reportIssue(methodInvocation, "Messages must only be sent from the sending point");
+      }
+    }
+  }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Constraint 4.}, captionpos=b, label=lst:sq_4, numbers=left, showstringspaces=false]
+public class ValidateUserInputRule
+    extends IssuableSubscriptionVisitor {
+  private static final String USER_INPUT =
+    "com.github.secarchunit.concepts.UserInput";
+  private static final String INPUT_VALIDATOR =
+    "com.github.secarchunit.concepts.InputValidator";
+
+  @Override
+  public List<Tree.Kind> nodesToVisit() {
+    return Collections.singletonList(Tree.Kind.METHOD);
+  }
+
+  @Override
+  public void visitNode(Tree tree) {
+    MethodTree methodTree = (MethodTree) tree;
+
+    // Check if this method deals with user input
+    if (!methodTree.symbol().metadata()
+        .isAnnotatedWith(USER_INPUT)) {
+      return;
+    }
+
+    // Check for in-line validation (case 1)
+    if (methodTree.symbol().metadata()
+        .isAnnotatedWith(INPUT_VALIDATOR)) {
+      return;
+    }
+
+    // Check for calls to validator (case 2)
+    for (Block block : methodTree.cfg().blocks()) {
+      for (Tree blockTree : block.elements()) {
+        if (blockTree.is(Tree.Kind.METHOD_INVOCATION)) {
+          MethodInvocationTree mit = (MethodInvocationTree) blockTree;
+          if (mit.symbol().metadata()
+              .isAnnotatedWith(INPUT_VALIDATOR)
+            || mit.symbol().enclosingClass().metadata()
+              .isAnnotatedWith(INPUT_VALIDATOR)) {
+            return;
+          }
+        }
+      }
+    }
+
+    // Check if all callers are marked as validators (case 3)
+    boolean hasCallers = !methodTree.symbol().usages().isEmpty();
+    if (hasCallers) {
+      boolean validatedInAllCallers = true;
+
+      for (IdentifierTree caller : methodTree.symbol().usages()) {
+        if (caller.symbol().metadata()
+            .isAnnotatedWith(INPUT_VALIDATOR)) {
+          // Caller method is validator
+          continue;
+        }
+
+        if (caller.symbol().enclosingClass().metadata()
+            .isAnnotatedWith(INPUT_VALIDATOR)) {
+          // Caller class is validator
+          continue;
+        }
+
+        validatedInAllCallers = false;
+        break;
+      }
+
+      if (validatedInAllCallers) {
+        return;
+      }
+    }
+
+    reportIssue(methodTree, "User input must be validated");
+  }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Constraint 5.}, captionpos=b, label=lst:sq_5, numbers=left, showstringspaces=false]
+public class LimitThreadSpawnRule
+    extends IssuableSubscriptionVisitor {
+  private static final String RESOURCE_RESTRICTION =
+    "com.github.secarchunit.concepts.ResourceRestriction";
+
+  private final MethodMatchers threadStartMethods =
+    MethodMatchers.create()
+      .ofSubTypes("java.lang.Thread").names("start")
+      .withAnyParameters().build();
+  private final MethodMatchers processStartMethods =
+    MethodMatchers.or(
+      MethodMatchers.create()
+        .ofTypes("java.lang.ProcessBuilder")
+        .names("start").withAnyParameters()
+        .build(),
+      MethodMatchers.create()
+        .ofTypes("java.lang.Runtime").names("exec")
+        .withAnyParameters()
+        .build()
+    );
+
+  @Override
+  public List<Tree.Kind> nodesToVisit() {
+    return Collections.singletonList(Tree.Kind.METHOD);
+  }
+
+  @Override
+  public void visitNode(Tree tree) {
+    MethodTree methodTree = (MethodTree) tree;
+
+    if (methodTree.symbol().isAbstract()) {
+      // Skip abstract methods, as they have no code block
+      return;
+    }
+
+    if (methodStartsThreadOrProcess(methodTree)) {
+      // Check for resource restriction marker...
+      // ... on method
+      if (methodTree.symbol().metadata()
+          .isAnnotatedWith(RESOURCE_RESTRICTION)) {
+        return;
+      }
+
+      // ... or on class
+      if (methodTree.symbol().enclosingClass().metadata()
+          .isAnnotatedWith(RESOURCE_RESTRICTION)) {
+        return;
+      }
+
+      reportIssue(methodTree, "Thread spawns must be restricted");
+    }
+  }
+
+  private boolean methodStartsThreadOrProcess(
+      MethodTree methodTree) {
+    for (Block block : methodTree.cfg().blocks()) {
+      for (Tree blockTree : block.elements()) {
+        if (blockTree.is(Tree.Kind.METHOD_INVOCATION)) {
+          MethodInvocationTree mit =
+            (MethodInvocationTree) blockTree;
+          if (threadStartMethods.matches(mit)
+              || processStartMethods.matches(mit)) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+}
+\end{lstlisting}

@@ -1,0 +1,35 @@
+\begin{table}[ht]
+\captionsetup{format=hang,justification=raggedright}
+\caption
+    [Results from validating constraints 1-5]
+    {Results from validating constraints 1-5 using SecArchUnit, SonarQube and PMD.}
+\begin{center}
+\begin{tabular}{lxggggg}
+\rowcolor{white}
+\textbf{Project} & \textbf{Tool} & \textbf{TP} & \textbf{FP} & \textbf{FN} & \textbf{Precision} & \textbf{Recall} \\
+\hline
+\rowcolor{white}
+\multirow[t]{3}{*}{ATMSim}
+        & SecArchUnit & 19 & 1 & 0 & 0.95 & 1 \\
+        & SonarQube Plugin & 19 & 1 & 0 & 0.95 & 1 \\
+        \rowcolor{white}
+        & PMD Plugin & 15 & 1 & 4 & 0.94 & 0.79 \\
+\hline
+\rowcolor{white}
+\multirow[t]{3}{*}{JPetStore}
+        & SecArchUnit & 51 & 0 & 0 & 1 & 1 \\
+        & SonarQube Plugin & 51 & 0 & 0 & 1 & 1 \\
+        \rowcolor{white}
+        & PMD Plugin & 47 & 0 & 4 & 1 & 0.92 \\
+\hline
+\rowcolor{white}
+\multirow[t]{3}{*}{ITrust}
+        & SecArchUnit & 216 & 3 & 0 & 0.99 & 1 \\
+        & SonarQube Plugin & 216 & 0 & 0 & 1 & 1 \\
+        \rowcolor{white}
+        & PMD Plugin & 216 & 0 & 0 & 1 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+\label{tab:results_comparison}
+\end{table}

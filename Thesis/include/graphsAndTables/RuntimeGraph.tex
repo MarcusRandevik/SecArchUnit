@@ -1,0 +1,41 @@
+\begin{filecontents*}{secarchunit_itrust.dat}
+42.7
+39.4
+36.2
+\end{filecontents*}
+
+\begin{filecontents*}{pmd_itrust.dat}
+12.4
+11.9
+12.9
+\end{filecontents*}
+
+\begin{filecontents*}{sonarqube_itrust.dat}
+15.7
+12.7
+12.8
+\end{filecontents*}
+
+\begin{figure}
+\centering
+\captionsetup{justification=centering}
+
+\begin{tikzpicture}
+\begin{axis}[
+    ytick={1,2,3},
+    yticklabels={SecArchUnit, PMD, SonarQube},
+    boxplot/draw direction=x
+]
+
+% SecArchUnit
+\addplot+ [boxplot] table[y index=0]{secarchunit_itrust.dat};
+\addplot+ [boxplot] table[y index=0]{pmd_itrust.dat};
+\addplot+ [boxplot] table[y index=0]{sonarqube_itrust.dat};
+
+%\legend{SecArchUnit,PMD,SonarQube}
+\end{axis}
+\end{tikzpicture}
+
+\caption{Runtime benchmarks of each tool and system.}
+\label{bar:frequency_violation_comparison}
+\end{figure}

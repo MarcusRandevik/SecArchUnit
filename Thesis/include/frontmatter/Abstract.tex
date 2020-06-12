@@ -1,0 +1,20 @@
+% CREATED BY DAVID FRISK, 2018
+\oneLineTitle\\
+\oneLineSubtitle\\
+MARCUS RANDEVIK\\
+PATRIK OLSON\\
+Department of Computer Science and Engineering\\
+Chalmers University of Technology and University of Gothenburg\setlength{\parskip}{0.5cm}
+
+\thispagestyle{plain}			% Supress header 
+\setlength{\parskip}{0pt plus 1.0pt}
+\section*{Abstract}
+The architecture of a software system heavily influences the level of security achieved.  However, a perfectly designed architecture does not provide any security if the implementation does not conform to the constraints. Adhering to a defined architecture is easier said than done as the representation of its design often requires manual labor to validate the conformance of the implementation. Previous attempts at solving the issue of creating a representation that allows for automatic conformance checking has failed to gain adoption, perhaps due to the disparity between models and code. In this thesis, we present our investigation and extension of the ArchUnit library to support the validation of security architectural constraints. In contrast to previously proposed approaches, ArchUnit represents architectural constraints via rules that can be validated using conventional unit test runners.  We compare our extension of ArchUnit, called SecArchUnit, to both SonarQube and PMD to distinguish any difference in their ability to detect violations of constrains as well as their appropriateness of expressing architectural constraints. Our results show that SecArchUnit was able to detect a wider variety of constraints and provides an interface more suitable for defining constraints at the architectural level.
+
+% KEYWORDS (MAXIMUM 10 WORDS)
+\vfill
+Keywords: Software Architecture, Architectural Conformance, Static Analysis, Security
+
+\newpage				% Create empty back of side
+\thispagestyle{empty}
+\mbox{}

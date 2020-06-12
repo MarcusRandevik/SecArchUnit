@@ -1,0 +1,189 @@
+\chapter{Selection of Architectural Security Constraints}
+
+This chapter describes the result of compiling a list of security constraints, as described in the methodology chapter, and the selection of seven constraints that have been implemented in SecArchUnit.  
+
+\section{Compiled list of security constraints}
+
+The compiled collection of security constraints can be seen in Table~\ref{tab:all_measures}. There are in total 17 constraints. As mentioned in Section~\ref{sec:processing}, each constraint was categorized according to the goals of CIAA to ensure coverage of a diverse set of security goals. 
+
+Although both the architectural rules found in Jasser \cite{franch_constraining_2019} and the security patterns presented in Scandariato et al. \cite{scandariato_system_2006} were at the appropriate level of design, many of the weaknesses presented in CAWE were not. Common examples include; CAWE-259 "Use of hard-coded password" where the weakness is reliant on a local change of behavior rather than the architectural structure; and CAWE-263 "Password aging with long expiration" where the weakness is introduced by a single variable most likely defined outside of the source code. As a result, a far lower percentage of entries were included from the CAWE-catalog compared to the other sources.
+
+
+% E.g. #5, what is "it"/the subject? Who strips the data?
+% Some of these are just guidelines, not actual constraints.
+
+% (2020-04-10) Subgoals do not seem to add any value as we have not used them when considering the implementation. 
+% (2020-04-10) Previous entry 16 and 17 were merged in table 4.1 instead of 4.2 as they were previously not grouped due to sub-goal differences
+
+\begin{table}
+\captionsetup{justification=centering}
+\caption
+    [Security constraints and their related CIAA goals]
+    {Security constraints and their related CIAA goals.}
+\begin{center}
+\begin{tabular}{lp{10.4cm}ll}
+\hline
+\textbf{ID} & \textbf{Constraint} & \textbf{Goal} \\
+\hline
+1  & Exceptions shown to the client must be sent to a sanitizer  & Confidentiality \\
+\rowcolor{RowColor}
+2  & Sensitive information must not bleed to components with lower security classification  & Confidentiality \\
+3  & Sensitive information must be encrypted before transmission  & Confidentiality \\
+\rowcolor{RowColor}
+4  & Every outbound message must be sent from a single component responsible for transmissions  & Confidentiality \\
+5  & Data that passes a trust boundary must first be sent to a component responsible for hiding or removing sensitive data  & Confidentiality \\
+\rowcolor{RowColor}
+6  & Secrets must not be exposed in log messages  & Confidentiality \\
+7  & The system must not provide functionality to decrypt secured log messages  & Confidentiality \\
+\rowcolor{RowColor}
+8  & Output passing between components must be validated against its specification & Integrity \\
+9  & Input from a user must pass through a component validating the data  & Integrity \\
+\rowcolor{RowColor}
+10 & The session object must not be accessible to the user  & Integrity \\
+11 & Components must store its state as restorable checkpoints  & Availability \\
+\rowcolor{RowColor}
+12 & Spawning of threads must be limited or throttled  & Availability \\
+13 & The system must not have multiple points of access  & Accountability \\
+\rowcolor{RowColor}
+14 & At least one checkpoint must be initialized after successful authentication and authorization  & Accountability \\
+15 & Methods related to security events must call the logger  & Accountability \\
+\rowcolor{RowColor}
+16 & Authentication and authorization must each be enforced in a single component  & Accountability \\
+17 & Security relevant log messages must be encrypted and immutable & Accountability \\
+\hline
+\end{tabular}
+\end{center}
+\label{tab:all_measures}
+\end{table}
+
+\section{Selection of constraints to be implemented in SecArchUnit}
+
+As explained in Section~\ref{sec:limitations}, the aim is not to demonstrate the enforceability of as many constraints as possible, but rather to investigate the feasibility of using the tool in this manner. To that end, a subset of the full list of security constraints is selected to be implemented in SecArchUnit. In total, seven constraints have been selected, as this allows us to cover at least one constraint from each goal in the CIAA model. The selected constraints can be seen in Table~\ref{tab:selected_measures}. The remainder of this section presents each selected constraint in further detail.
+
+\begin{table}
+\captionsetup{justification=centering}
+\caption
+    [Constraints to be implemented in SecArchUnit]
+    {Constraints to be implemented in SecArchUnit.\\Column \#\textsubscript{4.1} refers to the ID of the constraint in Table~\ref{tab:all_measures}.}
+\begin{center}
+\begin{tabular}{ccp{12.4cm}}
+\hline
+\textbf{\#} & \textbf{\#\textsubscript{4.1}} & \textbf{Constraint} \\
+\hline
+1 & 15 & Methods related to security events must call the logger\\
+\rowcolor{RowColor}
+2 & 16 & Authentication and authorization must each be enforced in a single component\\
+3 & 4 & Every outbound message must be sent from a single component responsible for transmissions\\
+\rowcolor{RowColor}
+4 & 9 & Input from a user must pass through a component validating the data\\
+5 & 12 & Spawning of threads must be limited or throttled\\
+\rowcolor{RowColor}
+6 & 2 & Sensitive information must not bleed to components with lower security classification\\
+7 & 6 & Secrets must not be exposed in log messages\\
+\hline
+\end{tabular}
+\end{center}
+\label{tab:selected_measures}
+\end{table}
+
+% For each constraint:
+% * describe what it means
+% * typical way to enforce it
+% * which source it comes from (literature)
+% * maybe describing a security attack scenario that this constraint aims to avoid
+
+\subsection{Log all security events } 
+
+\textbf{Description:} In any system, several components either directly change or process data, which represents the system's asset, or indirectly by invoking other components to act on its behalf. In either case, the request to perform a particular action originates from an actor (user or external process) who should later be held accountable.  As a consequence, the system should log a security event before performing an action that could breach the specified security policies. Although the term security event has become somewhat ambiguous, the definition used in the context of this report comes from the SANS Institute: \say{An event is an observable occurrence in an information system that actually happened at some point in time.}  \footnote{\url{https://www.sans.org/reading-room/whitepapers/incident/events-incidents-646}}
+
+\textbf{Typical enforcement:} The usage of the \textit{audit interceptor} forces all requests from a user to first be sent to a component responsible for logging the request and later forwarding it to the intended target. 
+
+\textbf{Sources:} CAWE 223/778, Jasser rule 5, Security pattern \textit{Audit interceptor}.
+
+\textbf{Attack scenario:} A typical scenario where the logging of security events increases a system's resilience to attacks is that of failed login attempts. An attacker may try and guess the credentials of a user by employing a brute-force attack. During the attack, the attacker performs several failed attempts at guessing the credentials, (hopefully) causing the system to either increase the time between repeated attempts or lock the account entirely though with the added effect of decreased availability for the intended user. Although this type of defense temporarily hinders the attacker, a log of failed attempts facilities the detection of malicious actors and enables administrators to impose more permanent measures. 
+
+\subsection{Enforce AuthN/AuthZ at single point} 
+ 
+ \textbf{Description:} Any system that has more than one user needs to incorporate functionality for authentication (AuthN), as well as authorization (AuthZ) if the privileges between users differ. The difficulty in complex systems where components handle different functionality, thus receiving separate requests and creating multiple entry points, is the fact that the components may have been designed to use various mechanisms of authentication. Instead, AuthN/AuthZ should be delegated to a single component to ensure consistent behavior across all entry points. 
+ 
+ \textbf{Typical enforcement:} Designing a single component responsible for AuthN/AuthZ mechanisms across several points of entry. Several third-party libraries exist that provide such features as well as language extending specifications such as Jakarta EE (formerly J2EE). 
+ 
+ \textbf{Sources:} CAWE 288/420/592, Security pattern \textit{Authentication enforcer} and \textit{Authorization enforcer}
+ 
+ \textbf{Attack scenario:} In system where the following conditions are true:
+ 
+ \begin{itemize}
+     \item There are multiple points of entry; 
+     \item There are different mechanisms to provide AuthN/AuthZ, some having a greater certainty that a user is properly authenticated or authorized to perform an action
+     \item and all points of entry share the same session object
+ \end{itemize}
+ 
+  An attacker may try and gain access to the least trusted point of entry and later use the granted authority to access services or operation normally requiring a greater level of trust.
+
+\subsection{Messages are sent from a central point} 
+
+\textbf{Description:} 
+Communication with external actors, whether they are a client connecting to a server, or the system sending data to a third party, is commonly performed over insecure networks using several components. Encryption is the preferred method of securing such communication against potential attackers, whereas removing secrets from the data to be sent ensures that a user only sees non-sensitive information. Having a single component responsible for all outbound communication reduces the risk of information disclosure (e.g. transmitting a sensitive message via an insecure network or disclosing implementation details through stack traces), and can prevent harmful output from reaching the client (e.g. cross-site scripting attacks from other users). 
+ 
+ \textbf{Typical enforcement:} 
+ Outbound messages can be intercepted before transmission to facilitate output sanitization. Similarly, outgoing messages can be forced to pass through a single component, designated as the sending point. This sending point can handle sanitization and decide whether the sender is allowed to carry the specified message.
+ 
+ \textbf{Sources:} Jasser rules 11 and 12.
+ 
+ \textbf{Attack scenario:}
+ A blog website may properly use a delegated component for the sanitized transmission of some data (e.g. blog entries) but fail to do so for others (e.g. comments). An attacker who posts a comment containing HTML tags may then hijack the browser session of other users visiting the site.
+
+\subsection{Validate user input} 
+
+\textbf{Description:} 
+The ability to receive and process user input is fundamental to every computer system. However, the same input is also the primary source of untrusted data as an attacker possesses full control of what the system receives. Assuming that all data passed to a system is safe to process can have severe consequences when interpreting user input as a part of a query, often referred to as injection. In order to prevent an attacker from compromising the system by injection, all user input must be validated.
+ 
+ \textbf{Typical enforcement:} 
+ Placing a component performing validation between the user's input and the component processing the data ensures that the input can be trusted. The approach is commonly referred to as the security pattern \textit{input guard}.
+ 
+ \textbf{Sources:} CAWE 20/59/74-79/88-91/93-99/138/150/349/352/472/473/502/601/\newline/641/643/652/790-797/942, Security pattern \textit{input guard}.
+ 
+ \textbf{Attack scenario:}
+ In an application that uses user input to build a SQL query to retrieve a specific account number (as seen in Listing~\ref{lst:SQL_vul}) an attacker may construct the request to retrieve all accounts by adding characters that break the query and introduces new parameters, such as \texttt{' or '1'='1}. The resulting operation would retrieve all customer accounts, thus exposing sensitive information.
+ 
+ \begin{center}
+\begin{minipage}{0.65\textwidth}
+\begin{lstlisting}[caption={Example of a vulnerable SQL query.}, captionpos=b, label=lst:SQL_vul, numbers=left, showstringspaces=false]
+String query = "SELECT * FROM accounts WHERE 
+    custID='" + userInput + "'";
+\end{lstlisting}
+\end{minipage}
+\end{center}
+
+\subsection{Restrict thread spawning}
+
+\textbf{Description:} Computers have finite resources in terms of memory, CPU time and network bandwidth. Systems should be designed with this in mind, employing measures to avoid exhausting the computer's resources. This constraint limits the number of threads that can be spawned on behalf of actors, which could otherwise lead to a malicious actor occupying all of the available CPU time.
+ 
+ \textbf{Typical enforcement:} Tasks can be dispatched to a pool of worker threads that is not allowed to grow beyond a fixed size. Moreover, various mechanisms can be employed to throttle or limit requests such that a single actor cannot occupy all of the allotted threads.
+ 
+ \textbf{Sources:} CAWE 770.
+ 
+ \textbf{Attack scenario:} An attacker may initiate many requests that are each handled by the system in a separate thread. By initiating requests at a higher rate than the server is able to process them, the resources at the server are eventually exhausted. This leads to a denial of service for any legitimate actors attempting to access the system.
+
+\subsection{Sensitive information must stay within trust boundary}\label{sec:trust_boundry_constraint}
+
+\textbf{Description:} 
+Generally, a specific set of components, which have stricter security requirements constraining their implementation, handles the sensitive data within a system. Should that information leak to less secure components, the risk of exposing secrets to the user, and a potential attacker, increases significantly. In order to prevent leakage to less secure components, sensitive information must stay within a trust boundary.
+ 
+ \textbf{Typical enforcement:}
+ A typical approach is to manually review methods that receives or send information to other components and ensure that they do not expose any secrets. As for automated enforcement, various information flow analysis tools, like JOANA\footnote{\url{https://pp.ipd.kit.edu/projects/joana/}}, can be employed to detect these types of information leaks within a system.
+ 
+ \textbf{Sources:} CAWE 488.
+ 
+ \textbf{Attack scenario:}
+ An asset may be leaked from a component that is supposed to service a single actor, such as a session object, to a component that multiple actors have shared access to. This may subsequently lead to the asset being illegitimately accessed by a malicious actor.
+
+\subsection{Secrets must not be exposed in log messages} 
+
+\textbf{Description:} Many systems handle secrets that should never touch permanent storage. A password is perhaps the most common example of such a secret. While great care can be taken on the design level to ensure that these secrets are not stored to disk, they may still be exposed unintentionally through log messages. In order to prevent such exposure, messages that are sent to the logger must not contain secrets.
+
+ \textbf{Typical enforcement:} Similar to the constraint described in Section~\ref{sec:trust_boundry_constraint}, the typical approach is to manually review calls to the logger to ensure that no secrets are exposed, with the potential ability to use information flow analysis tools.
+ 
+ \textbf{Sources:} CAWE 359/532, Jasser rule 13.
+ 
+ \textbf{Attack scenario:} Log messages may be accessible to actors who are not otherwise granted direct access to the secrets. By exploiting an unintentional leak of secrets into the log messages, an attacker could systematically extract these without facing the intended restrictions.

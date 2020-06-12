@@ -1,0 +1,101 @@
+% CREATED BY DAVID FRISK, 2018
+
+% COVER PAGE
+\begin{titlepage}
+\newgeometry{top=3cm, bottom=3cm,
+			left=2.25 cm, right=2.25cm}	% Temporarily change margins		
+			
+% Cover page background 
+\AddToShipoutPicture*{\backgroundpic{-4}{56.7}{figure/auxiliary/frontpage_eng.pdf}}
+\addtolength{\voffset}{2cm}
+
+% Cover picture (replace with your own or delete)		
+%\begin{figure}[H]
+%\centering
+%\vspace{2cm}	% Adjust vertical spacing here
+%\includegraphics[width=0.9\linewidth]{figure/auxiliary/13067542-disguised-computer-hacker.jpg}
+%\end{figure}
+
+% Cover text
+\mbox{}
+\vfill
+\renewcommand{\familydefault}{\sfdefault} \normalfont % Set cover page font
+\textbf{{\Huge 	SecArchUnit: Extending ArchUnit to
+support validation of security architectural constraints}} 	\\[0.5cm]
+%{\Large A Subtitle that can be Very Much Longer if Necessary}\\[0.5cm]
+Master's Thesis in Software Engineering \setlength{\parskip}{1cm}
+
+{\Large MARCUS RANDEVIK \\[0.2cm]
+        PATRIK OLSON} \setlength{\parskip}{2.9cm}
+
+Department of Computer Science and Engineering \\
+\textsc{Chalmers University of Technology} \\
+Gothenburg, Sweden \the\year
+
+\renewcommand{\familydefault}{\rmdefault} \normalfont % Reset standard font
+\end{titlepage}
+
+
+% BACK OF COVER PAGE (BLANK PAGE)
+\newpage
+\restoregeometry
+\thispagestyle{empty}
+\mbox{}
+
+
+% TITLE PAGE
+\newpage
+\thispagestyle{empty}
+\begin{center}
+	\textsc{\large Master's thesis \the\year}\\[4cm]		% Report number given by department 
+	\textbf{\Large SecArchUnit: Extending ArchUnit to support validation of security architectural constraints} \\[1cm]
+	%{\large A Subtitle that can be Very Much Longer if Necessary}\\[1cm]
+	{\large MARCUS RANDEVIK}\\
+	{\large PATRIK OLSON}
+	
+	\vfill	
+	% Logotype on titlepage	
+	\begin{figure}[H]
+	\centering
+	% Remove the following line to remove the titlepage logotype
+	\includegraphics[width=0.2\pdfpagewidth]{figure/auxiliary/logo_eng.pdf} \\	
+	\end{figure}	\vspace{5mm}	
+	
+	Department of Computer Science and Engineering \\
+	\emph{Division of Software Engineering}\\
+	%Name of research group (if applicable)\\
+	\textsc{Chalmers University of Technology} \\
+	Gothenburg, Sweden \the\year \\
+\end{center}
+
+
+% IMPRINT PAGE (BACK OF TITLE PAGE)
+\newpage
+\thispagestyle{plain}
+\vspace*{4.5cm}
+SecArchUnit: Extending ArchUnit to support validation of security architectural constraints\\
+%A Subtitle that can be Very Much Longer if Necessary\\
+MARCUS RANDEVIK\\
+PATRIK OLSON \setlength{\parskip}{1cm}
+
+\copyright ~ MARCUS RANDEVIK, PATRIK OLSON, \the\year. \setlength{\parskip}{1cm}
+
+Supervisor: Riccardo Scandariato, Computer Science and Engineering\\
+Examiner: Michel Chaudron, Computer Science and Engineering \setlength{\parskip}{1cm}
+
+Master's Thesis \the\year\\	% Report number given by department 
+Department of Computer Science and Engineering\\
+Division of Software Engineering\\
+%Name of research group (if applicable)\\
+Chalmers University of Technology\\
+SE-412 96 Gothenburg\\
+Telephone +46 31 772 1000 \setlength{\parskip}{0.5cm}
+
+\vfill
+% Caption for cover page figure if used, possibly with reference to further information in the report
+%Cover: Wind visualization constructed in Matlab showing a surface of constant wind speed along with streamlines of the flow. \setlength{\parskip}{0.5cm}
+
+Typeset in \LaTeX \tagtemp\\
+Printed by Chalmers Reproservice\\
+Gothenburg, Sweden \the\year
+

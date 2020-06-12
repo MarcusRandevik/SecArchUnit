@@ -1,0 +1,205 @@
+\chapter{SecArchUnit Code Excerpts}
+\begin{lstlisting}[caption=Constraint 4: performDirectOrIndirectValidation custom condition., captionpos=b, label=lst:constraint_4_condition, numbers=left, showstringspaces=false]
+ArchCondition<JavaCodeUnit> performDirectOrIndirectValidation =
+new ArchCondition<>("perform direct or indirect validation") {
+  @Override
+  void check(JavaCodeUnit codeUnit, ConditionEvents events) {
+    if (codeUnit.isAnnotatedWith(InputValidator.class)) {
+      // Validates input directly => condition passed
+      return;
+    }
+
+    boolean callsValidator = codeUnit.getCallsFromSelf().stream()
+      .map(call -> call.getTarget())
+      .anyMatch(target -> 
+        target.isAnnotatedWith(InputValidator.class)
+        || target.getOwner().isAnnotatedWith(InputValidator.class)
+      );
+    if (callsValidator) {
+      // Calls a validator => condition passed
+      return;
+    }
+
+    boolean calledAtLeastOnce = !codeUnit.getAccessesToSelf()
+      .isEmpty();
+    boolean onlyCalledByValidators = codeUnit.getAccessesToSelf()
+      .stream()
+      .map(call -> call.getOrigin())
+      .allMatch(origin -> 
+        origin.isAnnotatedWith(InputValidator.class)
+        || origin.getOwner().isAnnotatedWith(InputValidator.class)
+      );
+    if (calledAtLeastOnce && onlyCalledByValidators) {
+      // Is only called by validators => condition passed
+      return;
+    }
+
+    String message = codeUnit.getFullName() + " takes user input that is never validated";
+    events.add(SimpleConditionEvent.violated(codeUnit, message));
+  }
+};
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Constraint 5: aThreadIsStartedWithoutRestriction custom predicate.}, captionpos=b, label=lst:constraint_5_predicate_1, numbers=left, showstringspaces=false]
+DescribedPredicate<JavaMethodCall> aThreadIsStartedWithoutRestriction =
+new DescribedPredicate<>("a thread is started") {
+  @Override
+  public boolean apply(JavaMethodCall call) {
+    AccessTarget.MethodCallTarget target = call.getTarget();
+
+    boolean isRestricted = call.getOrigin()
+      .isAnnotatedWith(ResourceRestriction.class);
+    boolean startsAThread = 
+      target.getOwner().isAssignableTo(Thread.class)
+      && target.getName().equals("start");
+
+    return !isRestricted && startsAThread;
+  }
+};
+\end{lstlisting}
+
+\begin{lstlisting}[caption={Constraint 5: aProcessIsStartedWithoutRestriction custom predicate.}, captionpos=b, label=lst:constraint_5_predicate_2, numbers=left, showstringspaces=false]
+DescribedPredicate<JavaMethodCall> aProcessIsStartedWithoutRestriction =
+new DescribedPredicate<>("a process is started") {
+  @Override
+  public boolean apply(JavaMethodCall call) {
+    AccessTarget.MethodCallTarget target = call.getTarget();
+
+    boolean isRestricted = call.getOrigin()
+      .isAnnotatedWith(ResourceRestriction.class);
+    boolean startsAProcess =
+      target.getOwner().isEquivalentTo(ProcessBuilder.class)
+        && target.getName().equals("start")
+      || target.getOwner().isEquivalentTo(Runtime.class)
+        && target.getName().equals("exec");
+
+    return !isRestricted && startsAProcess;
+  }
+};
+\end{lstlisting}
+
+\clearpage
+\begin{lstlisting}[caption={Constraint 6: notBleedToInsecureComponents custom condition.}, captionpos=b, label=lst:constraint_6_condition, numbers=left, showstringspaces=false]
+ArchCondition<JavaField> notBleedToInsecureComponents =
+new ArchCondition<>("not bleed to insecure components") {
+  @Override
+  public void check(JavaField field, ConditionEvents events) {
+    // Direct access
+    field.getAccessesToSelf().stream()
+      .filter(access -> 
+        !access.getOriginOwner()
+          .isAnnotatedWith(AssetHandler.class)
+      )
+      .forEach(offendingFieldAccess -> {
+        String message = offendingFieldAccess
+          + ": access to asset " + field.getName();
+        events.add(SimpleConditionEvent.violated(offendingFieldAccess, message));
+      });
+
+    // Access via getter method
+    field.getAccessesToSelf().stream()
+      .filter(access -> access.getOrigin() instanceof JavaMethod)
+      .map(access -> (JavaMethod) access.getOrigin())
+      .filter(method ->
+        method.getReturnValueHints().stream()
+          .anyMatch(hint ->
+            field.equals(hint.getMemberOrigin())
+          )
+      )
+      .flatMap(method -> method.getCallsOfSelf().stream())
+      .filter(call ->
+        !call.getOriginOwner()
+          .isAnnotatedWith(AssetHandler.class)
+      )
+      .forEach(offendingMethodCall -> {
+        String message = offendingMethodCall
+          + ": access to asset " + field.getName()
+          + " (via getter method)";
+        events.add(SimpleConditionEvent.violated(offendingMethodCall, message));
+      });
+  }
+};
+\end{lstlisting}
+
+\clearpage
+\begin{lstlisting}[caption={Constraint 7: passSecretArgumentTo custom condition.}, captionpos=b, label=lst:constraint_7_condition, numbers=left, showstringspaces=false]
+ArchCondition<JavaClass> passSecretArgumentTo(
+    DescribedPredicate<JavaAccess<?>> target) {
+return new ArchCondition<>("pass @Secret argument to "
+    + target.getDescription()) {
+  @Override
+  public void check(JavaClass clazz, ConditionEvents events) {
+    clazz.getMethodCallsFromSelf().stream()
+      .filter(call -> target.apply(call))
+      .forEach(callToTarget -> {
+        InformationFlow.recurseOnHints(
+            callToTarget.getArgumentHints()
+          )
+          .filter(hint -> hint.getMemberOrigin() != null)
+          .map(hint -> hint.getMemberOrigin())
+          .filter(member ->
+            member.isAnnotatedWith(Secret.class)
+            || member.getOwner().isAnnotatedWith(Secret.class)
+          )
+          .distinct()
+          .forEach(secretMember -> {
+            String message = callToTarget.getSourceCodeLocation()
+              + " passes secret "
+              + secretMember.getOwner().getSimpleName()
+              + "." + secretMember.getName();
+            events.add(SimpleConditionEvent.satisfied(
+              callToTarget,
+              message)
+            );
+          });
+      });
+  }
+};
+\end{lstlisting}
+
+\clearpage
+\begin{lstlisting}[caption={Constraint 7: InformationFlow class used to recursively follow hints to their originating members. For hints originating from fields, we check all hints that flow into said field. For hints originating from methods, we check all hints that flow into the return value of the method. This process is repeated until the "breadcrumb trail" of hints is exhausted, or to a maximum of 5 recursive steps.}, captionpos=b, label=lst:constraint_7_flow, numbers=left, showstringspaces=false]
+class InformationFlow {
+  Stream<Hint> recurseOnHints(Set<Hint> hints) {
+    return recurseOnHints(hints, 5).distinct();
+  }
+
+  Stream<Hint> recurseOnHints(Set<Hint> hints, int depth) {
+    if (depth == 0 || hints.isEmpty()) {
+      return hints.stream();
+    }
+
+    // Hints with an originating member
+    Set<JavaMember> hintOrigins = hints.stream()
+      .filter(hint -> hint.getMemberOrigin() != null)
+      .map(hint -> hint.getMemberOrigin())
+      .collect(Collectors.toSet());
+
+    // Hints flowing into a field
+    Stream<Hint> hintsFlowingIntoFields = hintOrigins.stream()
+      .filter(member -> member instanceof JavaField)
+      .map(member -> (JavaField) member)
+      .flatMap(hint -> hint.getAccessesToSelf().stream())
+      .flatMap(access -> access.getArgumentHints().stream());
+
+    // Hints flowing out of a method
+    Stream<Hint> hintsFlowingOutOfMethods = hintOrigins.stream()
+      .filter(member -> member instanceof JavaMethod)
+      .map(member -> (JavaMethod) member)
+      .flatMap(method -> method.getReturnValueHints().stream());
+
+    // Collect hints from this level
+    Set<Hint> recursedHints = Stream.concat(
+        hintsFlowingIntoFields, 
+        hintsFlowingOutOfMethods
+      )
+      .collect(Collectors.toSet());
+
+    // Concatenate this level of hints with the next recursion level
+    return Stream.concat(
+      hints.stream(),
+      recurseOnHints(recursedHints, depth - 1)
+    );
+  }
+}
+\end{lstlisting}
