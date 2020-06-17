@@ -1,0 +1,109 @@
+\chapter{Ground Truth Tables}\label{chap:groundtruth}
+
+This appendix contains an excerpt of our ground truth focusing soley on the ATMSimulator system. The entriety of the data can be found in our public repository\footnote{\url{https://github.com/MarcusRandevik/SecArchUnit/blob/master/Validation/Validation.xlsx}}. 
+
+The data presented here consists of three tables:
+
+\begin{itemize}
+    \item Table~\ref{tab:groundtruthviolations} contains the identified violations of all constrains in ATMSimulator. It is this data that the tools were evaluated against.
+    \item Table~\ref{tab:groundtruthconceptincluded} contains the concepts of our constraints that were applied to the target system. These were later used to identify the violations of constraints in Table~\ref{tab:groundtruthviolations}.
+    \item Finally, Table~\ref{tab:groundtruthconceptnotincluded} presents concepts that were considered by at least one author but later discarded and not included when forming the ground truth. 
+\end{itemize}  
+
+\begin{table}[h]
+\captionsetup{justification=centering}
+\caption{Table of constraints violations found within ATMSimulator.}
+\hspace*{-1.6cm}
+\label{tab:groundtruthviolations}
+\begin{center}
+\begin{tabular}{llllll}
+\textbf{Marcus}   & \textbf{Patrik}   & \textbf{Conclusion} & \textbf{Constraint} & \textbf{Class} & \textbf{Line} \\
+\hline
+POSITIVE & NEGATIVE & POSITIVE   & 1          & CardReader     & 40       \\
+\rowcolor{RowColor}
+POSITIVE & NEGATIVE & POSITIVE   & 1          & CardReader     & 47       \\
+POSITIVE & NEGATIVE & POSITIVE   & 1          & CardReader     & 55       \\
+\rowcolor{RowColor}
+POSITIVE & POSITIVE & POSITIVE   & 1          & CashDispenser  & 35       \\
+POSITIVE & POSITIVE & POSITIVE   & 1          & CashDispenser  & 45       \\
+\rowcolor{RowColor}
+POSITIVE & POSITIVE & POSITIVE   & 1          & NetworkToBank  & 37       \\
+POSITIVE & POSITIVE & POSITIVE   & 1          & NetworkToBank  & 44       \\
+\rowcolor{RowColor}
+POSITIVE & POSITIVE & POSITIVE   & 1          & Transaction & 56       \\
+POSITIVE & POSITIVE & POSITIVE   & 1          & Transaction & 96       \\
+\rowcolor{RowColor}
+POSITIVE & POSITIVE & POSITIVE   & 1          & Transaction & 219      \\
+POSITIVE & POSITIVE & POSITIVE   & 1          & Transaction & 258      \\
+\rowcolor{RowColor}
+POSITIVE & POSITIVE & POSITIVE   & 2          & Receipt             & 41       \\
+POSITIVE & POSITIVE & POSITIVE   & 2          & Session                 & 76       \\
+\rowcolor{RowColor}
+POSITIVE & POSITIVE & POSITIVE   & 2          & Session                 & 90       \\
+POSITIVE & POSITIVE & POSITIVE   & 2          & Receipt             & 41       \\
+\rowcolor{RowColor}
+POSITIVE & POSITIVE & POSITIVE   & 2          & Session                 & 76       \\
+POSITIVE & POSITIVE & POSITIVE   & 2          & Session                 & 90       \\
+\rowcolor{RowColor}
+POSITIVE & POSITIVE & POSITIVE   & 4          & CardReader     & 40       \\
+POSITIVE & POSITIVE & POSITIVE   & 4          & OperatorPanel  & 39     \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{table}[]
+\begin{center}
+\captionsetup{justification=centering}
+\caption{Table of concepts mapped to classes within ATMSimulator, both in initial agreement and disagrement. These are later used to find violations as presented in Table~\ref{tab:groundtruthviolations}.}
+\label{tab:groundtruthconceptincluded}
+\hspace*{-2.7cm}
+\begin{tabular}{p{3.5cm}p{3.5cm}p{3.5cm}ll}
+\textbf{Marcus} & \textbf{Patrik} & \textbf{Conclusion} & \textbf{Cons} & \textbf{Class/Member} \\
+\hline
+Class not considered as security service & Class considered as security service & The public methods were considered as a security service as they are the entry point to a crucial set of operations & 1                   & CardReader                     \\
+\rowcolor{RowColor}
+Class considered as security service     & Class considered as security service & -                                                                                                              & 1                   & CashDispenser                  \\
+Class considered as security service     & Class considered as security service & -                                                                                                              & 1                   & NetworkToBank                  \\
+\rowcolor{RowColor}
+Class considered as security service     & Class considered as security service & -                                                                                                              & 1                   & Transaction                 \\
+Authenticator                            & Authenticator                        & -                                                                                                              & 2                   & Transaction                 \\
+\rowcolor{RowColor}
+Central sender                           & Central Sender                       & -                                                                                                              & 3                   & NetworkToBank                  \\
+Sending point                            & Sending point                        & -                                                                                                              & 3                   & Transaction                 \\
+\rowcolor{RowColor}
+User Input                               & User Input                           & -                                                                                                              & 4                   & CardReader.readCard            \\
+User Input                               & User Input                           & -                                                                                                              & 4                   & CustomerConsole.readPin        \\
+\rowcolor{RowColor}
+User Input                               & User Input                           & -                                                                                                              & 4                   & CustomerConsole.readMenuChoice \\
+User Input                               & User Input                           & -                                                                                                              & 4                   & CustomerConsole.readAmount     \\
+\rowcolor{RowColor}
+User Input                               & User Input                           & -                                                                                                              & 4                   & OperatorPanel.getInitialCash   \\
+Input validator                          & Input validator                      & -                                                                                                              & 4                   & CustomerConsole.readPin        \\
+\rowcolor{RowColor}
+Input validator                          & Input validator                      & -                                                                                                              & 4                   & CustomerConsole.readMenuChoice \\
+Input validator                          & Input validator                      & -                                                                                                              & 4                   & CustomerConsole.readAmount     \\
+\rowcolor{RowColor}
+ResourceRestriction                      & ResourceRestriction                  & -                                                                                                              & 5                   & ATMApplet                                   \\
+ResourceRestriction                      & ResourceRestriction                  & -                                                                                                              & 5                   & ATMMain  \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{sidewaystable}[]
+\begin{center}
+\captionsetup{justification=centering}
+\caption{Table of concepts that were considered by at least one author but later discarded.}
+\label{tab:groundtruthconceptnotincluded}
+\hspace*{-2cm}
+\begin{tabular}{p{4cm}p{4cm}p{6cm}ll}
+\textbf{Marcus} & \textbf{Patrik} & \textbf{Conclusion} & \textbf{Constraint} & \textbf{Class} \\
+\hline
+Class considered as security service & Class not considered as security service & Not a security service as it is the loop at which other components act & 1 & Session \\
+\rowcolor{RowColor}
+Class considered to be out of system domain & Class considered to be an a authN/authZ  & The class represents the simulated functionallity of a bank, thus being outside of the system. Class will not be considered as authN/authZ & 2 & SimulatedBank \\
+\hline
+\end{tabular}
+\end{center}
+\end{sidewaystable}
