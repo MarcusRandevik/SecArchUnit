@@ -150,10 +150,8 @@ To summarize, while it is possible for SonarQube and PMD to enforce some securit
 \section{Generalizing the approach}
 The constraints presented in this thesis are defined in terms of accesses from code units to members. When the code statements of a code unit are analyzed, static type information is utilized to determine which target member is being accessed, as well as the class that it belongs to.
 
-While this thesis shows that such analysis is possible in Java, the approach should be generalizable to any object oriented language where types are known at compile-time, i.e. statically typed object oriented languages.
+While this thesis shows that such analysis is possible in Java, the approach should be generalizable to any object oriented language where types are known at compile-time, i.e. statically typed object oriented languages. %An example includes C\#, for which SonarQube already has custom rule support. https://github.com/SonarSource/sonar-dotnet
 Moreover, a similar approach should be possible in statically typed functional languages, where the concepts of classes and members are replaced with files and functions.
-
-%given that the analysis is performed on a representation of the code that exposes this type information.
 
 
 \section{Answering research questions}

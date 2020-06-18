@@ -10,7 +10,7 @@ The data presented here consists of three tables:
     \item Finally, Table~\ref{tab:groundtruthconceptnotincluded} presents concepts that were considered by at least one author but later discarded and not included when forming the ground truth. 
 \end{itemize}  
 
-\begin{table}[h]
+\begin{table}[ht]
 \captionsetup{justification=centering}
 \caption{Table of constraints violations found within ATMSimulator.}
 \hspace*{-1.6cm}
@@ -52,7 +52,7 @@ POSITIVE & POSITIVE & POSITIVE   & 4          & OperatorPanel  & 39     \\
 \end{center}
 \end{table}
 
-\begin{table}[]
+\begin{table}
 \begin{center}
 \captionsetup{justification=centering}
 \caption{Table of concepts mapped to classes within ATMSimulator, both in initial agreement and disagrement. These are later used to find violations as presented in Table~\ref{tab:groundtruthviolations}.}
@@ -91,7 +91,7 @@ ResourceRestriction                      & ResourceRestriction                  
 \end{center}
 \end{table}
 
-\begin{sidewaystable}[]
+\begin{sidewaystable}
 \begin{center}
 \captionsetup{justification=centering}
 \caption{Table of concepts that were considered by at least one author but later discarded.}
@@ -102,7 +102,7 @@ ResourceRestriction                      & ResourceRestriction                  
 \hline
 Class considered as security service & Class not considered as security service & Not a security service as it is the loop at which other components act & 1 & Session \\
 \rowcolor{RowColor}
-Class considered to be out of system domain & Class considered to be an a authN/authZ  & The class represents the simulated functionallity of a bank, thus being outside of the system. Class will not be considered as authN/authZ & 2 & SimulatedBank \\
+Class considered to be out of system domain & Class considered to be authentication point and enforcer & The class represents the simulated functionality of a bank, thus being outside of the system. Class will not be considered as authentication point/enforcer & 2 & SimulatedBank \\
 \hline
 \end{tabular}
 \end{center}

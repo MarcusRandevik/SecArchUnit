@@ -60,13 +60,13 @@ While the term architectural constraint means refers specifications that impact 
 \section{ArchUnit}\label{archunit-back-section}
 ArchUnit is a library that leverages static analysis to validate architectural constraints. Static analysis refers to the analysis of code, either in the shape of source code or compiled bytecode, without executing the code itself \cite[p. 21]{chess_secure_2007}. In the case of ArchUnit, the analysis is performed on compiled Java bytecode.
 
-Using ArchUnit, a target system can be analyzed and composed into a Java code structure \cite{gafert_archunit_2020}. This structure contains a number of classes, outlined in Figure~\ref{fig:archunit}, which describe the code of the analyzed system. Some key observations regarding this structure:
+Using ArchUnit, the bytecode of a target system is analyzed and composed into a Java code structure \cite{gafert_archunit_2020}. This structure contains a number of classes, outlined in Figure~\ref{fig:archunit}, which describe the code of the analyzed system. As shown in the figure, ArchUnit introduces the following terminology:
 
 \begin{figure}
     \centering
     \captionsetup{justification=centering}
     \includegraphics[width=\textwidth]{figure/ArchUnit.png}
-    \caption{The architectural constructs present in the domain of ArchUnit, adapted from \cite{gafert_archunit_2020}.}
+    \caption{A UML class diagram of the code structure that ArchUnit uses to represent a system under analysis. Predicates and conditions are defined in terms of the classes in this structure. Figure adapted from \cite{gafert_archunit_2020}.}
     \label{fig:archunit}
 \end{figure}
 
@@ -76,7 +76,7 @@ Using ArchUnit, a target system can be analyzed and composed into a Java code st
     \item Field accesses, method calls and constructor calls are collectively known as \textbf{accesses}. An access has a source, i.e. the code unit from which the access originates, and a target, i.e. the member that is being accessed.
 \end{itemize}
 
-The validation of a constraint is performed by evaluating one or multiple conditions against select properties of this code structure. ArchUnit exposes a sentence-like API that allows these constraints to be expressed as sentences of the form \say{The \textbf{constructs} that match \textbf{predicate} should fulfill \textbf{condition}.} 
+The validation of a constraint is performed by evaluating one or multiple conditions against elements of this code structure. ArchUnit exposes a sentence-like API that allows these constraints to be expressed as sentences of the form \say{The \textbf{constructs} that match \textbf{predicate} should fulfill \textbf{condition}.} 
 
 An example of a constraint can be seen in Listing~\ref{lst:architectural_rule}. This constraint assumes that there are two layers \textit{view} and \textit{controller}, in the form of packages, and dictates that the view layer should only be accessed by the controller layer. In this example, the constructs are classes (line 1), the predicate selects classes declared in a package with the suffix \textit{view} (line 2), and the conditition applied to these classes is that they should only be accessed by code units declared in a package with the suffix \textit{controller} (line 3).
 
@@ -90,7 +90,7 @@ ArchRule rule = classes()
 \end{minipage}
 \end{center}
 
-In general, constructs refer to either classes or members. It is also possible to select a specific type of member, such as fields or constructors. The predicate is used to filter constructs based on their attributes, such as selecting classes that are defined in a specific package as seen in the example above. Finally, the condition is applied to all the selected constructs. Constructs that fail to fulfill the condition are reported as violating the constraint.
+In general, constructs refer to either classes, fields, methods or constructors. The predicate is used to filter the constructs based on their attributes, such as selecting classes that are defined in a specific package as seen in the example above. Finally, the condition is applied to all the selected constructs. Constructs that fail to fulfill the condition are reported as violating the constraint.
 
 
 % \cite{pistoia_survey_2007}
