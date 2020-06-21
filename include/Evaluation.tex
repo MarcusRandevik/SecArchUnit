@@ -148,10 +148,13 @@ To summarize, while it is possible for SonarQube and PMD to enforce some securit
 
 
 \section{Generalizing the approach}
-The constraints presented in this thesis are defined in terms of accesses from code units to members. When the code statements of a code unit are analyzed, static type information is utilized to determine which target member is being accessed, as well as the class that it belongs to.
+The constraints presented in this thesis are defined in terms of accesses from code units to members. When the code statements of a code unit are analyzed, static type information is utilized to determine which target class is being accessed.
 
-While this thesis shows that such analysis is possible in Java, the approach should be generalizable to any object oriented language where types are known at compile-time, i.e. statically typed object oriented languages. %An example includes C\#, for which SonarQube already has custom rule support. https://github.com/SonarSource/sonar-dotnet
-Moreover, a similar approach should be possible in statically typed functional languages, where the concepts of classes and members are replaced with files and functions.
+While this thesis shows that such analysis is possible in Java, the approach should be generalizable to any object oriented language where types are known at compile-time. These languages are typically referred to as statically typed object oriented languages. C\# is an example of such a language, for which there is a SonarQube extension\footnote{\url{https://github.com/SonarSource/sonar-dotnet}} that supports the expression of similar constraints as C\# source code.
+
+Moreover, a similar approach should be possible in functional languages, where the concept of classes is replaced with file names or namespaces.
+An example includes the Clojure language, for which a static analysis tool called clj-kondo\footnote{\url{https://github.com/borkdude/clj-kondo}} exists. While its purpose is that of a source code linter, the tool allows custom rules to be expressed as Clojure source code. These rules can be defined in terms of accesses between source code locations, comparable to the analysis performed by ArchUnit.
+
 
 
 \section{Answering research questions}
