@@ -23,31 +23,23 @@ BlogWeb is, as the name suggests, a blog website providing users with the abilit
 
 
 \section{Support in ArchUnit as-is}\label{sec:as-is}
-ArchUnit contains an extensive vocabulary for expressing architectural constraints in a sentence-like manner, as shown through an example in Listing~\ref{lst:standard_vocabulary}. This rule is defined entirely using the standard vocabulary and enforces complete mediation, a security pattern which dictates that some internal classes must only be accessed through a mediator.
+ArchUnit contains an extensive vocabulary for expressing architectural constraints in a sentence-like manner, as exemplified in Section~\ref{archunit-back-section}. In situations where the standard vocabulary is insufficient for expressing a constraint, there is a possibility to define custom predicates and conditions over any given construct. These can be supplied as arguments to the \texttt{that()} and \texttt{should()} methods. Custom predicates and conditions are used extensively in our implementation, as will be made apparent in the following sections.
 
-%\newenvironment{customenv}
-%    {
-%    \renewcommand{\ttdefault}{pcr}
-%    \lstset{emph={rule},emphstyle=\bfseries}
-%    }
+%\begin{center}
+%\begin{minipage}{0.90\linewidth}
+%\begin{lstlisting}[caption={Example of a rule that is expressed with the standard vocabulary.}, %captionpos=b, label=lst:standard_vocabulary, numbers=left]
+%ArchRule rule = classes()
+%    .that().resideInAPackage("..internal..")
+%    .should().onlyBeAccessed().byAnyPackage("..mediator..");
+%\end{lstlisting}
+%\end{minipage}
+%\end{center}
 
-%\begin{customenv}
-\begin{center}
-\begin{minipage}{0.90\linewidth}
-\begin{lstlisting}[caption={Example of a rule that is expressed with the standard vocabulary.}, captionpos=b, label=lst:standard_vocabulary, numbers=left]
-ArchRule rule = classes()
-    .that().resideInAPackage("..internal..")
-    .should().onlyBeAccessed().byAnyPackage("..mediator..");
-\end{lstlisting}
-\end{minipage}
-\end{center}
-%\end{customenv}
-
-Rules in ArchUnit are composed of three parts. The first part (line 1 in Listing~\ref{lst:standard_vocabulary}) is the type of Java constructs that should be inspected; namely classes, fields or methods. The second part (line 2) is a predicate that is used to filter for constructs related to the constraint. The third part (line 3) describes the logical condition that must hold true for all of the selected constructs. In short, rules are generally expressed as sentences of the form \say{The \textbf{constructs} that match \textbf{predicate} should fulfill \textbf{condition}.}
+% in ArchUnit are composed of three parts. The first part (line 1 in Listing~\ref{lst:standard_vocabulary}) is the type of Java constructs that should be inspected; namely classes, fields or methods. The second part (line 2) is a predicate that is used to filter for constructs related to the constraint. The third part (line 3) describes the logical condition that must hold true for all of the selected constructs. In short, rules are generally expressed as sentences of the form \say{The \textbf{constructs} that match \textbf{predicate} should fulfill \textbf{condition}.}
 
 %These constraints are generally composed of three parts: a construct, a predicate and a condition. The construct defines the type of Java construct that should be inspected, and includes classes, methods, fields and constructors. The predicate then selects a subset of these constructs, for which the condition must hold true.
 
-In situations where the standard vocabulary is insufficient for expressing a constraint, there is a possibility to define custom predicates and conditions over any given construct. These can be supplied as arguments to the \texttt{that()} and \texttt{should()} methods. Custom predicates and conditions are used extensively in our implementation, as will be made apparent in the following sections.
+
 
 \subsection{Constraint 1: Log all security events}
 % Description
@@ -289,7 +281,7 @@ Conveniently, ASM provides an extension of its \texttt{MethodVisitor} class, cal
 
 \textbf{SecArchUnit.} As seen in Figure~\ref{fig:method_processor_2}, \texttt{MethodProcessor} now extends \texttt{Analyzer\-Adapter} and utilizes the information about the operand stack to perform an analysis of information flow within a code unit.
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     \captionsetup{justification=centering}
     \includegraphics[width=0.7\textwidth]{figure/extension/MethodProcessor2.png}

@@ -30,7 +30,7 @@ Starting from each of the three sources of architectural constraints described i
 
 \begin{enumerate}
     \item The entry must be related to the architectural design of a system, i.e., non-local and intensional (as described in Section~\ref{subsec:security_rules}). \label{criterion_1}
-    \item It must be possible to enforce the entry through static analysis. An example on a non enforceable constraint is \say{No two instances of a microservice are deployed on the same machine} \cite{franch_constraining_2019}, as the number of machines deployed is a dynamic property. \label{criterion_2}
+    \item It must be possible to enforce the entry through the static analysis of source-code. An example on a non enforceable constraint is \say{No two instances of a microservice are deployed on the same machine} \cite{franch_constraining_2019}, as the number of machines deployed is a deployment-time property. \label{criterion_2}
     \item Although somewhat included in the first criterion as it is a local issue, an entry must not relate to the correctness or best practice of the implementation of an algorithm. Examples include the practice of using session tokens with time-limited validity. \label{criterion_3}
     \item The entry must only relate to the system under design, thus ignoring the correctness and security of any external dependencies. An example can be found in SonarQube where the usage of a version of a library with known vulnerabilities is reported as a weakness. \label{criterion_4}
     \item The entry must not be dependent on externally defined data. A common example is that of user permissions where the mapping between a regulated function and a users rights is performed using an access control list, external to the source code. \label{criterion_5}
@@ -127,11 +127,23 @@ Based on the presented criterion, three systems were selected for the evaluation
 \end{table}
 
 \subsection{Ground truth}
-A ground truth had to be set to validate the results of applying the tools to the included projects. The ground truth consisted of: a set of classes applicable to the concepts defined in the final list of constraints, annotations to the source code, and a record of each violation found. 
+A ground truth had to be set to validate the results of applying the tools to the included projects. The ground truth consisted of the following items: 
 
-In the absence of any previously established ground truth, in large because we defined the constraints, a structural analysis was performed for each of the systems. Our analysis was guided by the architectural descriptions supplied with the projects and the extraction of SecDFDs by Peldszus et al. \cite{peldszus_secure_2019}. Each constraint was applied to the system by analyzing every file in the project in a separate pass. Although time-consuming, performing a complete scan of the entire system for each constraint reduced the risk of wrongfully dismissing a class and ensured that violations were detected.
+\begin{itemize}
+    \item A set of classes applicable to the concepts defined in the final list of constraints. An example included the set of classes deemed to represent the security services in a system. 
+    \item Annotations to the source code, in cases where a constraint relied on additional information within the source code to identify a particular concept.
+    \item A list of violations found within the source-code, linked both to the precise location and to a particular constraint.
+\end{itemize}
 
-In order to reduce the bias of the ground truth, the analysis was performed individually, later comparing the results. In cases were the classification differed, a careful review of the reasoning behind each author's choice was performed, resulting in a combined decision. 
+In the absence of any previously established ground truth, in large because we defined the constraints, a structural analysis was performed for each of the systems. Our analysis was guided by the architectural descriptions supplied with the projects and the extraction of SecDFDs by Peldszus et al. \cite{peldszus_secure_2019}. An overview of the steps performed can be seen in Figure~\ref{fig:ground_truth}. Each constraint was applied to the system by analyzing every file in the project in a separate pass, as seen in the first step in Figure~\ref{fig:ground_truth}. Although time-consuming, performing a complete scan of the entire system for each constraint reduced the risk of wrongfully dismissing a class and ensured that violations were detected. 
 
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figure/GroundTruth.png}
+    \caption{An overview of the process of establishing the ground truth.}
+    \label{fig:ground_truth}
+\end{figure}
 
+In order to reduce the bias of the ground truth, the analysis was performed individually, seen in Figure~\ref{fig:ground_truth} by the presence of two parallel processes, later comparing the results. In cases were the classification differed, such as when only one of the authors considered a class to represent a certain security concept, a careful review of the reasoning behind each author's choice was performed, resulting in a combined decision, as seen in the last step in Figure~\ref{fig:ground_truth}. In addition, our supervisors were consulted in cases where we were unable to reach a consensus.
 
+An excerpt of the ground truth is included in Appendix~\ref{chap:groundtruth}. The complete set of data, along with our extensions to ArchUnit, can be accessed trough our public repository\footnote{\url{https://github.com/MarcusRandevik/SecArchUnit}}.  
