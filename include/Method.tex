@@ -135,7 +135,7 @@ A ground truth had to be set to validate the results of applying the tools to th
     \item A list of violations found within the source-code, linked both to the precise location and to a particular constraint.
 \end{itemize}
 
-In the absence of any previously established ground truth, in large because we defined the constraints, a structural analysis was performed for each of the systems. Our analysis was guided by the architectural descriptions supplied with the projects and the extraction of SecDFDs by Peldszus et al. \cite{peldszus_secure_2019}. An overview of the steps performed can be seen in figure~\ref{fig:ground_truth}. Each constraint was applied to the system by analyzing every file in the project in a separate pass, as seen in the first step in figure~\ref{fig:ground_truth}. Although time-consuming, performing a complete scan of the entire system for each constraint reduced the risk of wrongfully dismissing a class and ensured that violations were detected. 
+In the absence of any previously established ground truth, in large because we defined the constraints, a structural analysis was performed for each of the systems. Our analysis was guided by the architectural descriptions supplied with the projects and the extraction of SecDFDs by Peldszus et al. \cite{peldszus_secure_2019}. An overview of the steps performed can be seen in Figure~\ref{fig:ground_truth}. Each constraint was applied to the system by analyzing every file in the project in a separate pass, as seen in the first step in Figure~\ref{fig:ground_truth}. Although time-consuming, performing a complete scan of the entire system for each constraint reduced the risk of wrongfully dismissing a class and ensured that violations were detected. 
 
 \begin{figure}
     \centering
@@ -144,9 +144,6 @@ In the absence of any previously established ground truth, in large because we d
     \label{fig:ground_truth}
 \end{figure}
 
-In order to reduce the bias of the ground truth, the analysis was performed individually, seen in Figure~\ref{fig:ground_truth} by the presence of two parallel processes, later comparing the results. In cases were the classification differed, such as when only one other considered a class to represent a certain security concept, a careful review of the reasoning behind each author's choice was performed, resulting in a combined decision, as seen in the last step in Figure~\ref{fig:ground_truth}. In addition, our supervisors were consulted in cases where we were unable to reach a consensus.
+In order to reduce the bias of the ground truth, the analysis was performed individually, seen in Figure~\ref{fig:ground_truth} by the presence of two parallel processes, later comparing the results. In cases were the classification differed, such as when only one of the authors considered a class to represent a certain security concept, a careful review of the reasoning behind each author's choice was performed, resulting in a combined decision, as seen in the last step in Figure~\ref{fig:ground_truth}. In addition, our supervisors were consulted in cases where we were unable to reach a consensus.
 
 An excerpt of the ground truth is included in Appendix~\ref{chap:groundtruth}. The complete set of data, along with our extensions to ArchUnit, can be accessed trough our public repository\footnote{\url{https://github.com/MarcusRandevik/SecArchUnit}}.  
-
-
-
